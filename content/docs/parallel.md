@@ -99,6 +99,8 @@ The 2D Riemann problem (configuration 3) on Cartesian quadrilaterals, fifth-orde
 | 8 | 8M | 1.39 s | 74% |
 | 8, GPU-aware MPI | 8M | 1.106 s | 93% |
 
-The single-GPU time matches the throughput above (21.7 ns per step and cell gives 1.08 s for 50 steps of 1M cells). Two limitations account for most of the lost efficiency and are being worked on: the halo exchange is blocking, with no overlap of communication and computation yet, and setup builds the global mesh on every rank.
+The single-GPU time matches the single-A100 throughput on the [Performance](performance.md) page (21.7 ns per step and cell gives 1.08 s for 50 steps of 1M cells). Two limitations account for most of the lost efficiency and are being worked on: the halo exchange is blocking, with no overlap of communication and computation yet, and setup builds the global mesh on every rank.
+
+These tables predate [pull request #57](https://github.com/MatthewBonanni/mallard/pull/57), which splits TENO's troubled-cell pass into per-face and per-cell work: with GPU-aware MPI on 8 GPUs it brings 50 steps down from 0.287 s to 0.213 s on 1M cells (59% efficiency) and from 0.630 s to 0.584 s on 4M cells (78%). Full scaling tables will follow the current round of work.
 
 See [Design: MPI](design/mpi.md) for how the partitioning, halos and exchanges work.
