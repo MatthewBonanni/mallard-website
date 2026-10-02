@@ -32,6 +32,44 @@ if [ -d "$here/errata/$ref" ]; then
     sed -i.bak -f "$here/errata/$ref/$f" "$docs/${f%.sed}" && rm "$docs/${f%.sed}.bak"
   done
 fi
+# Pages the documented release does not have yet, from Mallard's main branch until a release ships them
+rm -f "$docs/references.md"
+for page in references.md; do
+  if [ -f "$src/docs/$page" ]; then
+    cp "$src/docs/$page" "$docs/$page"
+  else
+    for branch in origin/main main github/main; do
+      git -C "$src" show "$branch:docs/$page" > "$docs/$page" 2>/dev/null \
+        && python3 - "$docs/$page" "$version" <<'EOF' && break
+import sys
+page, version = sys.argv[1], sys.argv[2]
+text = open(page).read()
+head, _, rest = text.partition("\n")
+note = (f'!!! note "From Mallard\'s main branch"\n    Mallard {version} does not have this page yet; this is the version on `main`, '
+        "which also covers methods added since that release.\n")
+open(page, "w").write(head + "\n\n" + note + rest)
+EOF
+      rm -f "$docs/$page"
+    done
+  fi
+done
+python3 - "$docs" <<'EOF'
+# Links in those pages to docs the release lacks go to the files on GitHub; the numerics pages link the references
+import pathlib, re, sys
+docs = pathlib.Path(sys.argv[1])
+refs = docs / "references.md"
+if refs.exists():
+    def fix(m):
+        target = m.group(2).split("#")[0]
+        if target.startswith("http") or (docs / target).exists():
+            return m.group(0)
+        return f"]({'https://github.com/MatthewBonanni/mallard/blob/main/docs/' + m.group(2)})"
+    refs.write_text(re.sub(r"\](\(([^)\s]+\.md(?:#[^)\s]*)?)\))", fix, refs.read_text()))
+    for page in (docs / "numerics").glob("*.md"):
+        text = page.read_text()
+        if "references.md" not in text:
+            page.write_text(text.rstrip() + "\n\nSources of these methods: [References](../references.md).\n")
+EOF
 python3 - "$src/examples/README.md" "$docs/examples.md" "$here/content/examples.json" "$ref" <<'EOF'
 # The examples README, with each row of its table as a section with a still image
 import json, re, sys

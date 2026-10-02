@@ -92,6 +92,10 @@ cd examples/sod && ../../build/src/Mallard -i input.toml
 
 This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorial.md) walks through the input, the output and the comparison with the exact solution; [Getting started](docs/index.md) covers OpenMP and GPU builds.
 
+## Citing Mallard
+
+Cite the software with the metadata in its [`CITATION.cff`](https://github.com/MatthewBonanni/mallard/blob/main/CITATION.cff) (GitHub's "Cite this repository" button), and the papers behind the methods you use, listed with where Mallard uses them on the [References](docs/references.md) page.
+
 ## For fun
 
 <figure class="mallard-figure mallard-fun" markdown>
