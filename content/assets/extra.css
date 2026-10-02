@@ -177,3 +177,28 @@
   border: 1px solid var(--md-default-fg-color--lightest);
   background: #fff;
 }
+
+/* Home hero: facts */
+.md-typeset .mallard-facts {
+  list-style: none;
+  margin: 0 0 1.6rem;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: #e3d4cd;
+}
+.md-typeset .mallard-facts li { margin: 0; padding-left: 1rem; position: relative; }
+.md-typeset .mallard-facts li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--mallard-flame);
+}
+.md-typeset .mallard-facts strong { color: #fff; font-weight: 600; }
+.md-typeset .mallard-facts a { color: #fff; text-decoration: underline; text-decoration-color: #f28b1d99; text-underline-offset: 0.18em; }
+.md-typeset .mallard-facts a:hover { color: var(--mallard-flame); }

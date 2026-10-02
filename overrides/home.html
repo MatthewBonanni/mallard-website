@@ -9,6 +9,12 @@
           <img class="mallard-hero__wordmark" src="{{ 'assets/wordmark_dark.png' | url }}" alt="Mallard">
           <h1>Unstructured, GPU accelerated, high-order finite volume CFD solver</h1>
           <p>TENO-E reconstruction of orders 3 to 6 on triangles, quads and mixed meshes, Euler and Navier–Stokes, written in C++20 with Kokkos so one code runs on CPUs and GPUs.</p>
+          <ul class="mallard-facts">
+            <li><a href="{{ 'validation/#design-order-convergence' | url }}"><strong>Design order 3–6</strong></a> measured on triangles and quadrilaterals</li>
+            <li><a href="{{ 'validation/' | url }}"><strong>Validated</strong></a> against exact solutions, theory and published data</li>
+            <li><a href="{{ 'docs/performance/' | url }}"><strong>46 million</strong></a> cell time steps per second on one A100 (fifth-order TENO-E, 2D Euler)</li>
+            <li><strong>Open source</strong>, AGPL v3, 200+ tests on every change</li>
+          </ul>
           <a href="{{ 'docs/' | url }}" class="md-button md-button--primary">Get started</a>
           <a href="{{ 'validation/' | url }}" class="md-button">Validation</a>
           <a href="{{ 'gallery/' | url }}" class="md-button">Gallery</a>
