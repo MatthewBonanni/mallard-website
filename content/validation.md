@@ -73,7 +73,7 @@ Mach 1.758 flow (u = 600 m/s, T = 300 K, R = 277.4 J/(kg K)) over an 8° compres
 <figcaption>Left: pressure with the theoretical shock (dashed). Right: pressure across the shock at x = 1.51 m with MUSCL and fifth-order TENO-E against the theoretical jump.</figcaption>
 </figure>
 
-| | Shock angle | Error | p<sub>2</sub>/p<sub>1</sub> | Error |
+| Source | Shock angle | Error | p<sub>2</sub>/p<sub>1</sub> | Error |
 |---|---:|---:|---:|---:|
 | Theory | 42.816° | | 1.4984 | |
 | MUSCL | 42.814° | −0.002° | 1.4984 | < 0.01% |
@@ -150,7 +150,7 @@ Viscous flow past a circular cylinder at Re = U D / ν = 100 and Mach 0.2, the [
 <figcaption>Left: drag and lift coefficients. Right: Strouhal number, mean drag and lift amplitude relative to Liu et al. (1998).</figcaption>
 </figure>
 
-| | St | mean C<sub>D</sub> | C<sub>D</sub> amplitude | C<sub>L</sub> amplitude |
+| Source | St | mean C<sub>D</sub> | C<sub>D</sub> amplitude | C<sub>L</sub> amplitude |
 |---|---:|---:|---:|---:|
 | Mallard, 384 × 128 | 0.1644 | 1.365 | 0.013 | 0.330 |
 | Mallard, 768 × 256, first cell 0.005 D | 0.1650 | 1.365 | 0.014 | 0.330 |
@@ -169,7 +169,7 @@ The viscous shock tube of Daru & Tenaud (2009) at Re = 200: a diaphragm at x = 0
 <figcaption>Viscous shock tube at t = 1 on 1000 × 500 quadrilaterals. Top: density near the floor with the reference triple point and primary-vortex height. Bottom: density in the first row of cells against the tabulated wall density of Zhou et al. (2018).</figcaption>
 </figure>
 
-| | Mallard, 1000 × 500 | Zhou et al., 1500 × 750 (Table 1) |
+| Quantity | Mallard, 1000 × 500 | Zhou et al., 1500 × 750 (Table 1) |
 |---|---:|---:|
 | Lambda-shock triple point (x, y) | (0.581, 0.138) | (0.58, 0.137) |
 | Wall density minimum, at x | 36.90, 0.6575 | 36.96, 0.6577 |
