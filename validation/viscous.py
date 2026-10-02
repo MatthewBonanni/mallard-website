@@ -18,9 +18,9 @@ cfl = 0.8
 
 [mesh]
 type = "{mesh}"
-Nx = 4
+Nx = {ny // 4}
 Ny = {ny}
-Lx = {4.0 / ny}
+Lx = 0.25
 Ly = 1.0
 
 [initialize]

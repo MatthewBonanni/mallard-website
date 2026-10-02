@@ -15,7 +15,7 @@ Each result on this page comes from a run of Mallard 0.2.0 (double precision), u
 | [Shu–Osher problem](#shu-osher-problem) | L<sub>1</sub> density difference, 400 / 800 cells | 0.26 / 0.12 | WENO5 at 12,800 cells; WENO5 at the same resolution: 0.29 / 0.10 |
 | [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.82°, 1.4984 | 42.82°, 1.4984 (theory) |
 | [Isentropic vortex](#design-order-convergence) | order of accuracy, TENO-E orders 3–6 | 2.99, 4.02, 4.98, 6.03 (quads); 3.00, 4.01, 4.99, 5.99 (triangles) | 3, 4, 5, 6 |
-| [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.015% of U (quads); 0.39% of U, converging slowly (triangles) | exact solution |
+| [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows (`main`) | second order, 0.0099% of U (quads); order 1.7, 0.0089% of U (triangles) | exact solution |
 | [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude | 0.164, 1.365, 0.330 | 0.164–0.165, 1.33–1.35, 0.33–0.34 |
 | [Spherical explosion](#spherical-explosion) (3D, `main`) | mean density difference, 64³ hexahedra | 0.004 | 1D radial solution, 4000 cells |
 | [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D, `main`) | peak kinetic-energy dissipation rate, at t | 0.01302 at 8.12 (128³ equivalent) | 0.01286 at 8.97 (512³ spectral DNS) |
@@ -116,7 +116,7 @@ Every order converges at its design rate on both meshes: between the two finest 
 
 ## Viscous exact solutions {#viscous-exact-solutions}
 
-Three exact solutions of the compressible Navier–Stokes equations in a channel 0 < y < 1, computed on strips of 4 × N square cells (quadrilaterals, or the same split into triangles) with transmissive ends, μ constant, Pr = 0.72, R = 1, γ = 1.4, MUSCL reconstruction (Venkatakrishnan limiter), HLLC, SSPRK3 at CFL 0.8:
+Three exact solutions of the compressible Navier–Stokes equations in a channel 0 < y < 1, computed on strips 0.25 wide of N/4 × N square cells (quadrilaterals, or the same split into triangles) with transmissive ends, μ constant, Pr = 0.72, R = 1, γ = 1.4, MUSCL reconstruction (Venkatakrishnan limiter), HLLC, SSPRK3 at CFL 0.8, with Mallard's `main` branch at commit e8bad50 (after 0.2.0; it includes the viscous-flux fix for triangles of pull request #55):
 
 - **Couette flow:** a wall at rest at y = 0 and a wall moving at U = 0.1 at y = 1, both isothermal at T = 1, μ = 0.2, run to steady state (t = 15). Exact: u = U y.
 - **Stokes' first problem:** a wall started impulsively at U = 0.05 under fluid at rest, ν = 0.01, a symmetry plane at y = 1, t = 2. Exact: u = U erfc(y / 2√(νt)).
@@ -127,16 +127,16 @@ Three exact solutions of the compressible Navier–Stokes equations in a channel
 <figcaption>Couette flow and conduction on 16 rows of cells, Stokes' first problem on 32 rows, against the exact solutions.</figcaption>
 </figure>
 
-On quadrilaterals the linear Couette and conduction profiles are reproduced to round-off (largest error 2e-13 of U and 5e-14 of the temperature difference); on triangles the largest errors are 3.05 × 10<sup>−6</sup> and 2.07 × 10<sup>−4</sup>. For Stokes' first problem, the largest velocity error relative to U:
+On quadrilaterals the linear Couette and conduction profiles are reproduced to round-off (largest error 1e-13 of U and 5e-14 of the temperature difference); on triangles the largest errors are 7.41 × 10<sup>−7</sup> and 1.03 × 10<sup>−5</sup>. For Stokes' first problem, the largest velocity error relative to U:
 
 | Rows | Quadrilaterals | rate | Triangles | rate |
 |---:|---:|---:|---:|---:|
-| 16 | 1.03 × 10<sup>−2</sup> |  | 6.36 × 10<sup>−3</sup> |  |
-| 32 | 2.56 × 10<sup>−3</sup> | 2.01 | 5.00 × 10<sup>−3</sup> | 0.35 |
-| 64 | 6.87 × 10<sup>−4</sup> | 1.89 | 4.46 × 10<sup>−3</sup> | 0.17 |
-| 128 | 1.50 × 10<sup>−4</sup> | 2.19 | 3.94 × 10<sup>−3</sup> | 0.18 |
+| 16 | 6.56 × 10<sup>−3</sup> |  | 2.91 × 10<sup>−3</sup> |  |
+| 32 | 1.58 × 10<sup>−3</sup> | 2.05 | 9.33 × 10<sup>−4</sup> | 1.64 |
+| 64 | 3.97 × 10<sup>−4</sup> | 2.00 | 2.84 × 10<sup>−4</sup> | 1.72 |
+| 128 | 9.94 × 10<sup>−5</sup> | 2.00 | 8.90 × 10<sup>−5</sup> | 1.67 |
 
-The viscous terms converge at second order on quadrilaterals. On these right triangles the error decreases only slowly, from 0.64% to 0.39% of U between 16 and 128 rows, and is largest where the velocity profile is most curved (y ≈ 0.2), which points to an inconsistency of the viscous face gradients (averages of the two cells' least-squares gradients, corrected along the face normal) for the second derivative on this mesh. The error is too small to see in the figure, and on triangles stretched along the wall it does converge (4 × 128 cells on the unit square: 0.03% of U), but on isotropic triangles the viscous terms are not yet second-order accurate.
+The viscous terms converge at second order on quadrilaterals and at about 1.7 on these right triangles (0.0089% of U at 128 rows). An earlier version of this study, with Mallard 0.2.0 on strips only 4 cells wide, found the triangle error stalling near 0.4% of U. It came from the transmissive ends of the strip, not from the interior scheme: the viscous fluxes on triangles next to transmissive boundaries, which pull request #55 made second-order, and a one-sided gradient at those ends, which dominates when the strip narrows with refinement. The strip now keeps a fixed width of 0.25.
 
 ## Cylinder at Re = 100 {#cylinder-at-re-100}
 

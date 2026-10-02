@@ -20,7 +20,7 @@ With CUDA, Mallard runs on one GPU; `--kokkos-device-id=N` picks which.
 ## MPI
 
 !!! note "Not in Mallard 0.2.0"
-    MPI support is on Mallard's `main` branch and will be part of the next release; build from `main` to use it. The commands and results below were checked on `main` (commits bee090d and, for the partitioner and GPU-aware options, db1c3d2).
+    MPI support is on Mallard's `main` branch and will be part of the next release; build from `main` to use it. The commands and results below were checked on `main` (commits bee090d, db1c3d2 for the partitioner and GPU-aware options, and e8bad50 for rank-count independence).
 
 Build with MPI enabled; this needs an MPI implementation such as Open MPI or MPICH:
 
@@ -51,7 +51,7 @@ The pieces come from one of two partitioners, chosen with `partitioner` in a `[p
 
 On GPUs, build with `-DMallard_GPU_AWARE_MPI=ON` if your MPI is CUDA-aware: halo data then goes between GPUs directly instead of through host memory.
 
-Because every rank builds the same stencils as a serial run, results do not depend on the number of ranks, up to the round-off of summing fluxes in a different order: after 100 steps of the 2D Riemann problem on 400 × 400 quadrilaterals with fifth-order TENO-E, runs on 1 and 3 ranks differ by at most 4 × 10<sup>−15</sup> in density.
+Every rank builds the same stencils as a serial run and sums each cell's face fluxes in a fixed order, so the solution is bitwise identical on any number of ranks: after 100 steps of the 2D Riemann problem on 400 × 400 quadrilaterals with fifth-order TENO-E, the restart files of runs on 1 and 3 ranks are byte for byte the same. Sums over the whole domain that are written to output files, such as force monitors, are reduced across ranks and can differ in the last digits.
 
 With threads and ranks together, keep ranks × threads at or below the number of cores. On GPUs, use one rank per GPU; Kokkos maps each rank to its own device.
 
@@ -73,7 +73,7 @@ Boundary-zone output (`geometry = "<zone>"`) likewise holds each rank's own face
 
 ### Restarts
 
-Restart files have the same layout whatever the number of ranks, cells in global order, written collectively with MPI-IO. A run can therefore restart on a different number of ranks, or serially from a parallel run and vice versa: a run written at step 50 on 3 ranks and continued to step 100 on 2 ranks matches an uninterrupted serial run to 4 × 10<sup>−15</sup>.
+Restart files have the same layout whatever the number of ranks, cells in global order, written collectively with MPI-IO. A run can therefore restart on a different number of ranks, or serially from a parallel run and vice versa: a run written at step 50 on 3 ranks and continued to step 100 on 2 ranks ends with a restart file identical to that of an uninterrupted serial run.
 
 ## Multi-GPU scaling
 
