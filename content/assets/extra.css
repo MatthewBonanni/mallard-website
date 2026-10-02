@@ -69,7 +69,7 @@
 .mallard-hero .md-button--primary:hover { background: #ffa140; border-color: #ffa140; color: #24130a; }
 .mallard-hero .md-button:not(.md-button--primary) { color: #f6eee9; border-color: #f6eee966; }
 .mallard-hero .md-button:not(.md-button--primary):hover { color: var(--mallard-flame); border-color: var(--mallard-flame); }
-.mallard-hero__media img {
+.mallard-hero__media video {
   width: 100%;
   display: block;
   border-radius: 10px;
@@ -86,7 +86,7 @@
 
 /* Gallery */
 .mallard-gallery figure { margin: 0 0 2.4rem; }
-.mallard-gallery img {
+.mallard-gallery img, .mallard-gallery video {
   width: 100%;
   border-radius: 8px;
   border: 1px solid var(--md-default-fg-color--lightest);

@@ -4,7 +4,8 @@ title: Mallard
 hide:
   - navigation
   - toc
-hero_image: images/riemann_2d.gif
+hero_video: media/riemann_2d.mp4
+hero_poster: media/riemann_2d_poster.jpg
 hero_alt: Density in the 2D Riemann problem computed with Mallard
 hero_caption: 2D Riemann problem (configuration 3), fifth-order TENO-E on 980,000 triangles.
 ---

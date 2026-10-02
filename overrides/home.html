@@ -15,7 +15,9 @@
           <div class="mallard-version">Documentation for Mallard {{ config.extra.mallard_version }}</div>
         </div>
         <div class="mallard-hero__media">
-          <img src="{{ page.meta.hero_image | url }}" alt="{{ page.meta.hero_alt }}">
+          <video autoplay loop muted playsinline preload="metadata" poster="{{ page.meta.hero_poster | url }}" aria-label="{{ page.meta.hero_alt }}">
+            <source src="{{ page.meta.hero_video | url }}" type="video/mp4">
+          </video>
           <div class="mallard-hero__caption">{{ page.meta.hero_caption }}</div>
         </div>
       </div>
