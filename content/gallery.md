@@ -8,7 +8,7 @@ hide:
 
 # Gallery
 
-Every case here is one of Mallard's [examples](docs/examples.md); all but the last were run with release 0.2.0, and the last, `mallard`, is on the `main` branch. Quantitative comparisons with exact solutions and reference data are on the [validation](validation.md) page.
+Every case here is one of Mallard's [examples](docs/examples.md); the last, `mallard`, was added after release 0.2.0 and is on the `main` branch. Quantitative comparisons with exact solutions and reference data are on the [validation](validation.md) page.
 
 <div class="mallard-gallery" markdown>
 
