@@ -1,0 +1,81 @@
+site_name: Mallard
+site_description: High-order unstructured finite volume solver for compressible flow, in C++ with Kokkos.
+site_url: https://matthewbonanni.github.io/mallard/
+repo_url: https://github.com/MatthewBonanni/mallard
+repo_name: MatthewBonanni/mallard
+edit_uri: ""
+copyright: Mallard is free software under the GNU Affero General Public License v3.
+docs_dir: content
+site_dir: out
+
+theme:
+  name: material
+  custom_dir: overrides
+  logo: assets/icon.png
+  favicon: assets/favicon.png
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - assets/extra.css
+
+extra:
+  mallard_version: !ENV [MALLARD_VERSION, "dev"]
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/MatthewBonanni/mallard
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - Gallery: gallery.md
+  - Documentation:
+      - docs/index.md
+      - Input reference: docs/input.md
+      - Examples: docs/examples.md
+      - Numerical methods: docs/numerics/overview.md
+      - TENO-E details: docs/numerics/teno_e.md
+      - "Design: MPI": docs/design/mpi.md
+      - API reference: docs/api/index.html

@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+
+{% block tabs %}
+  {{ super() }}
+  <section class="mallard-hero">
+    <div class="md-grid">
+      <div class="mallard-hero__inner md-typeset">
+        <div>
+          <img class="mallard-hero__wordmark" src="{{ 'assets/wordmark_dark.png' | url }}" alt="Mallard">
+          <h1>High-order unstructured finite volumes for compressible flow</h1>
+          <p>TENO-E reconstruction of orders 3 to 6 on triangles, quads and mixed meshes, Euler and Navier–Stokes, written in C++20 with Kokkos so one code runs on CPUs and GPUs.</p>
+          <a href="{{ 'docs/' | url }}" class="md-button md-button--primary">Get started</a>
+          <a href="{{ 'gallery/' | url }}" class="md-button">Gallery</a>
+          <a href="{{ config.repo_url }}" class="md-button">GitHub</a>
+          <div class="mallard-version">Documentation for Mallard {{ config.extra.mallard_version }}</div>
+        </div>
+        <div class="mallard-hero__media">
+          <img src="{{ page.meta.hero_image | url }}" alt="{{ page.meta.hero_alt }}">
+          <div class="mallard-hero__caption">{{ page.meta.hero_caption }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  {{ page.content }}
+{% endblock %}

@@ -1,0 +1,11 @@
+out/
+.venv/
+.cache/
+# Pulled from the Mallard repository at build time
+content/docs/input.md
+content/docs/index.md
+content/docs/examples.md
+content/docs/numerics/
+content/docs/design/
+content/images/
+.preview/

@@ -1,0 +1,97 @@
+/* Mallard brand: plum (logo background), flame orange, mallard teal */
+:root {
+  --mallard-plum: #2b1a22;
+  --mallard-plum-2: #3d2632;
+  --mallard-flame: #f28b1d;
+  --mallard-teal: #12655f;
+}
+
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: var(--mallard-plum);
+  --md-primary-fg-color--light: var(--mallard-plum-2);
+  --md-primary-fg-color--dark: #1d1117;
+  --md-primary-bg-color: #f6eee9;
+  --md-primary-bg-color--light: #f6eee9b3;
+}
+
+[data-md-color-accent="custom"] {
+  --md-accent-fg-color: var(--mallard-flame);
+  --md-accent-fg-color--transparent: #f28b1d1a;
+}
+
+[data-md-color-scheme="default"] {
+  --md-typeset-a-color: var(--mallard-teal);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #171114;
+  --md-default-bg-color--light: #1d151a;
+  --md-code-bg-color: #241b20;
+  --md-typeset-a-color: #5fcfc1;
+}
+
+.md-typeset h1,
+.md-typeset h2 {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Home hero */
+.mallard-hero {
+  background: radial-gradient(1200px 500px at 85% -10%, #4a2b37 0%, var(--mallard-plum) 55%, #1f1218 100%);
+  color: #f6eee9;
+  padding: 3.2rem 0 3.6rem;
+}
+.mallard-hero .md-grid { padding: 0 0.8rem; }
+.mallard-hero__inner {
+  display: grid;
+  gap: 2.4rem;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+}
+.mallard-hero__wordmark { width: min(360px, 80%); display: block; margin-bottom: 1.4rem; }
+.mallard-hero h1 {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+  line-height: 1.2;
+  color: #fff;
+  margin: 0 0 1rem;
+}
+.mallard-hero p { font-size: 0.95rem; color: #e3d4cd; margin: 0 0 1.6rem; max-width: 46ch; }
+.mallard-hero .md-button { margin: 0 0.6rem 0.6rem 0; }
+.mallard-hero .md-button--primary {
+  background: var(--mallard-flame);
+  border-color: var(--mallard-flame);
+  color: #24130a;
+}
+.mallard-hero .md-button--primary:hover { background: #ffa140; border-color: #ffa140; color: #24130a; }
+.mallard-hero .md-button:not(.md-button--primary) { color: #f6eee9; border-color: #f6eee966; }
+.mallard-hero .md-button:not(.md-button--primary):hover { color: var(--mallard-flame); border-color: var(--mallard-flame); }
+.mallard-hero__media img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid #ffffff1f;
+  box-shadow: 0 18px 50px #00000066;
+  background: #000;
+}
+.mallard-hero__caption { font-size: 0.7rem; color: #c9b8b1; margin-top: 0.6rem; }
+.mallard-version { font-size: 0.7rem; color: #c9b8b1; margin-top: 0.2rem; }
+
+@media screen and (max-width: 60em) {
+  .mallard-hero__inner { grid-template-columns: 1fr; }
+}
+
+/* Gallery */
+.mallard-gallery figure { margin: 0 0 2.4rem; }
+.mallard-gallery img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: #000;
+}
+.mallard-gallery figcaption { max-width: none; text-align: left; font-size: 0.75rem; }
+.mallard-hero.md-typeset, .mallard-hero .md-typeset { color: #f6eee9; }
+.mallard-hero .md-typeset h1 { margin-top: 0; }
