@@ -24,7 +24,7 @@ Each result on this page comes from a run of Mallard 0.2.0 (double precision) wi
 The Riemann problem of Sod (1978): (ρ, u, p) = (1, 0, 1) for x < 0.5 and (0.125, 0, 0.1) for x > 0.5, γ = 1.4, at t = 0.2. The [`sod`](docs/examples.md) example: a strip of N × 4 square quadrilaterals with slip walls, HLLC flux, SSPRK3 at CFL 0.5.
 
 <figure class="mallard-figure" markdown>
-![Density, velocity and pressure of the Sod shock tube at t = 0.2 on 200 cells, TENO-E and MUSCL against the exact solution](validation/sod.png){ loading=lazy }
+![Density, velocity and pressure of the Sod shock tube at t = 0.2 on 200 cells, TENO-E and MUSCL against the exact solution](validation/sod.png){ loading=lazy width=2158 height=718 }
 <figcaption>Sod shock tube at t = 0.2 on 200 cells. Fifth-order TENO-E (dots) and MUSCL with the Venkatakrishnan limiter (line) against the exact solution.</figcaption>
 </figure>
 
@@ -44,7 +44,7 @@ Both schemes converge at close to first order, the expected rate for a solution 
 A Mach 3 shock running into a sinusoidal density field (Shu & Osher 1989), on [0, 10] (the usual [−5, 5] shifted by 5), t = 1.8, with the [`shu_osher`](docs/examples.md) example's fifth-order TENO-E on N × 4 square quadrilaterals. There is no exact solution; the reference is a one-dimensional fifth-order WENO-JS solution (characteristic, Lax–Friedrichs flux splitting, SSPRK3) on 12,800 cells, which differs from the same code on 6,400 cells by 0.007 in L<sub>1</sub>.
 
 <figure class="mallard-figure" markdown>
-![Density of the Shu-Osher problem at t = 1.8 on 200 and 400 cells against a fine-grid reference](validation/shu_osher.png){ loading=lazy }
+![Density of the Shu-Osher problem at t = 1.8 on 200 and 400 cells against a fine-grid reference](validation/shu_osher.png){ loading=lazy width=2158 height=778 }
 <figcaption>Shu–Osher problem at t = 1.8: fifth-order TENO-E with the RHLL flux on 200 and 400 cells against the 12,800-cell reference. Right: the entropy waves generated behind the shock, the part of the solution that separates high-order schemes.</figcaption>
 </figure>
 
@@ -60,7 +60,7 @@ L<sub>1</sub> density difference from the reference, ∫|ρ − ρ<sub>ref</sub>
 With the rotated-hybrid RHLL flux, Mallard converges to the reference and is as accurate as the one-dimensional WENO5 scheme up to 800 cells. With HLLC it does not converge: behind the Mach 3 shock, which moves along the grid lines of the strip, the flow develops transverse disturbances (on 1600 × 4 cells the density differs by up to 0.86 between rows of a problem that should stay one-dimensional) that destroy the entropy waves. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. With RHLL the rows still differ by up to 0.15 in the entropy-wave region, which accounts for part of its remaining difference from the one-dimensional reference at 1600 cells.
 
 <figure class="mallard-figure" markdown>
-![Entropy waves of the Shu-Osher problem on 1600 cells with HLLC and RHLL fluxes](validation/shu_osher_flux.png){ loading=lazy style="max-width: 32rem" }
+![Entropy waves of the Shu-Osher problem on 1600 cells with HLLC and RHLL fluxes](validation/shu_osher_flux.png){ loading=lazy width=1258 height=714 style="max-width: 32rem" }
 <figcaption>Entropy waves on 1600 cells with the HLLC and RHLL fluxes.</figcaption>
 </figure>
 
@@ -69,7 +69,7 @@ With the rotated-hybrid RHLL flux, Mallard converges to the reference and is as 
 Mach 1.758 flow (u = 600 m/s, T = 300 K, R = 277.4 J/(kg K)) over an 8° compression ramp, the [`wedge`](docs/examples.md) example: 160 × 120 quadrilaterals, HLLC, SSPRK3, run to t = 0.02 s (six flow-through times). The oblique-shock relations give a shock angle β = 42.816° and a pressure ratio p<sub>2</sub>/p<sub>1</sub> = 1.4984. The measured angle is a straight-line fit to the half-jump pressure contour for 0.7 < x < 1.6 m; the pressure ratio is the mean over the cells 0.03–0.12 m above the ramp for 0.9 < x < 1.1 m.
 
 <figure class="mallard-figure" markdown>
-![Pressure field over the 8 degree ramp with the theoretical shock angle, and a pressure profile across the shock](validation/wedge.png){ loading=lazy }
+![Pressure field over the 8 degree ramp with the theoretical shock angle, and a pressure profile across the shock](validation/wedge.png){ loading=lazy width=2136 height=808 }
 <figcaption>Left: pressure with the theoretical shock (dashed). Right: pressure across the shock at x = 1.51 m with MUSCL and fifth-order TENO-E against the theoretical jump.</figcaption>
 </figure>
 
@@ -86,7 +86,7 @@ The fitted shock passes through x = 0.4996 m at y = 0, the ramp corner being at 
 The isentropic vortex (Shu 1998) is an exact solution of the Euler equations: a vortex of strength β = 5 in a uniform stream (ρ, u, v, p) = (1, 1, 0.5, 1), γ = 1.4, translating without change of shape. It runs on [0, 14]² from (6.5, 6.75) to t = 1, with the exact moving solution imposed on all four boundaries (`dirichlet` conditions with expressions in x, y and t), on N × N quadrilaterals and on the same grids split into 2N² triangles, N = 28 to 448. TENO-E of orders 3 to 6, HLLC flux, RK4. The time step is 0.1 h for orders 3 and 4 and 0.1 h (h / h<sub>0</sub>)<sup>(p − 4)/4</sup> for orders p = 5 and 6 (h<sub>0</sub> = 1/2), so that the fourth-order time error falls at least as fast as the spatial error. The error is the area-weighted mean of |ρ − ρ<sub>exact</sub>| over all cells, with the exact cell averages from a degree-5 quadrature on 16 sub-triangles of each triangle.
 
 <figure class="mallard-figure" markdown>
-![Density error against cell size for TENO-E orders 3 to 6 on quadrilaterals and triangles](validation/convergence.png){ loading=lazy }
+![Density error against cell size for TENO-E orders 3 to 6 on quadrilaterals and triangles](validation/convergence.png){ loading=lazy width=2158 height=898 }
 <figcaption>Mean density error of the isentropic vortex at t = 1 against the cell size h (the edge of the quadrilaterals, which the triangles split in two). Dashed lines have slopes 3 to 6.</figcaption>
 </figure>
 
@@ -121,7 +121,7 @@ Three exact solutions of the compressible Navier–Stokes equations in a channel
 - **Conduction:** walls at rest at T = 1.2 and T = 0.8, μ = 0.2, steady state (t = 20). Exact: T = 1.2 − 0.4 y.
 
 <figure class="mallard-figure" markdown>
-![Velocity and temperature profiles of Couette flow, Stokes' first problem and conduction against exact solutions](validation/viscous.png){ loading=lazy }
+![Velocity and temperature profiles of Couette flow, Stokes' first problem and conduction against exact solutions](validation/viscous.png){ loading=lazy width=2158 height=748 }
 <figcaption>Couette flow and conduction on 16 rows of cells, Stokes' first problem on 32 rows, against the exact solutions.</figcaption>
 </figure>
 
@@ -141,30 +141,31 @@ The viscous terms converge at second order on quadrilaterals. On these right tri
 Viscous flow past a circular cylinder at Re = U D / ν = 100 and Mach 0.2, the [`cylinder`](docs/examples.md) example: an O-grid of 384 × 128 quadrilaterals reaching 25 D, first cell 0.01 D, generated with `tools/make_cylinder_mesh.py`. Adiabatic no-slip wall, characteristic far field, third-order TENO-E, HLLC, SSPRK3 at CFL 0.8, run to t U / D = 80. Shedding is fully developed by t U / D = 12, and the statistics are taken over the ten complete lift cycles after that.
 
 <figure class="mallard-figure" markdown>
-![Vorticity in the wake of the cylinder showing the von Karman vortex street](validation/cylinder_wake.png){ loading=lazy }
+![Vorticity in the wake of the cylinder showing the von Karman vortex street](validation/cylinder_wake.png){ loading=lazy width=1921 height=830 }
 <figcaption>Vorticity at t U / D = 80.</figcaption>
 </figure>
 
 <figure class="mallard-figure" markdown>
-![Drag and lift coefficient histories, and Strouhal number, mean drag and lift amplitude compared with two reference computations](validation/cylinder_forces.png){ loading=lazy }
+![Drag and lift coefficient histories, and Strouhal number, mean drag and lift amplitude compared with two reference computations](validation/cylinder_forces.png){ loading=lazy width=2158 height=778 }
 <figcaption>Left: drag and lift coefficients. Right: Strouhal number, mean drag and lift amplitude relative to Liu et al. (1998).</figcaption>
 </figure>
 
 | | St | mean C<sub>D</sub> | C<sub>D</sub> amplitude | C<sub>L</sub> amplitude |
 |---|---:|---:|---:|---:|
 | Mallard, 384 × 128 | 0.1644 | 1.365 | 0.013 | 0.330 |
+| Mallard, 768 × 256, first cell 0.005 D | 0.1650 | 1.365 | 0.014 | 0.330 |
 | Liu, Zheng & Sung (1998) | 0.164 | 1.350 | 0.012 | 0.339 |
 | Park, Kwon & Choi (1998) | 0.165 | 1.33 | | 0.33 |
 | Williamson (1996), experiment | 0.164 | | | |
 
-The references are incompressible computations (Liu et al., Park et al.) and experiments (Williamson); Mallard's run is compressible at Mach 0.2.
+The references are incompressible computations (Liu et al., Park et al.) and experiments (Williamson); Mallard's run is compressible at Mach 0.2. On a mesh refined by a factor of two in each direction (768 × 256 cells, first cell 0.005 D, run to t U / D = 60: seven lift cycles) the Strouhal number changes by 0.4%, and the mean drag and lift amplitude by less than 0.1%.
 
 ## Viscous shock tube {#viscous-shock-tube}
 
 The viscous shock tube of Daru & Tenaud (2009) at Re = 200: a diaphragm at x = 0.5 in a closed unit box releases a Mach 2.37 shock (density ratio 100) that reflects off the end wall and interacts with the boundary layer it has laid down on the floor, forming a lambda shock and a primary vortex by t = 1. The [`viscous_shock_tube`](docs/examples.md) example computes the lower half, [0, 1] × [0, 0.5], on 1000 × 500 quadrilaterals with no-slip adiabatic walls and a symmetry plane on top; Navier–Stokes, Pr = 0.73, fifth-order TENO-E, HLLC, SSPRK3 at CFL 0.8 (about 58,500 time steps, limited by viscosity). The reference is the grid-converged solution of Zhou et al. (2018) on 1500 × 750 cells.
 
 <figure class="mallard-figure" markdown>
-![Density contours of the viscous shock tube near the floor at t = 1, and wall density against the reference](validation/vst.png){ loading=lazy }
+![Density contours of the viscous shock tube near the floor at t = 1, and wall density against the reference](validation/vst.png){ loading=lazy width=2157 height=1925 }
 <figcaption>Viscous shock tube at t = 1 on 1000 × 500 quadrilaterals. Top: density near the floor with the reference triple point and primary-vortex height. Bottom: density in the first row of cells against the tabulated wall density of Zhou et al. (2018).</figcaption>
 </figure>
 
@@ -176,7 +177,7 @@ The viscous shock tube of Daru & Tenaud (2009) at Re = 200: a diaphragm at x = 0
 | Wall density, RMS difference at the 20 tabulated points | 0.53 | |
 | Wall density, largest difference | 1.72 (at x = 0.707, on the steep rise to the second peak) | |
 
-The triple point is the intersection of straight-line fits to the density-gradient ridges of the lambda's front leg and the reflected shock above it. The wall density varies from 37 to 118 along the floor, so the RMS difference is 0.7% of that range.
+The triple point is the intersection of straight-line fits to the density-gradient ridges of the lambda's front leg and the reflected shock above it. The wall density varies from 37 to 118 along the floor, so the RMS difference is 0.7% of that range. On a mesh coarsened by a factor of two in each direction (500 × 250) the RMS difference is 2.08, the largest 6.93, and the triple point is at (0.580, 0.140): the solution converges toward the reference with the mesh.
 
 ## References
 
