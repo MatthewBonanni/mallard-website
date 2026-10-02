@@ -1,5 +1,5 @@
 site_name: Mallard
-site_description: High-order unstructured finite volume solver for compressible flow, in C++ with Kokkos.
+site_description: Unstructured, GPU accelerated, high-order finite volume CFD solver
 site_url: https://matthewbonanni.github.io/mallard/
 repo_url: https://github.com/MatthewBonanni/mallard
 repo_name: MatthewBonanni/mallard
