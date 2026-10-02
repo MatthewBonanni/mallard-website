@@ -108,9 +108,10 @@
 }
 
 /* Validation figures and tables */
-.mallard-figure img {
+.mallard-figure img, .mallard-figure video {
   width: 100%;
   height: auto;
+  display: block;
   background: #fff;
   border-radius: 6px;
   border: 1px solid var(--md-default-fg-color--lightest);
@@ -163,3 +164,5 @@
 /* Footer copyright at AA contrast */
 .md-copyright { color: var(--md-footer-fg-color--light); }
 .md-copyright__highlight { color: var(--md-footer-fg-color--light); }
+
+.mallard-figure video { background: #000; }

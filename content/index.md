@@ -4,10 +4,10 @@ title: Mallard
 hide:
   - navigation
   - toc
-hero_video: media/hero.mp4
-hero_poster: media/hero_poster.jpg
-hero_alt: Density fields computed with Mallard for a double Mach reflection, a 2D Riemann problem and a viscous shock tube, beside a plot of the shock tube's wall density against reference data
-hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangles), 2D Riemann problem (1 million quadrilaterals) and viscous shock tube (500,000 quadrilaterals), whose wall density at t = 1 follows the reference of Zhou et al. (2018)."
+hero_video: media/mallard.mp4
+hero_poster: media/mallard_poster.jpg
+hero_alt: Mach number of Mach 8 flow over the silhouette of a flying mallard, showing the bow shocks off the bill, head and wing and the unsteady wake
+hero_caption: "Mach 8 flow over a mallard, from an impulsive start: Mach number on 1,067,536 triangles, fifth-order TENO-E with the RHLL flux."
 ---
 
 ## What's inside
