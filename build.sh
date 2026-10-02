@@ -13,7 +13,7 @@ src="$(cd "${1:?usage: build.sh MALLARD_CHECKOUT [REF]}" && pwd)"
 ref="${2:-$(git -C "$src" describe --tags --abbrev=0)}"
 awesome_version="v2.5.0"
 work="$(mktemp -d)"
-trap 'rm -rf "$work"; git -C "$src" checkout -q -- README.md 2>/dev/null || true' EXIT
+trap 'rm -rf "$work"' EXIT
 
 git -C "$src" -c advice.detachedHead=false checkout -q "$ref"
 version="${ref#v}"
@@ -22,11 +22,11 @@ echo "Building the Mallard website for $ref"
 # User guide pages from the Mallard repository (gitignored here)
 docs="$here/content/docs"
 rm -rf "$docs/input.md" "$docs/examples.md" "$docs/numerics" "$docs/design" "$here/content/images"
+# docs/images is not copied: no user-guide page uses it (the API reference gets its own copy)
 mkdir -p "$docs"
 cp "$src/docs/input.md" "$docs/input.md"
 cp -R "$src/docs/numerics" "$src/docs/design" "$docs/"
 cp "$src/examples/README.md" "$docs/examples.md"
-cp -R "$src/docs/images" "$here/content/images"
 python3 - "$src/README.md" "$docs/index.md" <<'EOF'
 import re, sys
 readme = open(sys.argv[1]).read()
@@ -39,22 +39,30 @@ open(sys.argv[2], "w").write("# Getting started\n\n" + body.rstrip() + "\n")
 EOF
 
 # Site
-(cd "$here" && MALLARD_VERSION="$version" mkdocs build --strict --quiet)
+# Not --quiet: it hides the warnings that --strict turns into errors
+(cd "$here" && MALLARD_VERSION="$version" mkdocs build --strict)
 
-# API reference
-sed -i.bak -e '/#gh-dark-mode-only/d' -e '/#gh-light-mode-only/d' "$src/README.md" && rm -f "$src/README.md.bak"
+# API reference: the source tree only (the user guide lives in the MkDocs pages above),
+# with a landing page from this repository
 curl -sSL "https://github.com/jothepro/doxygen-awesome-css/archive/refs/tags/${awesome_version}.tar.gz" | tar xz -C "$work"
 awesome="$(ls -d "$work"/doxygen-awesome-css-*)"
 (
     cat "$src/docs/Doxyfile"
+    echo "INPUT = ../src $here/doxygen/mainpage.md"
+    echo "EXCLUDE = ../src/external"
+    echo "USE_MDFILE_AS_MAINPAGE = $here/doxygen/mainpage.md"
+    echo "IMAGE_PATH ="
     echo "PROJECT_NUMBER = $version"
+    echo "PROJECT_BRIEF = \"$(sed -n 's/^site_description: //p' "$here/mkdocs.yml")\""
+    echo "PROJECT_LOGO = $here/content/assets/icon.png"
     echo "OUTPUT_DIRECTORY = $work/doxygen"
     echo "HTML_OUTPUT = html"
     echo "GENERATE_TREEVIEW = YES"
     echo "DISABLE_INDEX = NO"
     echo "FULL_SIDEBAR = NO"
+    echo "TREEVIEW_WIDTH = 300"
     echo "HTML_COLORSTYLE = LIGHT"
-    echo "HTML_EXTRA_STYLESHEET = $awesome/doxygen-awesome.css $awesome/doxygen-awesome-sidebar-only.css"
+    echo "HTML_EXTRA_STYLESHEET = $awesome/doxygen-awesome.css $awesome/doxygen-awesome-sidebar-only.css $here/doxygen/mallard.css"
 ) > "$work/Doxyfile"
 # Homebrew's doxygen 1.18 crashes intermittently (bus error); retry, and accept a
 # crash on exit only after it reported finishing
@@ -69,4 +77,9 @@ for attempt in 1 2 3; do
 done
 rm -rf "$here/out/docs/api"
 cp -R "$work/doxygen/html" "$here/out/docs/api"
+# A way back to the website from every API page
+find "$here/out/docs/api" -name '*.html' -exec sed -i.bak \
+    -e 's#<div id="projectbrief">\([^<]*\)</div>#<div id="projectbrief">\1<br><a class="mallard-site-link" href="../../">Mallard website</a></div>#' {} +
+find "$here/out/docs/api" -name '*.html.bak' -delete
+python3 "$here/check_links.py" "$here/out"
 echo "Done: $here/out"

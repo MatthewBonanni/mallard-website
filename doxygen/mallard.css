@@ -1,0 +1,60 @@
+/* Mallard brand on top of doxygen-awesome: plum, flame orange, mallard teal; Inter and Source Serif 4 */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,600&display=swap");
+
+html {
+    --primary-color: #12655f;
+    --primary-dark-color: #0c4a45;
+    --primary-light-color: #4f9a92;
+    --link-color: #12655f;
+    --page-foreground-color: #2b1a22;
+    --page-secondary-foreground-color: #6b5a62;
+    --side-nav-background: #faf6f3;
+    --separator-color: #e6dcd6;
+    --font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-family-monospace: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --side-nav-fixed-width: 300px;
+}
+
+@media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+        --primary-color: #5fcfc1;
+        --primary-dark-color: #9ae3d9;
+        --primary-light-color: #2f7f76;
+        --link-color: #5fcfc1;
+        --page-background-color: #171114;
+        --page-foreground-color: #e8dfdb;
+        --page-secondary-foreground-color: #a8999f;
+        --side-nav-background: #1d151a;
+        --separator-color: #3a2c33;
+        --code-background: #241b20;
+        --tablehead-background: #241b20;
+        --blockquote-background: #1d151a;
+        --fragment-background: #241b20;
+    }
+}
+
+h1, h2, h3, .title, #projectname {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+#projectname a, #projectname {
+    color: var(--page-foreground-color);
+}
+
+#projectnumber {
+    color: #f28b1d;
+}
+
+#projectlogo img {
+    max-height: 44px;
+    border-radius: 6px;
+}
+
+a.mallard-site-link {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 500;
+}
