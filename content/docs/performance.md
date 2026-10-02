@@ -13,7 +13,7 @@ Throughput of Mallard 0.2.0 on the 2D Riemann problem (configuration 3, the [`ri
 | TENO-E, order 3 | 117 | 7.3 | 137 | 16× |
 | TENO-E, order 5 | 553 | 21.7 | 46 | 25× |
 
-CPU: 6 of the 14 cores of an Apple M4 Pro, Kokkos `Threads` backend. GPU: one NVIDIA A100, Kokkos CUDA backend (`Kokkos_ARCH_AMPERE80`). Both builds are Release builds of the same source. The machines were shared with other work, so these numbers are indicative, not best case.
+CPU: 6 of the 14 cores of an Apple M4 Pro, Kokkos `Threads` backend. GPU: one NVIDIA A100, Kokkos CUDA backend (`Kokkos_ARCH_AMPERE80`) with a serial host backend, which slows the setup but not the time steps. Both builds are Release builds of the same source. The machines were shared with other work, so these numbers are indicative, not best case.
 
 At these rates the A100 advances the million-cell TENO-E 5 case by one time step in about 22 ms.
 
