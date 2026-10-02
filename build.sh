@@ -26,6 +26,12 @@ rm -rf "$docs/input.md" "$docs/examples.md" "$docs/numerics" "$docs/design" "$he
 mkdir -p "$docs"
 cp "$src/docs/input.md" "$docs/input.md"
 cp -R "$src/docs/numerics" "$src/docs/design" "$docs/"
+# Errata for released docs, until the next release ships the fix (errata/<ref>/*.sed, applied to the copied page of the same path)
+if [ -d "$here/errata/$ref" ]; then
+  (cd "$here/errata/$ref" && find . -name '*.sed') | while read -r f; do
+    sed -i.bak -f "$here/errata/$ref/$f" "$docs/${f%.sed}" && rm "$docs/${f%.sed}.bak"
+  done
+fi
 python3 - "$src/examples/README.md" "$docs/examples.md" "$here/content/examples.json" "$ref" <<'EOF'
 # The examples README, with each row of its table as a section with a still image
 import json, re, sys
