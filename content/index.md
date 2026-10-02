@@ -4,10 +4,10 @@ title: Mallard
 hide:
   - navigation
   - toc
-hero_video: media/riemann_2d.mp4
-hero_poster: media/riemann_2d_poster.jpg
-hero_alt: Density in the 2D Riemann problem computed with Mallard
-hero_caption: 2D Riemann problem (configuration 3), fifth-order TENO-E on 980,000 triangles.
+hero_video: media/hero.mp4
+hero_poster: media/hero_poster.jpg
+hero_alt: Density fields computed with Mallard for a double Mach reflection, a 2D Riemann problem and a viscous shock tube, beside a plot of the shock tube's wall density against reference data
+hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangles), 2D Riemann problem (1 million quadrilaterals) and viscous shock tube (500,000 quadrilaterals), whose wall density at t = 1 follows the reference of Zhou et al. (2018)."
 ---
 
 ## What's inside
@@ -48,22 +48,44 @@ hero_caption: 2D Riemann problem (configuration 3), fifth-order TENO-E on 980,00
 
     ---
 
-    Kokkos Serial, Threads, OpenMP and CUDA backends from one code base, with SSPRK3/RK4 time integration and exact restarts.
+    Kokkos Serial, Threads, OpenMP and CUDA backends from one code base, with SSPRK3 and RK4 time integration and restart files.
 
 </div>
 
 ## Validated
 
-Mallard ships with a test suite of more than 200 cases: Riemann solvers against an exact solver, design-order convergence of TENO-E on triangles and quadrilaterals, conservation and symmetry, Sod and oblique shocks, exact viscous solutions, and restart reproducibility. The [examples](docs/examples.md) reproduce reference results, for instance the cylinder at Re = 100 (Strouhal number 0.164, mean drag coefficient 1.36, lift amplitude 0.33).
+Every number below comes from a Mallard run compared with an exact solution, theory or published reference data; the [validation page](validation.md) has the setups, figures and error tables.
+
+<div class="mallard-stats" markdown>
+
+-   __Orders 3, 4, 5, 6__
+
+    measured for TENO-E of design orders 3–6 on triangles and on quadrilaterals ([isentropic vortex](validation.md#design-order-convergence))
+
+-   __42.82° and 1.4984__
+
+    shock angle and pressure ratio of a Mach 1.76 oblique shock; theory gives 42.82° and 1.4984 ([wedge](validation.md#oblique-shock))
+
+-   __St 0.164, C<sub>D</sub> 1.37, C<sub>L</sub>′ 0.33__
+
+    cylinder wake at Re = 100; reference computations give 0.164–0.165, 1.33–1.35 and 0.33–0.34 ([cylinder](validation.md#cylinder-at-re-100))
+
+-   __0.7% RMS__
+
+    difference in wall density (which ranges from 37 to 118) between the viscous shock tube and the grid-converged reference of Zhou et al. ([viscous shock tube](validation.md#viscous-shock-tube))
+
+</div>
+
+The test suite (more than 200 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
 
 ## Quick start
 
 ```bash
 git clone --recursive https://github.com/MatthewBonanni/mallard.git
 cd mallard
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_KOKKOS=OFF -DKokkos_ENABLE_OPENMP=ON
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_KOKKOS=OFF -DKokkos_ENABLE_THREADS=ON
 cmake --build build -j
-cd examples/riemann_2d && ../../build/src/Mallard -i input.toml
+cd examples/sod && ../../build/src/Mallard -i input.toml
 ```
 
-See [Getting started](docs/index.md) for GPU builds, inputs and post-processing.
+This builds for CPUs and runs the Sod shock tube in about a second. [First simulation](docs/tutorial.md) walks through the input, the output and the comparison with the exact solution; [Getting started](docs/index.md) covers OpenMP and GPU builds.

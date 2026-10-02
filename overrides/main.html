@@ -1,6 +1,37 @@
 {% extends "base.html" %}
 
+{% block htmltitle %}
+  {% if page and page.is_homepage %}
+    <title>{{ config.site_name }}: {{ config.site_description }}</title>
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
 {% block extrahead %}
+  {% if page and not page.is_homepage %}
+    {% set title = (page.meta.title or page.title | striptags) ~ " - " ~ config.site_name %}
+    {% set description = page.meta.description or config.site_description %}
+  {% else %}
+    {% set title = config.site_name %}
+    {% set description = config.site_description %}
+  {% endif %}
+  {% set image = config.site_url ~ "assets/og.png" %}
+  <meta name="theme-color" content="#2b1a22">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:description" content="{{ description }}">
+  {% if page and page.canonical_url %}<meta property="og:url" content="{{ page.canonical_url }}">{% endif %}
+  <meta property="og:image" content="{{ image }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Mallard logo beside a density field computed with Mallard">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title }}">
+  <meta name="twitter:description" content="{{ description }}">
+  <meta name="twitter:image" content="{{ image }}">
+  <link rel="apple-touch-icon" href="{{ 'assets/icon.png' | url }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
