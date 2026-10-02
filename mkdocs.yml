@@ -89,7 +89,6 @@ nav:
       - Input reference: docs/input.md
       - Examples: docs/examples.md
       - Running in parallel: docs/parallel.md
-      - 3D: docs/3d.md
       - Performance: docs/performance.md
       - Numerical methods: docs/numerics/overview.md
       - TENO-E details: docs/numerics/teno_e.md

@@ -31,17 +31,16 @@ def main():
     print(json.dumps(res, indent=1))
     json.dump(res, open(FIG / "tgv.json", "w"), indent=1)
 
-    fig, axs = plt.subplots(1, 2, figsize=(7.2, 2.7), sharey=True, constrained_layout=True)
-    for ax, y, title in ((axs[0], eps, r"Kinetic energy dissipation rate $-dE_k/dt$"),
-                         (axs[1], eps_resolved, r"Resolved dissipation $2\mu\,\Omega$ (enstrophy)")):
-        ax.plot(r[:, 0], r[:, 2], color=PLUM, lw=1.0, label=r"spectral DNS, 512$^3$")
-        ax.plot(t, y, color=TEAL, lw=1.2, label=r"Mallard, TENO-E 5, 128$^3$")
-        ax.set_xlim(0, 20)
-        ax.set_xlabel(r"$t\,V_0/L$")
-        ax.set_title(title)
-        ax.grid(alpha=0.25)
-    axs[0].set_ylabel(r"$\varepsilon\;L/V_0^3$")
-    axs[1].legend(loc="upper right")
+    fig, ax = plt.subplots(figsize=(5.0, 2.8), constrained_layout=True)
+    ax.plot(r[:, 0], r[:, 2], color=PLUM, lw=1.0, label=r"spectral DNS, 512$^3$")
+    ax.plot(t, eps, color=TEAL, lw=1.2, label=r"Mallard, TENO-E 5, 128$^3$ equivalent")
+    ax.set_xlim(0, 20)
+    ax.set_ylim(0, 0.0165)
+    ax.set_xlabel(r"$t\,V_0/L$")
+    ax.set_ylabel(r"$-dE_k/dt\;\;(L/V_0^3)$")
+    ax.set_title("Kinetic energy dissipation rate")
+    ax.grid(alpha=0.25)
+    ax.legend(loc="upper right")
     fig.savefig(FIG / "tgv.png")
 
 

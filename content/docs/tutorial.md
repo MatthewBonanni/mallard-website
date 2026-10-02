@@ -91,9 +91,44 @@ cd ../riemann_2d
 
 `animate.py` writes `riemann.mp4`, `riemann.gif` and the last frame as `riemann_final.png`: density with contours beside a numerical schlieren image, one frame per snapshot. Open `solut/riemann.pvd` in ParaView for anything else.
 
+## 6. A 3D case {#6-a-3d-case}
+
+!!! note "Not in Mallard 0.2.0"
+    3D is on Mallard's `main` branch and will be part of the next release; build from `main` to use it.
+
+The spatial dimension is fixed when Mallard is built. `-DMallard_DIM=3` gives a 3D solver for meshes of tetrahedra, hexahedra, prisms and pyramids, in any mix; build it in its own directory, next to the 2D one:
+
+```bash
+cmake -S . -B build3d -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_KOKKOS=OFF \
+      -DKokkos_ENABLE_THREADS=ON -DMallard_DIM=3
+cmake --build build3d -j
+```
+
+3D inputs use the same keys as 2D, with three differences: vectors have three components (`u = [u_x, u_y, u_z]`, `gravity`, `rhou`); expressions are in `x`, `y` and `z`; and generated meshes are `Nx × Ny × Nz` boxes with two more boundary zones, `back` (z = 0) and `front` (z = Lz). Each block of the box holds:
+
+| `[mesh] type` | Cells per block |
+|---|---|
+| `cartesian` | one hexahedron |
+| `cartesian_tet` | six tetrahedra |
+| `cartesian_prism` | two triangular prisms |
+| `cartesian_pyramid` | six pyramids |
+| `cartesian_mixed` | hexahedra, pyramids and prisms in successive thirds of x |
+
+Gmsh meshes (format 2.2 or 4.1) work as in 2D, each physical surface becoming a boundary zone. The output is VTU with 3D cells and the velocity as a 3-vector `U`.
+
+The `explosion_3d` example, a spherical explosion on 64³ hexahedra, takes about 10 minutes on 6 threads:
+
+```bash
+cd examples/explosion_3d
+../../build3d/src/Mallard -i input.toml --kokkos-num-threads=6
+```
+
+The [validation page](../validation.md#3d-cases) compares it with a one-dimensional radial solution, and also shows the Sod shock tube in 3D and the Taylor–Green vortex.
+
 ## Next steps
 
 - [Examples](examples.md): the other cases (Shu–Osher, double Mach reflection, oblique shock, cylinder wake) and how long they take.
 - [Input reference](input.md): meshes from Gmsh, boundary conditions, force monitors, restarts.
 - [Numerical methods](numerics/overview.md): what the reconstruction, fluxes and time integrators do.
 - [Validation](../validation.md): what accuracy to expect, case by case.
+- [Running in parallel](parallel.md): threads, GPUs and MPI.

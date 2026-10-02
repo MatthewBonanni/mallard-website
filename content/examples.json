@@ -38,7 +38,7 @@
   "explosion_3d": {
     "image": "validation/explosion.png",
     "alt": "Density of every cell of the 3D spherical explosion against radius, on a 1D reference",
-    "more": "docs/3d.md#example-spherical-explosion"
+    "more": "validation.md#spherical-explosion"
   },
   "mallard": {
     "image": "media/mallard_poster.jpg",

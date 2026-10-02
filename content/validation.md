@@ -9,11 +9,6 @@ description: Mallard against exact solutions, theory and reference data - shock 
 
 Each result on this page comes from a run of Mallard 0.2.0 (double precision), unless a section names a later commit, with the inputs described, compared with an exact solution, theory, or published reference data. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). Mallard's test suite checks many of the same properties at smaller scale on every change.
 
-<figure class="mallard-figure" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1800" height="1032" poster="../media/hero_poster.jpg" aria-label="Density in a double Mach reflection, a 2D Riemann problem and a viscous shock tube, the 3D Taylor-Green vortex, and the shock tube wall density and vortex dissipation rate against reference data"><source src="../media/hero.mp4" type="video/mp4"></video>
-<figcaption>Fifth-order TENO-E on the double Mach reflection (1.84 million triangles), the 3D Taylor–Green vortex (262,144 hexahedra), the 2D Riemann problem (1 million quadrilaterals) and the viscous shock tube (500,000 quadrilaterals). The shock tube wall density at t = 1 lands on the reference of Zhou et al. (2018) (<a href="#viscous-shock-tube">below</a>); the vortex dissipation rate follows the 512³ spectral DNS (<a href="../docs/3d/#taylor-green-vortex">3D page</a>).</figcaption>
-</figure>
-
 | Case | Quantity | Mallard | Reference |
 |---|---|---|---|
 | [Sod shock tube](#sod-shock-tube) | L<sub>1</sub> density error, 200 cells | 2.5 × 10<sup>−3</sup> | exact solution |
@@ -22,7 +17,8 @@ Each result on this page comes from a run of Mallard 0.2.0 (double precision), u
 | [Isentropic vortex](#design-order-convergence) | order of accuracy, TENO-E orders 3–6 | 2.99, 4.02, 4.98, 6.03 (quads); 3.00, 4.01, 4.99, 5.99 (triangles) | 3, 4, 5, 6 |
 | [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.015% of U (quads); 0.39% of U, converging slowly (triangles) | exact solution |
 | [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude | 0.164, 1.365, 0.330 | 0.164–0.165, 1.33–1.35, 0.33–0.34 |
-| [Taylor–Green vortex, Re = 1600](docs/3d.md#taylor-green-vortex) (3D, `main`) | peak kinetic-energy dissipation rate, at t | 0.01302 at 8.12 (128³ equivalent) | 0.01286 at 8.97 (512³ spectral DNS) |
+| [Spherical explosion](#spherical-explosion) (3D, `main`) | mean density difference, 64³ hexahedra | 0.004 | 1D radial solution, 4000 cells |
+| [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D, `main`) | peak kinetic-energy dissipation rate, at t | 0.01302 at 8.12 (128³ equivalent) | 0.01286 at 8.97 (512³ spectral DNS) |
 | [Viscous shock tube](#viscous-shock-tube) | wall density RMS difference; lambda-shock triple point | 0.53 (range 37–118); (0.581, 0.138) | Zhou et al. (2018), 1500 × 750 grid: (0.58, 0.137) |
 
 ## Sod shock tube {#sod-shock-tube}
@@ -185,12 +181,54 @@ The viscous shock tube of Daru & Tenaud (2009) at Re = 200: a diaphragm at x = 0
 
 The triple point is the intersection of straight-line fits to the density-gradient ridges of the lambda's front leg and the reflected shock above it. The wall density varies from 37 to 118 along the floor, so the RMS difference is 0.7% of that range. On a mesh coarsened by a factor of two in each direction (500 × 250) the RMS difference is 2.08, the largest 6.93, and the triple point is at (0.580, 0.140): the solution converges toward the reference with the mesh.
 
+## 3D cases {#3d-cases}
+
+The three cases below use Mallard's 3D build (`-DMallard_DIM=3`), which is on the `main` branch and not in release 0.2.0; each names the code it was run with. See [a 3D case](docs/tutorial.md#6-a-3d-case) for how to build and run in 3D.
+
+### Sod shock tube in 3D {#sod-3d}
+
+The Sod problem of the [Sod shock tube](#sod-shock-tube) section on a 200 × 4 × 4 box of hexahedra with slip walls on all six faces, MUSCL with the Venkatakrishnan limiter, HLLC, SSPRK3 (commit db1c3d2). The solution stays one-dimensional to round-off (transverse velocities below 10<sup>−13</sup>), and its L<sub>1</sub> density error against the exact solution, 2.974 × 10<sup>−3</sup>, equals that of the same scheme on 200 × 4 quadrilaterals in 2D to all four digits.
+
+### Spherical explosion {#spherical-explosion}
+
+The spherical explosion of Toro (*Riemann Solvers and Numerical Methods for Fluid Dynamics*, 3rd ed., §17.1.3), the [`explosion_3d`](https://github.com/MatthewBonanni/mallard/tree/main/examples/explosion_3d) example (commit db1c3d2): a sphere of radius 0.4 at ρ = 1, p = 1 in a gas at ρ = 0.125, p = 0.1, run to t = 0.25. One octant, [0, 1]³, is computed on 64³ hexahedra with symmetry planes at x, y, z = 0 and transmissive outer faces; fifth-order TENO-E, HLLC, SSPRK3. The reference is a solution of the radial Euler equations (fifth-order WENO on 4000 cells), from the validation scripts.
+
+<figure class="mallard-figure" markdown>
+![Density of every cell of the spherical explosion against its distance from the center, on top of a one-dimensional radial reference solution](validation/explosion.png){ loading=lazy width=2158 height=838 }
+<figcaption>Density at t = 0.25 of all 262,144 cells against their distance from the center, and the radial reference: the rarefaction running into the center, the contact near r = 0.6 and the shock near r = 0.8.</figcaption>
+</figure>
+
+The cells collapse onto one curve, so the computed flow stays spherically symmetric on the Cartesian mesh, and that curve follows the reference: the mean absolute difference in density is 0.004 (cells with r < 0.95), most of it at the discontinuities, which the 64³ mesh spreads over two to three cells.
+
+### Taylor–Green vortex at Re = 1600 {#taylor-green-vortex}
+
+The Taylor–Green vortex is the standard test of a scheme's resolution of transition and decaying turbulence (case C3.5 of the International Workshop on High-Order CFD Methods; Brachet et al. 1983): in a periodic box [−π, π]³, the velocity u = sin x cos y cos z, v = −cos x sin y cos z, w = 0 rolls up, breaks down into small vortices and decays, at Re = V<sub>0</sub>L/ν = 1600, Mach 0.1 and Pr = 0.71. Because the flow keeps the mirror symmetries of its initial state, Mallard's `taylor_green_3d` example (in [pull request #60](https://github.com/MatthewBonanni/mallard/pull/60), not yet merged into `main`) computes only the octant [0, π]³ with symmetry planes on all six faces: 64³ hexahedra there are equivalent to the workshop's 128³ grid of the full box. Fifth-order TENO-E, HLLC, SSPRK3 at CFL 0.8, to t = 20 (32,220 time steps, on one NVIDIA A100). The reference is the workshop's 512³ pseudo-spectral DNS. Once Mallard has periodic boundaries, the canonical full periodic box will replace these octant runs.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex colored by vorticity magnitude, beside the dissipation rate against the spectral DNS"><source src="../media/tgv.mp4" type="video/mp4"></video>
+<figcaption>Q-criterion isosurfaces colored by vorticity magnitude (the computed octant mirrored to the full box), and the kinetic-energy dissipation rate against the 512³ spectral DNS.</figcaption>
+</figure>
+
+<figure class="mallard-figure" markdown>
+![Kinetic energy dissipation rate of the Taylor-Green vortex against the spectral DNS](validation/tgv.png){ loading=lazy width=1498 height=838 style="max-width: 36rem" }
+<figcaption>Dissipation rate of the mean kinetic energy, −dE<sub>k</sub>/dt, against the 512³ spectral DNS.</figcaption>
+</figure>
+
+| | peak of −dE<sub>k</sub>/dt | at t |
+|---|---:|---:|
+| Spectral DNS, 512³ | 0.01286 | 8.97 |
+| Mallard, TENO-E 5, 128³ equivalent | 0.01302 | 8.12 |
+
+The kinetic energy decays like the DNS: the dissipation rate peaks 1.3% higher and 0.85 time units earlier, and follows the DNS through the turbulent decay to t = 20. The dissipation computed from the resolved enstrophy, 2μΩ, is well below the DNS (peak 0.0049 against 0.0129); whether this reflects excess numerical dissipation or the low-order evaluation of the enstrophy is under investigation. A run on a finer mesh is in progress.
+
 ## References
 
 - V. Daru and C. Tenaud, Numerical simulation of the viscous shock tube problem by using a high resolution monotonicity-preserving scheme, *Computers & Fluids* 38, 664–676 (2009).
+- M. E. Brachet, D. I. Meiron, S. A. Orszag, B. G. Nickel, R. H. Morf and U. Frisch, Small-scale structure of the Taylor–Green vortex, *J. Fluid Mech.* 130, 411–452 (1983).
 - C. Liu, X. Zheng and C. H. Sung, Preconditioned multigrid methods for unsteady incompressible flows, *J. Comput. Phys.* 139, 35–57 (1998).
 - J. Park, K. Kwon and H. Choi, Numerical solutions of flow past a circular cylinder at Reynolds numbers up to 160, *KSME Int. J.* 12, 1200–1205 (1998).
 - J. J. Quirk, A contribution to the great Riemann solver debate, *Int. J. Numer. Methods Fluids* 18, 555–574 (1994).
+- E. F. Toro, *Riemann Solvers and Numerical Methods for Fluid Dynamics*, 3rd ed., Springer (2009).
 - C.-W. Shu, Essentially non-oscillatory and weighted essentially non-oscillatory schemes for hyperbolic conservation laws, in *Advanced Numerical Approximation of Nonlinear Hyperbolic Equations*, Lecture Notes in Mathematics 1697, 325–432 (1998).
 - C.-W. Shu and S. Osher, Efficient implementation of essentially non-oscillatory shock-capturing schemes, II, *J. Comput. Phys.* 83, 32–78 (1989).
 - G. A. Sod, A survey of several finite difference methods for systems of nonlinear hyperbolic conservation laws, *J. Comput. Phys.* 27, 1–31 (1978).
