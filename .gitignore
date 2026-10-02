@@ -9,3 +9,4 @@ content/docs/numerics/
 content/docs/design/
 content/images/
 .preview/
+mkdocs.build.yml

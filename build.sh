@@ -77,7 +77,19 @@ EOF
 
 # Site
 # Not --quiet: it hides the warnings that --strict turns into errors
-(cd "$here" && MALLARD_VERSION="$version" mkdocs build --strict)
+# The release decides which design notes exist: list each of docs/design/ in the nav
+python3 - "$here/mkdocs.yml" "$docs/design" "$here/mkdocs.build.yml" <<'EOF'
+import pathlib, re, sys
+config, design, out = open(sys.argv[1]).read(), pathlib.Path(sys.argv[2]), sys.argv[3]
+lines = []
+for f in sorted(design.glob("*.md")):
+    title = re.search(r"^# (.+)$", f.read_text(), re.M).group(1).replace('"', "'")
+    title = re.sub(r",? *issue #\d+$", "", re.sub(r"^Design( note)?: *", "", title))
+    lines.append(f'      - "Design: {title}": docs/design/{f.name}')
+config = re.sub(r'^      - "Design: MPI": docs/design/mpi\.md$', "\n".join(lines), config, flags=re.M)
+open(out, "w").write(config)
+EOF
+(cd "$here" && MALLARD_VERSION="$version" mkdocs build --strict -f mkdocs.build.yml)
 
 # API reference: the source tree only (the user guide lives in the MkDocs pages above),
 # with a landing page from this repository
