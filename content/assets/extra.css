@@ -148,3 +148,18 @@
 }
 .md-typeset .mallard-stats > ul > li > p:first-child strong { font-weight: 600; }
 .md-typeset .mallard-stats > ul > li > p { margin: 0; }
+
+/* Accessibility: links in running text are underlined, not told apart by color alone */
+.md-typeset p a:not(.md-button):not(.headerlink),
+.md-typeset li a:not(.md-button),
+.md-typeset td a,
+.md-typeset figcaption a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.md-typeset .md-nav a, .md-typeset .headerlink { text-decoration: none; }
+
+/* Footer copyright at AA contrast */
+.md-copyright { color: var(--md-footer-fg-color--light); }
+.md-copyright__highlight { color: var(--md-footer-fg-color--light); }

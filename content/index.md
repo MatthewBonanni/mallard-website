@@ -88,4 +88,4 @@ cmake --build build -j
 cd examples/sod && ../../build/src/Mallard -i input.toml
 ```
 
-This builds for CPUs and runs the Sod shock tube in about a second. [First simulation](docs/tutorial.md) walks through the input, the output and the comparison with the exact solution; [Getting started](docs/index.md) covers OpenMP and GPU builds.
+This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorial.md) walks through the input, the output and the comparison with the exact solution; [Getting started](docs/index.md) covers OpenMP and GPU builds.

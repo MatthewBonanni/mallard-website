@@ -34,6 +34,7 @@ start = readme.index("## Building")
 end = readme.index("## Contributing")
 body = readme[start:end]
 body = body.replace("](docs/input.md)", "](input.md)").replace("](examples)", "](examples.md)")
+body = body.replace("[`docs/input.md`](input.md)", "[input reference](input.md)")
 body = re.sub(r"`\[?`?examples/`?\]?`", "examples", body)
 open(sys.argv[2], "w").write("# Getting started\n\n" + body.rstrip() + "\n")
 EOF

@@ -16,7 +16,16 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_KOKKOS=OFF -DKokkos_
 cmake --build build -j
 ```
 
-This builds Kokkos from the bundled submodule with its `Threads` backend, which works on Linux and macOS. The solver is `build/src/Mallard`; `build/test/MallardTest` runs the test suite. For OpenMP or NVIDIA GPU builds, change the Kokkos option as described in [Getting started](index.md).
+This builds Kokkos from the bundled submodule with its `Threads` backend, which works on Linux and macOS. The solver is `build/src/Mallard`; `build/test/MallardTest` runs the test suite. For OpenMP, use `-DKokkos_ENABLE_OPENMP=ON` instead (see [Getting started](index.md)). For an NVIDIA GPU, enable CUDA with the architecture of your GPU (here an A100), compile through Kokkos' `nvcc_wrapper`, and enable OpenMP as the host backend so that the setup work done on the CPU (TENO's stencil precomputation, which takes minutes for a million cells on one thread) runs in parallel:
+
+```bash
+cmake -S . -B build-cuda -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_KOKKOS=OFF \
+      -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_OPENMP=ON \
+      -DCMAKE_CXX_COMPILER=$PWD/src/external/kokkos/bin/nvcc_wrapper
+cmake --build build-cuda -j
+```
+
+The commands below use the CPU build; the CUDA build runs the same inputs with `build-cuda/src/Mallard -i input.toml`.
 
 The post-processing scripts in `tools/` need a few Python packages:
 
