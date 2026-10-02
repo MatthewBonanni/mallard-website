@@ -26,7 +26,25 @@ rm -rf "$docs/input.md" "$docs/examples.md" "$docs/numerics" "$docs/design" "$he
 mkdir -p "$docs"
 cp "$src/docs/input.md" "$docs/input.md"
 cp -R "$src/docs/numerics" "$src/docs/design" "$docs/"
-cp "$src/examples/README.md" "$docs/examples.md"
+python3 - "$src/examples/README.md" "$docs/examples.md" "$here/content/examples.json" "$ref" <<'EOF'
+# The examples README, with each row of its table as a section with a still image
+import json, re, sys
+readme, out, images, ref = open(sys.argv[1]).read(), sys.argv[2], json.load(open(sys.argv[3])), sys.argv[4]
+head, _, rest = readme.partition("| Case |")
+rows = re.findall(r"^\| `([a-z0-9_]+)` \| (.*?) \| (.*?) \|$", rest, re.M)
+cols = rest.split("\n")[0].split("|")[1].strip()
+body = [head.rstrip()]
+for name, what, size in rows:
+    body += ["", f"## `{name}` {{#{name.replace('_', '-')}}}", ""]
+    if name in images:
+        im = images[name]
+        body += [f"![{im['alt']}](../{im['image']}){{ loading=lazy .mallard-still }}", ""]
+    link = f"[Input file](https://github.com/MatthewBonanni/mallard/blob/{ref}/examples/{name}/input.toml)"
+    if name in images:
+        link += f" · [results](../{images[name]['more']})"
+    body += [what, "", f"*{cols}:* {size}. {link}"]
+open(out, "w").write("\n".join(body) + "\n")
+EOF
 python3 - "$src/README.md" "$docs/index.md" <<'EOF'
 import re, sys
 readme = open(sys.argv[1]).read()

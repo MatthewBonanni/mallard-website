@@ -1,0 +1,48 @@
+{
+  "_comment": "Still image for each example on the Examples page (paths relative to content/); build.sh reads this. Examples without an entry are listed without a picture.",
+  "sod": {
+    "image": "validation/sod.png",
+    "alt": "Density, velocity and pressure of the Sod shock tube against the exact solution",
+    "more": "validation.md#sod-shock-tube"
+  },
+  "riemann_2d": {
+    "image": "media/riemann_2d_poster.jpg",
+    "alt": "Density and numerical schlieren of the 2D Riemann problem on triangles at t = 0.8",
+    "more": "gallery.md"
+  },
+  "riemann_2d_quads": {
+    "image": "media/riemann_2d_quads_poster.jpg",
+    "alt": "Density and numerical schlieren of the 2D Riemann problem on quadrilaterals at t = 0.8",
+    "more": "gallery.md"
+  },
+  "double_mach": {
+    "image": "media/double_mach_poster.jpg",
+    "alt": "Density and numerical schlieren of the double Mach reflection at t = 0.2",
+    "more": "gallery.md"
+  },
+  "wedge": {
+    "image": "validation/wedge.png",
+    "alt": "Pressure over the 8 degree ramp with the theoretical oblique shock",
+    "more": "validation.md#oblique-shock"
+  },
+  "cylinder": {
+    "image": "validation/cylinder_wake.png",
+    "alt": "Vorticity in the wake of the cylinder at Re = 100",
+    "more": "validation.md#cylinder-at-re-100"
+  },
+  "viscous_shock_tube": {
+    "image": "validation/vst.png",
+    "alt": "Density near the floor of the viscous shock tube at t = 1 and wall density against the reference",
+    "more": "validation.md#viscous-shock-tube"
+  },
+  "explosion_3d": {
+    "image": "validation/explosion.png",
+    "alt": "Density of every cell of the 3D spherical explosion against radius, on a 1D reference",
+    "more": "docs/3d.md#example-spherical-explosion"
+  },
+  "mallard": {
+    "image": "media/mallard_poster.jpg",
+    "alt": "Mach number of Mach 8 flow over a flying mallard at t = 0.75",
+    "more": "gallery.md"
+  }
+}

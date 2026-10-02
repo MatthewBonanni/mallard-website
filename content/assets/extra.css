@@ -168,3 +168,12 @@
 .mallard-figure video { background: #000; }
 
 .md-typeset figure.mallard-fun { max-width: 36rem; margin-left: 0; }
+
+.md-typeset img.mallard-still {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: #fff;
+}
