@@ -8,13 +8,18 @@ hide:
 
 # Gallery
 
-Every case here is one of Mallard's [examples](docs/examples.md); the last, `mallard`, was added after release 0.2.0 and is on the `main` branch. Quantitative comparisons with exact solutions and reference data are on the [validation](validation.md) page.
+Every case here is one of Mallard's [examples](docs/examples.md); the 3D Taylor–Green vortex and the mallard were added after release 0.2.0 and are on the `main` branch. Quantitative comparisons with exact solutions and reference data are on the [validation](validation.md) page.
 
 <div class="mallard-gallery" markdown>
 
 <figure class="mallard-gallery__feature" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="2100" height="1080" poster="../media/riemann_2d_quads_poster.jpg" aria-label="Density in the 2D Riemann problem on quadrilaterals, t = 0 to 0.8"><source src="../media/riemann_2d_quads.mp4" type="video/mp4"></video>
 <figcaption markdown>**2D Riemann problem, configuration 3** (Lax & Liu 1998). Four shocks interact and roll up the slip lines between quadrants into Kelvin–Helmholtz vortices. One million quadrilaterals, fifth-order TENO-E, HLLC flux, SSPRK3; density and numerical schlieren, t = 0 to 0.8.</figcaption>
+</figure>
+
+<figure markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex colored by vorticity magnitude, beside the dissipation rate against the spectral DNS"><source src="../media/tgv.mp4" type="video/mp4"></video>
+<figcaption markdown>**Taylor–Green vortex, Re = 1600, in 3D.** Transition to turbulence in a periodic box: Q-criterion isosurfaces colored by vorticity magnitude, and the kinetic-energy dissipation rate against the 512³ spectral DNS of the High-Order CFD Workshop. Fifth-order TENO-E on 64³ hexahedra in one symmetric octant (128³ equivalent), Mach 0.1; the `taylor_green_3d` example, from Mallard's `main` branch. [Validation details](docs/3d.md#taylor-green-vortex).</figcaption>
 </figure>
 
 <figure class="mallard-gallery__pair" markdown>

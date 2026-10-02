@@ -22,6 +22,7 @@ Each result on this page comes from a run of Mallard 0.2.0 (double precision), u
 | [Isentropic vortex](#design-order-convergence) | order of accuracy, TENO-E orders 3–6 | 2.99, 4.02, 4.98, 6.03 (quads); 3.00, 4.01, 4.99, 5.99 (triangles) | 3, 4, 5, 6 |
 | [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.015% of U (quads); 0.39% of U, converging slowly (triangles) | exact solution |
 | [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude | 0.164, 1.365, 0.330 | 0.164–0.165, 1.33–1.35, 0.33–0.34 |
+| [Taylor–Green vortex, Re = 1600](docs/3d.md#taylor-green-vortex) (3D, `main`) | peak kinetic-energy dissipation rate, at t | 0.01302 at 8.12 (128³ equivalent) | 0.01286 at 8.97 (512³ spectral DNS) |
 | [Viscous shock tube](#viscous-shock-tube) | wall density RMS difference; lambda-shock triple point | 0.53 (range 37–118); (0.581, 0.138) | Zhou et al. (2018), 1500 × 750 grid: (0.58, 0.137) |
 
 ## Sod shock tube {#sod-shock-tube}
