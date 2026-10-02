@@ -18,3 +18,5 @@ CPU: 6 of the 14 cores of an Apple M4 Pro, Kokkos `Threads` backend. GPU: one NV
 At these rates the A100 advances the million-cell TENO-E 5 case by one time step in about 22 ms.
 
 Fifth-order TENO-E costs 4.7 times as much per step as third order on the CPU and 3.0 times on the A100; its central stencil has 28 neighbors of each cell, against 10 for third order.
+
+For runs on several GPUs, see [multi-GPU scaling](parallel.md#multi-gpu-scaling).
