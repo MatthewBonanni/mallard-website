@@ -57,6 +57,24 @@ body = re.sub(r"`\[?`?examples/`?\]?`", "examples", body)
 open(sys.argv[2], "w").write("# Getting started\n\n" + body.rstrip() + "\n")
 EOF
 
+# Page descriptions for search engines and link previews
+python3 - "$docs" <<'EOF'
+import json, sys, pathlib
+descriptions = {
+    "index.md": "Build Mallard with CMake and Kokkos for CPUs or GPUs, run it, test it and post-process its output.",
+    "input.md": "Every key of Mallard's TOML input file: run control, meshes, physics, initial and boundary conditions, numerics and output.",
+    "examples.md": "Mallard's example cases, from the Sod shock tube to the double Mach reflection and a viscous shock tube, with their cost and results.",
+    "numerics/overview.md": "Mallard's numerical methods: finite volume discretization, reconstruction, Riemann solvers, boundary conditions, viscous fluxes and known limitations.",
+    "numerics/teno_e.md": "How Mallard implements TENO-E reconstruction of orders 3 to 6 on unstructured triangle and quadrilateral meshes.",
+    "design/mpi.md": "Design of Mallard's distributed-memory (MPI) parallelization: partitioning, halos and communication.",
+}
+root = pathlib.Path(sys.argv[1])
+for name, text in descriptions.items():
+    f = root / name
+    if f.exists() and not f.read_text().startswith("---"):
+        f.write_text(f"---\ndescription: {json.dumps(text)}\n---\n\n" + f.read_text())
+EOF
+
 # Site
 # Not --quiet: it hides the warnings that --strict turns into errors
 (cd "$here" && MALLARD_VERSION="$version" mkdocs build --strict)
