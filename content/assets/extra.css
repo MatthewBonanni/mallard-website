@@ -166,3 +166,5 @@
 .md-copyright__highlight { color: var(--md-footer-fg-color--light); }
 
 .mallard-figure video { background: #000; }
+
+.md-typeset figure.mallard-fun { max-width: 36rem; margin-left: 0; }
