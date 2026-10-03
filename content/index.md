@@ -9,7 +9,7 @@ hero_poster: media/hero_poster.jpg
 hero_width: 1800
 hero_height: 1032
 hero_alt: Density fields of a double Mach reflection, a 2D Riemann problem and a viscous shock tube, vortex structures of the 3D Taylor-Green vortex, and plots of the shock tube wall density and the vortex dissipation rate against reference data
-hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangles), 3D Taylor–Green vortex at Re = 1600 (262,144 hexahedra), 2D Riemann problem (1 million quadrilaterals) and viscous shock tube (500,000 quadrilaterals). The shock tube wall density lands on the reference of Zhou et al. (2018); the vortex dissipation rate follows the 512³ spectral DNS."
+hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangles), 3D Taylor–Green vortex at Re = 1600 (full periodic box, 2.1 million hexahedra), 2D Riemann problem (1 million quadrilaterals) and viscous shock tube (500,000 quadrilaterals). The shock tube wall density lands on the reference of Zhou et al. (2018); the vortex dissipation rate follows the 512³ spectral DNS."
 ---
 
 ## What's inside
