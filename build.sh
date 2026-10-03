@@ -21,11 +21,15 @@ echo "Building the Mallard website for $ref"
 
 # User guide pages from the Mallard repository (gitignored here)
 docs="$here/content/docs"
-rm -rf "$docs/input.md" "$docs/examples.md" "$docs/numerics" "$docs/design" "$here/content/images"
-# docs/images is not copied: no user-guide page uses it (the API reference gets its own copy)
+rm -rf "$docs/input.md" "$docs/examples.md" "$docs/numerics" "$docs/design" "$docs/images" "$here/content/images"
 mkdir -p "$docs"
 cp "$src/docs/input.md" "$docs/input.md"
 cp -R "$src/docs/numerics" "$src/docs/design" "$docs/"
+# Of docs/images, only the pictures these pages show (the README's are large)
+rm -rf "$docs/images"
+{ grep -ho '\.\./images/[A-Za-z0-9_.-]*' "$docs/input.md" "$docs/numerics"/*.md "$docs/design"/*.md || true; } | sort -u | while read -r img; do
+  mkdir -p "$docs/images" && cp "$src/docs/images/${img#../images/}" "$docs/images/"
+done
 # Errata for released docs, until the next release ships the fix (errata/<ref>/*.sed, applied to the copied page of the same path)
 if [ -d "$here/errata/$ref" ]; then
   (cd "$here/errata/$ref" && find . -name '*.sed') | while read -r f; do
