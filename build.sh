@@ -111,6 +111,8 @@ descriptions = {
     "numerics/overview.md": "Mallard's numerical methods: finite volume discretization, reconstruction, Riemann solvers, boundary conditions, viscous fluxes and known limitations.",
     "numerics/teno_e.md": "How Mallard implements TENO-E reconstruction of orders 3 to 6 on unstructured triangle and quadrilateral meshes.",
     "design/mpi.md": "Design of Mallard's distributed-memory (MPI) parallelization: partitioning, halos and communication.",
+    "design/chemistry.md": "Design of Mallard's finite-rate chemistry: multicomponent state, thermally perfect mixtures, numerics, stiff integration, coupling, validation.",
+    "design/periodic.md": "Design of periodic boundaries in Mallard: generated and Gmsh meshes, stencils across the seam.",
 }
 root = pathlib.Path(sys.argv[1])
 for name, text in descriptions.items():

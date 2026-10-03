@@ -7,12 +7,12 @@ description: Mallard against exact solutions, theory and reference data - shock 
 
 # Validation
 
-Each result on this page comes from a run of Mallard 0.3.0 (double precision, default settings, including the low-Mach correction of the convective flux), unless a section says otherwise, with the inputs described, compared with an exact solution, theory, or published reference data. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). Mallard's test suite checks many of the same properties at smaller scale on every change.
+Each result on this page comes from a run of Mallard 0.4.0 (double precision, default settings, including the low-Mach correction of the convective flux), unless a section says otherwise, with the inputs described, compared with an exact solution, theory, or published reference data. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). Mallard's test suite checks many of the same properties at smaller scale on every change.
 
 | Case | Quantity | Mallard | Reference |
 |---|---|---|---|
-| [Sod shock tube](#sod-shock-tube) | L<sub>1</sub> density error, 200 cells | 2.3 × 10<sup>−3</sup> | exact solution |
-| [Shu–Osher problem](#shu-osher-problem) | L<sub>1</sub> density difference, 400 / 800 cells | 0.26 / 0.12 | WENO5 at 12,800 cells; WENO5 at the same resolution: 0.29 / 0.10 |
+| [Sod shock tube](#sod-shock-tube) | L<sub>1</sub> density error, 200 cells | 2.4 × 10<sup>−3</sup> | exact solution |
+| [Shu–Osher problem](#shu-osher-problem) | L<sub>1</sub> density difference, 400 / 800 cells | 0.20 / 0.11 | WENO5 at 12,800 cells; WENO5 at the same resolution: 0.29 / 0.10 |
 | [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.82°, 1.4984 | 42.82°, 1.4984 (theory) |
 | [Isentropic vortex](#design-order-convergence) | order of accuracy, TENO-E orders 3–6 | 2.99, 4.02, 4.98, 6.03 (quads); 3.00, 4.01, 4.99, 5.99 (triangles) | 3, 4, 5, 6 |
 | [Vortex across a periodic seam](#periodic-seams) | order of accuracy, TENO-E orders 3–6 | 2.91, 4.08, 4.87, 6.15 (quads); 2.98, 4.03, 4.94, 6.05 (triangles) | 3, 4, 5, 6 |
@@ -34,16 +34,18 @@ The Riemann problem of Sod (1978): (ρ, u, p) = (1, 0, 1) for x < 0.5 and (0.125
 <figcaption>Sod shock tube at t = 0.2 on 200 cells. Fifth-order TENO-E (dots) and MUSCL with the Venkatakrishnan limiter (line) against the exact solution.</figcaption>
 </figure>
 
-L<sub>1</sub> error of the cell-averaged density, ∫|ρ − ρ<sub>exact</sub>| dx, with the exact solution averaged over each cell:
+L<sub>1</sub> error of the cell-averaged density, ∫|ρ − ρ<sub>exact</sub>| dx, with the exact solution averaged over each cell, over all cells of the strip:
 
 | Cells | TENO-E 5 | rate | MUSCL | rate |
 |---:|---:|---:|---:|---:|
-| 100 | 3.92 × 10<sup>−3</sup> |  | 4.46 × 10<sup>−3</sup> |  |
-| 200 | 2.28 × 10<sup>−3</sup> | 0.78 | 2.65 × 10<sup>−3</sup> | 0.75 |
-| 400 | 1.21 × 10<sup>−3</sup> | 0.92 | 1.43 × 10<sup>−3</sup> | 0.89 |
-| 800 | 6.01 × 10<sup>−4</sup> | 1.01 | 7.65 × 10<sup>−4</sup> | 0.90 |
+| 100 | 4.16 × 10<sup>−3</sup> |  | 4.46 × 10<sup>−3</sup> |  |
+| 200 | 2.41 × 10<sup>−3</sup> | 0.79 | 2.65 × 10<sup>−3</sup> | 0.75 |
+| 400 | 1.27 × 10<sup>−3</sup> | 0.93 | 1.43 × 10<sup>−3</sup> | 0.89 |
+| 800 | 7.24 × 10<sup>−4</sup> | 0.81 | 7.65 × 10<sup>−4</sup> | 0.90 |
 
-Both schemes converge at close to first order, the expected rate for a solution with a shock and a contact discontinuity; TENO-E has 12–21% lower error than MUSCL. The shock spans two cells and the contact discontinuity about five.
+Both schemes converge at close to first order, the expected rate for a solution with a shock and a contact discontinuity; TENO-E has 5–12% lower error than MUSCL. The shock spans two cells and the contact discontinuity about five.
+
+Mallard 0.4.0 changed TENO-E next to walls (complete stencils and a conditioning bound for the central stencil), so that the four rows of the strip now stay identical up to 400 cells; with 0.3.0 the rows next to the slip walls differed from the inner two by up to 0.014 in density, and the 0.3.0 errors on this page (3.92, 2.28, 1.21 and 0.60 × 10<sup>−3</sup>) were those of the bottom row alone. On 800 cells the rows still differ by up to 0.005 behind the shock with HLLC, and by 0.001 with HLL or RHLL: the grid-aligned shock instability discussed under [Shu–Osher](#shu-osher-problem). MUSCL results are unchanged from 0.3.0.
 
 ## Shu–Osher problem {#shu-osher-problem}
 
@@ -58,12 +60,12 @@ L<sub>1</sub> density difference from the reference, ∫|ρ − ρ<sub>ref</sub>
 
 | Cells | Mallard, RHLL | Mallard, HLLC | 1D WENO5, same cells |
 |---:|---:|---:|---:|
-| 200 | 0.64 | 0.68 | 0.75 |
-| 400 | 0.26 | 0.57 | 0.29 |
-| 800 | 0.12 | 0.66 | 0.10 |
-| 1600 | 0.082 | 0.71 | 0.048 |
+| 200 | 0.66 | 0.65 | 0.75 |
+| 400 | 0.20 | 0.20 | 0.29 |
+| 800 | 0.11 | 0.49 | 0.10 |
+| 1600 | 0.059 | 0.78 | 0.048 |
 
-With the rotated-hybrid RHLL flux, Mallard converges to the reference, more accurate than the one-dimensional WENO5 scheme on 200 and 400 cells and within 15% of it on 800. With HLLC it does not converge: behind the Mach 3 shock, which moves along the grid lines of the strip, the flow develops transverse disturbances (on 1600 × 4 cells the density differs by up to 1.2 between rows of a problem that should stay one-dimensional) that destroy the entropy waves. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. The example has used RHLL since Mallard 0.3.0 (0.2.0's used HLLC). With RHLL the rows still differ by up to 0.25 in the entropy-wave region, which accounts for part of its remaining difference from the one-dimensional reference at 1600 cells.
+With the rotated-hybrid RHLL flux, Mallard converges to the reference, more accurate than the one-dimensional WENO5 scheme on 200 and 400 cells and within 7% of it on 800 (0.4.0 lowered the error on 400 and 1600 cells by 22% and 28% from 0.3.0's 0.26 and 0.082). With HLLC it does not converge beyond 400 cells: behind the Mach 3 shock, which moves along the grid lines of the strip, the flow develops transverse disturbances (on 1600 × 4 cells the density differs by up to 1.1 between rows of a problem that should stay one-dimensional) that destroy the entropy waves. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. The example has used RHLL since Mallard 0.3.0 (0.2.0's used HLLC). With RHLL the rows still differ by up to 0.26 on 800 cells and 0.16 on 1600 in the entropy-wave region, which accounts for part of its remaining difference from the one-dimensional reference at 1600 cells.
 
 <figure class="mallard-figure" markdown>
 ![Entropy waves of the Shu-Osher problem on 1600 cells with HLLC and RHLL fluxes](validation/shu_osher_flux.png){ loading=lazy width=1258 height=714 style="max-width: 32rem" }

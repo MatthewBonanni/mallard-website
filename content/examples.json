@@ -69,5 +69,20 @@
     "image": "media/sphere_re300_poster.jpg",
     "alt": "Hairpin vortices shed by a sphere at Re = 300",
     "more": "validation.md#sphere-re300"
+  },
+  "h2_ignition": {
+    "image": "validation/ignition.png",
+    "alt": "Temperature history of constant-volume H2/air ignition and ignition delays of H2/air and CH4/air against Cantera",
+    "more": "validation.md#ignition"
+  },
+  "reactive_shock_tube": {
+    "image": "validation/reactive_shock_tube.png",
+    "alt": "Temperature and pressure of the reactive shock tube at 170 and 230 microseconds on three meshes",
+    "more": "validation.md#reactive-shock-tube"
+  },
+  "detonation_1d": {
+    "image": "validation/detonation.png",
+    "alt": "Front speed of the 1D CJ detonation against the CJ speed, and pressure behind the front against the ZND profile",
+    "more": "validation.md#detonation"
   }
 }

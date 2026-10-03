@@ -34,17 +34,17 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_poster.jpg" aria-label="Mach number and schlieren of Mach 3 flow over a sphere, with the bow-shock standoff distance against Billig's correlation"><source src="../media/sphere.mp4" type="video/mp4"></video>
-<figcaption markdown>**Mach 3 flow over a sphere, in 3D.** The bow shock forms from an impulsive start and settles by t u<sub>∞</sub>/D ≈ 1.2 at a standoff of 0.226 R, against 0.205 R from Billig's correlation; the stagnation pressure, 12.0 p<sub>∞</sub>, matches the Rayleigh pitot value 12.06. 800,000 tetrahedra in a quarter domain with two symmetry planes, fifth-order TENO-E with bound-preserving scaling, HLL flux, on 4 GPUs; the `sphere_mach3` example, added after release 0.3.0. [Validation details](validation.md#mach-3-sphere).</figcaption>
+<figcaption markdown>**Mach 3 flow over a sphere, in 3D.** The bow shock forms from an impulsive start and settles by t u<sub>∞</sub>/D ≈ 1.2 at a standoff of 0.226 R, against 0.205 R from Billig's correlation; the stagnation pressure, 12.0 p<sub>∞</sub>, matches the Rayleigh pitot value 12.06. 800,000 tetrahedra in a quarter domain with two symmetry planes, fifth-order TENO-E with bound-preserving scaling, HLL flux, on 4 GPUs; the `sphere_mach3` example (new in Mallard 0.4.0). [Validation details](validation.md#mach-3-sphere).</figcaption>
 </figure>
 
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_re300_poster.jpg" aria-label="Q-criterion isosurfaces of the hairpin vortices shed by a sphere at Re = 300, colored by streamwise velocity, with drag and lift histories"><source src="../media/sphere_re300.mp4" type="video/mp4"></video>
-<figcaption markdown>**Sphere at Re = 300, in 3D.** Periodic shedding of hairpin vortices from a wake with one plane of symmetry: Q-criterion isosurfaces colored by streamwise velocity, and the drag and lift coefficients. Navier–Stokes at Mach 0.2 on 850,000 prisms and tetrahedra, MUSCL, HLLC, on 4 GPUs; the `sphere_re300` example, on Mallard's `main` branch for the next release. [Validation details](validation.md#sphere-re300).</figcaption>
+<figcaption markdown>**Sphere at Re = 300, in 3D.** Periodic shedding of hairpin vortices from a wake with one plane of symmetry: Q-criterion isosurfaces colored by streamwise velocity, and the drag and lift coefficients. Navier–Stokes at Mach 0.2 on 850,000 prisms and tetrahedra, MUSCL, HLLC, on 4 GPUs; the `sphere_re300` example (new in Mallard 0.4.0). [Validation details](validation.md#sphere-re300).</figcaption>
 </figure>
 
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sedov_poster.jpg" aria-label="Density of the Sedov-Taylor blast wave on three symmetry planes, with the shock radius and density profile against the exact similarity solution"><source src="../media/sedov.mp4" type="video/mp4"></video>
-<figcaption markdown>**Sedov–Taylor blast wave, in 3D.** A point explosion: density on the three symmetry planes of the computed octant, the shock radius against the exact similarity solution, and the radial density profile. 128³ hexahedra, fifth-order TENO-E with bound-preserving scaling, HLLC; the `sedov_3d` example, added after release 0.3.0. [Validation details](validation.md#sedov-taylor).</figcaption>
+<figcaption markdown>**Sedov–Taylor blast wave, in 3D.** A point explosion: density on the three symmetry planes of the computed octant, the shock radius against the exact similarity solution, and the radial density profile. 128³ hexahedra, fifth-order TENO-E with bound-preserving scaling, HLLC; the `sedov_3d` example (new in Mallard 0.4.0). [Validation details](validation.md#sedov-taylor).</figcaption>
 </figure>
 
 <figure markdown>

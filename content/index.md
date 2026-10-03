@@ -20,7 +20,7 @@ hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangle
 
     ---
 
-    Triangles, quadrilaterals and mixed meshes, generated or read from Gmsh 2.2 and 4.1 files. Boundary zones can be split by expressions.
+    Triangles and quadrilaterals in 2D; tetrahedra, hexahedra, prisms and pyramids in 3D. Generated, or read from Gmsh 2.2 and 4.1 or HDF5 files; periodic boundaries; boundary zones can be split by expressions.
 
 -   :material-chart-bell-curve:{ .lg .middle } __High-order reconstruction__
 
@@ -40,6 +40,12 @@ hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangle
 
     Viscous fluxes with constant or Sutherland viscosity; slip, no-slip, moving, isothermal and heat-flux walls; wall force monitors.
 
+-   :material-fire:{ .lg .middle } __Reacting flow__
+
+    ---
+
+    Thermally perfect gas mixtures and finite-rate chemistry from Cantera YAML mechanisms, with a stiff Rosenbrock (RODAS) integrator, Strang splitting, and the `MallardReactor` 0D tool.
+
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
     ---
@@ -50,7 +56,7 @@ hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangle
 
     ---
 
-    Kokkos Serial, Threads, OpenMP and CUDA backends from one code base, with SSPRK3 and RK4 time integration and restart files.
+    Kokkos Serial, Threads, OpenMP and CUDA backends from one code base, MPI across GPUs and nodes, double or single precision, SSPRK3 and RK4 time integration and restart files.
 
 </div>
 
@@ -78,7 +84,7 @@ Every number below comes from a Mallard run compared with an exact solution, the
 
 </div>
 
-The test suite (more than 200 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
+The test suite (more than 240 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
 
 ## Quick start
 
