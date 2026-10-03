@@ -64,5 +64,10 @@
     "image": "validation/shu_osher.png",
     "alt": "Density of the Shu-Osher problem against a fine-grid reference",
     "more": "validation.md#shu-osher-problem"
+  },
+  "sphere_re300": {
+    "image": "media/sphere_re300_poster.jpg",
+    "alt": "Hairpin vortices shed by a sphere at Re = 300",
+    "more": "validation.md#sphere-re300"
   }
 }
