@@ -65,10 +65,11 @@ def main():
     for recon in ("TENO", "MUSCL"):
         errs = []
         for n in (100, 200, 400, 800):
-            x, rho, u, p, t = profile(case(n, recon))
-            assert abs(t - T_END) < 1e-12
-            ex = exact_cell_avg(np.linspace(0, 1, n + 1), T_END)
-            errs.append(float(np.mean(np.abs(rho - ex[0]))))
+            c = load(last_vtu(case(n, recon), "sod"))
+            assert abs(c["TIME"] - T_END) < 1e-12
+            ex = exact_cell_avg(np.linspace(0, 1, n + 1), T_END)[0]
+            i = np.minimum((c["x"] * n).astype(int), n - 1)
+            errs.append(float(np.mean(np.abs(c["RHO"] - ex[i]))))  # all cells: the rows can differ
         results[recon] = errs
     print(json.dumps(results, indent=1))
     for recon, e in results.items():

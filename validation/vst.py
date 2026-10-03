@@ -1,10 +1,13 @@
 """Viscous shock tube (Daru & Tenaud) at t = 1 against Zhou et al. (arXiv:1705.09062).
 
+    vst.py [RUN]   (default val_vst; also val_vst_coarse, the same on 500 x 250 cells)
+
 Reads the t = 1 snapshot of examples/viscous_shock_tube run in runs/val_vst (500,000
 quads, ~58,500 steps: use a GPU build) and uses the reference data and triple-point
 fit of tools/plot_viscous_shock_tube.py.
 """
 import json
+import sys
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,8 +17,8 @@ from mallard_vtu import read_vtu
 from plot_viscous_shock_tube import REF_TRIPLE_POINT, REF_VORTEX_HEIGHT, REF_WALL, structured, triple_point
 
 
-def main():
-    path = last_vtu(RUNS / "val_vst", "vst")
+def main(run="val_vst"):
+    path = last_vtu(RUNS / run, "vst")
     pts, tris, tri_cell, data = read_vtu(str(path))
     assert abs(data["TIME"] - 1.0) < 1e-9, data["TIME"]
     xs, ys, rho = structured(pts, tris, tri_cell, data["RHO"])
@@ -27,7 +30,9 @@ def main():
                triple_point=[float(tp[0]), float(tp[1])], wall_min=float(wall.min()),
                x_wall_min=float(xs[wall.argmin()]), wall_max=float(wall.max()), x_wall_max=float(xs[wall.argmax()]))
     print(json.dumps(res, indent=1))
-    json.dump(res, open(FIG / "vst.json", "w"), indent=1)
+    json.dump(res, open(FIG / ("vst.json" if run == "val_vst" else f"{run}.json"), "w"), indent=1)
+    if run != "val_vst":
+        return
 
     fig, (ax0, ax1) = plt.subplots(2, 1, figsize=(7.2, 6.4), height_ratios=[1.15, 1], constrained_layout=True)
     sx, sy = xs >= 0.3, ys <= 0.3
@@ -55,4 +60,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(*sys.argv[1:])
