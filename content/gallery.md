@@ -28,8 +28,8 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 </figure>
 
 <figure markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex colored by vorticity magnitude, beside the dissipation rate against the spectral DNS"><source src="../media/tgv.mp4" type="video/mp4"></video>
-<figcaption markdown>**Taylor–Green vortex, Re = 1600, in 3D.** Transition to turbulence in a periodic box: Q-criterion isosurfaces colored by vorticity magnitude, and the kinetic-energy dissipation rate against the 512³ spectral DNS of the High-Order CFD Workshop. Fifth-order TENO-E on 64³ hexahedra in one symmetric octant (128³ equivalent), Mach 0.1, run before the low-Mach correction that Mallard 0.3.0 applies by default; the `taylor_green_3d` example. [Validation details](validation.md#taylor-green-vortex).</figcaption>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex in the full periodic box, beside the dissipation rate against the spectral DNS"><source src="../media/tgv.mp4" type="video/mp4"></video>
+<figcaption markdown>**Taylor–Green vortex, Re = 1600, in 3D.** Transition to turbulence in the full periodic box: Q-criterion isosurfaces colored by vorticity magnitude, and the dissipation rate against the 512³ spectral DNS of the High-Order CFD Workshop. Fifth-order TENO-E on 128³ hexahedra, Mach 0.1, Mallard 0.3.0 defaults, on 8 GPUs; the `taylor_green_3d` example (`input_periodic.toml`). [Validation details](validation.md#taylor-green-vortex).</figcaption>
 </figure>
 
 <figure markdown>
