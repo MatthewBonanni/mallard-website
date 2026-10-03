@@ -68,7 +68,7 @@ Every number below comes from a Mallard run compared with an exact solution, the
 
     shock angle and pressure ratio of a Mach 1.76 oblique shock; theory gives 42.82° and 1.4984 ([wedge](validation.md#oblique-shock))
 
--   __St 0.164, C<sub>D</sub> 1.37, C<sub>L</sub>′ 0.33__
+-   __St 0.165, C<sub>D</sub> 1.37, C<sub>L</sub>′ 0.33__
 
     cylinder wake at Re = 100; reference computations give 0.164–0.165, 1.33–1.35 and 0.33–0.34 ([cylinder](validation.md#cylinder-at-re-100))
 

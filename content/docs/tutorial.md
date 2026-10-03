@@ -93,9 +93,6 @@ cd ../riemann_2d
 
 ## 6. A 3D case {#6-a-3d-case}
 
-!!! note "Not in Mallard 0.2.0"
-    3D is on Mallard's `main` branch and will be part of the next release; build from `main` to use it.
-
 The spatial dimension is fixed when Mallard is built. `-DMallard_DIM=3` gives a 3D solver for meshes of tetrahedra, hexahedra, prisms and pyramids, in any mix; build it in its own directory, next to the 2D one:
 
 ```bash
@@ -116,7 +113,7 @@ cmake --build build3d -j
 
 Gmsh meshes (format 2.2 or 4.1) work as in 2D, each physical surface becoming a boundary zone. The output is VTU with 3D cells and the velocity as a 3-vector `U`.
 
-The `explosion_3d` example, a spherical explosion on 64³ hexahedra, takes about 10 minutes on 6 threads:
+The `explosion_3d` example, a spherical explosion on 64³ hexahedra, takes about 11 minutes on 6 threads:
 
 ```bash
 cd examples/explosion_3d

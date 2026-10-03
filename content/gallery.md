@@ -8,7 +8,7 @@ hide:
 
 # Gallery
 
-Every case here is one of Mallard's [examples](docs/examples.md); the 3D Taylor–Green vortex and the mallard were added after release 0.2.0. Quantitative comparisons with exact solutions and reference data are on the [validation](validation.md) page.
+Every case here is one of Mallard's [examples](docs/examples.md). Quantitative comparisons with exact solutions and reference data are on the [validation](validation.md) page.
 
 <div class="mallard-gallery" markdown>
 
@@ -29,7 +29,17 @@ Every case here is one of Mallard's [examples](docs/examples.md); the 3D Taylor�
 
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex colored by vorticity magnitude, beside the dissipation rate against the spectral DNS"><source src="../media/tgv.mp4" type="video/mp4"></video>
-<figcaption markdown>**Taylor–Green vortex, Re = 1600, in 3D.** Transition to turbulence in a periodic box: Q-criterion isosurfaces colored by vorticity magnitude, and the kinetic-energy dissipation rate against the 512³ spectral DNS of the High-Order CFD Workshop. Fifth-order TENO-E on 64³ hexahedra in one symmetric octant (128³ equivalent), Mach 0.1; the `taylor_green_3d` example of [pull request #60](https://github.com/MatthewBonanni/mallard/pull/60). [Validation details](validation.md#taylor-green-vortex).</figcaption>
+<figcaption markdown>**Taylor–Green vortex, Re = 1600, in 3D.** Transition to turbulence in a periodic box: Q-criterion isosurfaces colored by vorticity magnitude, and the kinetic-energy dissipation rate against the 512³ spectral DNS of the High-Order CFD Workshop. Fifth-order TENO-E on 64³ hexahedra in one symmetric octant (128³ equivalent), Mach 0.1, run before the low-Mach correction that Mallard 0.3.0 applies by default; the `taylor_green_3d` example. [Validation details](validation.md#taylor-green-vortex).</figcaption>
+</figure>
+
+<figure markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_poster.jpg" aria-label="Mach number and schlieren of Mach 3 flow over a sphere, with the bow-shock standoff distance against Billig's correlation"><source src="../media/sphere.mp4" type="video/mp4"></video>
+<figcaption markdown>**Mach 3 flow over a sphere, in 3D.** The bow shock forms from an impulsive start and settles by t u<sub>∞</sub>/D ≈ 1.2 at a standoff of 0.226 R, against 0.205 R from Billig's correlation; the stagnation pressure, 12.0 p<sub>∞</sub>, matches the Rayleigh pitot value 12.06. 800,000 tetrahedra in a quarter domain with two symmetry planes, fifth-order TENO-E with bound-preserving scaling, HLL flux, on 4 GPUs; the `sphere_mach3` example, added after release 0.3.0. [Validation details](validation.md#mach-3-sphere).</figcaption>
+</figure>
+
+<figure markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sedov_poster.jpg" aria-label="Density of the Sedov-Taylor blast wave on three symmetry planes, with the shock radius and density profile against the exact similarity solution"><source src="../media/sedov.mp4" type="video/mp4"></video>
+<figcaption markdown>**Sedov–Taylor blast wave, in 3D.** A point explosion: density on the three symmetry planes of the computed octant, the shock radius against the exact similarity solution, and the radial density profile. 128³ hexahedra, fifth-order TENO-E with bound-preserving scaling, HLLC; the `sedov_3d` example, added after release 0.3.0. [Validation details](validation.md#sedov-taylor).</figcaption>
 </figure>
 
 <figure markdown>

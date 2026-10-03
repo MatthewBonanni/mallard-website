@@ -1,5 +1,6 @@
 """Shu-Osher problem against an independent fine-grid reference (1D WENO5-JS, written here)."""
 import json
+import re
 from pathlib import Path
 
 import numpy as np
@@ -105,7 +106,7 @@ def reference(n):
 
 def mallard(n, flux="RHLL"):
     toml = sub(example("shu_osher"), Nx=n, Ly=40.0 / n, check_interval=100000)
-    toml = toml.replace('riemann_solver = "HLLC"', f'riemann_solver = "{flux}"')
+    toml = re.sub(r'(?m)^riemann_solver = ".*"$', f'riemann_solver = "{flux}"', toml)
     d = run(f"shu_osher_{n}" if flux == "HLLC" else f"so_rhll_{n}", toml)
     c = load(last_vtu(d, "shu_osher"))
     assert abs(c["TIME"] - T_END) < 1e-12

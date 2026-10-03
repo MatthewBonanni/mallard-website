@@ -19,9 +19,6 @@ With CUDA, Mallard runs on one GPU; `--kokkos-device-id=N` picks which.
 
 ## MPI
 
-!!! note "Not in Mallard 0.2.0"
-    MPI support is on Mallard's `main` branch and will be part of the next release; build from `main` to use it. The commands and results below were checked on `main` (commits bee090d, db1c3d2 for the partitioner and GPU-aware options, and e8bad50 for rank-count independence).
-
 Build with MPI enabled; this needs an MPI implementation such as Open MPI or MPICH:
 
 ```bash
@@ -55,7 +52,7 @@ Every rank builds the same stencils as a serial run and sums each cell's face fl
 
 With threads and ranks together, keep ranks × threads at or below the number of cores. On GPUs, use one rank per GPU; Kokkos maps each rank to its own device.
 
-For now every rank reads (or generates) the whole mesh and then keeps its part, so the mesh must fit in the memory of one process; reading the mesh in parallel is the next step.
+With generated meshes, and with meshes converted to Mallard's HDF5 format (`mallard-mesh-convert`, in builds with `-DMallard_ENABLE_HDF5=ON`; see the [input reference](input.md)), each rank reads or generates only its share, and no rank ever holds the whole mesh. Gmsh files are still read whole by every rank, so convert large Gmsh meshes to HDF5 first.
 
 ### Output
 
@@ -73,34 +70,30 @@ Boundary-zone output (`geometry = "<zone>"`) likewise holds each rank's own face
 
 ### Restarts
 
-Restart files have the same layout whatever the number of ranks, cells in global order, written collectively with MPI-IO. A run can therefore restart on a different number of ranks, or serially from a parallel run and vice versa: a run written at step 50 on 3 ranks and continued to step 100 on 2 ranks ends with a restart file identical to that of an uninterrupted serial run.
+Restart files have the same layout whatever the number of ranks, cells in global order, and each rank reads only its cells by global id. A run can therefore restart on a different number of ranks, or serially from a parallel run and vice versa: a run written at step 50 on 3 ranks and continued to step 100 on 2 ranks ends with a restart file identical to that of an uninterrupted serial run.
 
 ## Multi-GPU scaling
 
-The 2D Riemann problem (configuration 3) on Cartesian quadrilaterals, fifth-order TENO-E, HLLC, SSPRK3, on one node with 8 NVIDIA A100-SXM4-80GB GPUs, one MPI rank per GPU (Open MPI from the NVIDIA HPC SDK 25.7), Hilbert partition, built with `-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_OPENMP=ON -DMallard_ENABLE_MPI=ON`, and with `-DMallard_GPU_AWARE_MPI=ON` where marked, which passes device buffers to MPI directly instead of staging them through host memory. Wall time for 50 time steps (steps 50 to 100), excluding setup; efficiency relative to one GPU.
+The 2D Riemann problem (configuration 3) on Cartesian quadrilaterals, fifth-order TENO-E, HLLC, SSPRK3, double precision, with Mallard 0.3.0 on NVIDIA A100-80GB GPUs, one MPI rank per GPU, the Hilbert partition and GPU-aware MPI. Builds use `-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_OPENMP=ON -DMallard_ENABLE_MPI=ON -DMallard_GPU_AWARE_MPI=ON`. Up to 8 GPUs share one node over NVLink; 16 GPUs are 4 nodes of 4, connected by HDR InfiniBand with GPUDirect RDMA. Times are seconds of wall time for 50 time steps, excluding setup; efficiency is relative to one GPU (for 16M cells, to 8).
 
 **Strong scaling** (fixed mesh):
 
-| GPUs | 1M cells | efficiency | 4M cells | efficiency |
-|---:|---:|---:|---:|---:|
-| 1 | 1.030 s | | 3.61 s | |
-| 2 | 0.733 s | 70% | 2.01 s | 90% |
-| 4 | 0.534 s | 48% | 1.32 s | 68% |
-| 8 | 0.384 s | 34% | 0.80 s | 56% |
-| 8, GPU-aware MPI | 0.287 s | 45% | 0.630 s | 72% |
+| GPUs | 1M cells | efficiency | 4M cells | efficiency | 16M cells | efficiency |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.938 s | | 3.50 s | | | |
+| 2 | 0.553 s | 85% | 1.93 s | 91% | | |
+| 4 | 0.311 s | 75% | 1.00 s | 88% | | |
+| 8 | 0.190 s | 62% | 0.534 s | 82% | 1.93 s | |
+| 16 | 0.152 s | 39% | 0.316 s | 69% | 1.01 s | 96% |
 
 **Weak scaling** (1M cells per GPU):
 
-| GPUs | cells | time | efficiency |
-|---:|---:|---:|---:|
-| 1 | 1M | 1.03 s | |
-| 2 | 2M | 1.27 s | 81% |
-| 4 | 4M | 1.36 s | 76% |
-| 8 | 8M | 1.39 s | 74% |
-| 8, GPU-aware MPI | 8M | 1.106 s | 93% |
+| GPUs | 1 | 2 | 4 | 8 | 16 |
+|---|---:|---:|---:|---:|---:|
+| cells | 1M | 2M | 4M | 8M | 16M |
+| time | 0.938 s | 0.999 s | 1.000 s | 1.005 s | 1.013 s |
+| efficiency | | 94% | 94% | 93% | 93% |
 
-The single-GPU time matches the single-A100 throughput on the [Performance](performance.md) page (21.7 ns per step and cell gives 1.08 s for 50 steps of 1M cells). Two limitations account for most of the lost efficiency and are being worked on: the halo exchange is blocking, with no overlap of communication and computation yet, and setup builds the global mesh on every rank.
-
-These tables predate [pull request #57](https://github.com/MatthewBonanni/mallard/pull/57), which splits TENO's troubled-cell pass into per-face and per-cell work: with GPU-aware MPI on 8 GPUs it brings 50 steps down from 0.287 s to 0.213 s on 1M cells (59% efficiency) and from 0.630 s to 0.584 s on 4M cells (78%). Full scaling tables will follow the current round of work.
+Eight GPUs on 2 nodes of 4 run as fast as on one node of 8. Staging halo data through host memory, without `Mallard_GPU_AWARE_MPI`, makes multi-GPU runs 15–25% slower, and the `graph` partitioner is within a few percent of `hilbert` on this mesh. On one GPU this build takes 18.8 ms per step of 1M cells, against 20.1 ms for the plain single-GPU build of the [Performance](performance.md) page (no MPI, serial host backend), on a different A100. The halo exchange overlaps the reconstruction of interior cells, and the work of TENO's troubled cells is split across faces and characteristic variables, so that the few troubled cells of a small partition do not serialize a stage; the [design note](design/mpi.md) has the profile behind these choices.
 
 See [Design: MPI](design/mpi.md) for how the partitioning, halos and exchanges work.

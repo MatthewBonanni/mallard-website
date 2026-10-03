@@ -44,5 +44,25 @@
     "image": "media/mallard_poster.jpg",
     "alt": "Mach number of Mach 8 flow over a flying mallard at t = 0.75",
     "more": "gallery.md"
+  },
+  "taylor_green_3d": {
+    "image": "media/tgv_poster.jpg",
+    "alt": "Q-criterion isosurfaces of the Taylor-Green vortex and its dissipation rate against the spectral DNS",
+    "more": "validation.md#taylor-green-vortex"
+  },
+  "sphere_mach3": {
+    "image": "media/sphere_poster.jpg",
+    "alt": "Mach 3 flow over a sphere with the bow-shock standoff against Billig's correlation",
+    "more": "validation.md#mach-3-sphere"
+  },
+  "sedov_3d": {
+    "image": "media/sedov_poster.jpg",
+    "alt": "Sedov-Taylor blast wave on three symmetry planes with the shock radius against the similarity solution",
+    "more": "validation.md#sedov-taylor"
+  },
+  "shu_osher": {
+    "image": "validation/shu_osher.png",
+    "alt": "Density of the Shu-Osher problem against a fine-grid reference",
+    "more": "validation.md#shu-osher-problem"
   }
 }
