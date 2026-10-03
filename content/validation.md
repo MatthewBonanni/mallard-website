@@ -182,12 +182,12 @@ Viscous flow past a circular cylinder at Re = U D / ν = 100 and Mach 0.2, the [
 | Source | St | mean C<sub>D</sub> | C<sub>D</sub> amplitude | C<sub>L</sub> amplitude |
 |---|---:|---:|---:|---:|
 | Mallard, 384 × 128 | 0.1651 | 1.368 | 0.015 | 0.331 |
-| Mallard, 768 × 256, first cell 0.005 D | 0.1650 | 1.365 | 0.014 | 0.330 |
+| Mallard, 768 × 256, first cell 0.005 D | 0.1651 | 1.365 | 0.016 | 0.330 |
 | Liu, Zheng & Sung (1998) | 0.164 | 1.350 | 0.012 | 0.339 |
 | Park, Kwon & Choi (1998) | 0.165 | 1.33 | | 0.33 |
 | Williamson (1996), experiment | 0.164 | | | |
 
-The references are incompressible computations (Liu et al., Park et al.) and experiments (Williamson); Mallard's run is compressible at Mach 0.2. On a mesh refined by a factor of two in each direction (768 × 256 cells, first cell 0.005 D, run to t U / D = 60: seven lift cycles) the Strouhal number changes by 0.4%, and the mean drag and lift amplitude by less than 0.1%.
+The references are incompressible computations (Liu et al., Park et al.) and experiments (Williamson); Mallard's run is compressible at Mach 0.2. On a mesh refined by a factor of two in each direction (768 × 256 cells, first cell 0.005 D, run to t U / D = 60: seven lift cycles) the Strouhal number does not change (to 0.01%), and the mean drag and lift amplitude change by 0.2% and 0.4%.
 
 ## Viscous shock tube {#viscous-shock-tube}
 
