@@ -7,12 +7,12 @@ description: Mallard against exact solutions, theory and reference data - shock 
 
 # Validation
 
-Each result on this page comes from a run of Mallard 0.4.0 (double precision, default settings, including the low-Mach correction of the convective flux), unless a section says otherwise, with the inputs described, compared with an exact solution, theory, or published reference data. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). Mallard's test suite checks many of the same properties at smaller scale on every change.
+Each result on this page comes from a run of Mallard 0.4.0 (double precision, default settings, including the low-Mach correction of the convective flux), unless a section says otherwise, with the inputs described, compared with an exact solution, theory, or published reference data. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). Mallard's test suite checks many of the same properties at smaller scale on every change. Mallard 0.5.0 changed two things that affect results: 2D cell centroids are now exact to round-off ([#127](https://github.com/MatthewBonanni/mallard/pull/127)), which keeps the Sod and Shu–Osher strips one-dimensional (both rerun with 0.5.0) and changes other 2D results at round-off level; and TENO-E ranks stencil candidates by the local mesh spacing on strongly stretched cells ([#120](https://github.com/MatthewBonanni/mallard/pull/120)), which leaves hexahedral and regular meshes unchanged.
 
 | Case | Quantity | Mallard | Reference |
 |---|---|---|---|
 | [Sod shock tube](#sod-shock-tube) | L<sub>1</sub> density error, 200 cells | 2.4 × 10<sup>−3</sup> | exact solution |
-| [Shu–Osher problem](#shu-osher-problem) | L<sub>1</sub> density difference, 400 / 800 cells | 0.20 / 0.11 | WENO5 at 12,800 cells; WENO5 at the same resolution: 0.29 / 0.10 |
+| [Shu–Osher problem](#shu-osher-problem) | L<sub>1</sub> density difference, 400 / 800 cells | 0.20 / 0.090 | WENO5 at 12,800 cells; WENO5 at the same resolution: 0.29 / 0.10 |
 | [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.82°, 1.4984 | 42.82°, 1.4984 (theory) |
 | [Isentropic vortex](#design-order-convergence) | order of accuracy, TENO-E orders 3–6 | 2.99, 4.02, 4.98, 6.03 (quads); 3.00, 4.01, 4.99, 5.99 (triangles) | 3, 4, 5, 6 |
 | [Vortex across a periodic seam](#periodic-seams) | order of accuracy, TENO-E orders 3–6 | 2.91, 4.08, 4.87, 6.15 (quads); 2.98, 4.03, 4.94, 6.05 (triangles) | 3, 4, 5, 6 |
@@ -27,10 +27,12 @@ Each result on this page comes from a run of Mallard 0.4.0 (double precision, de
 | [0D ignition](#ignition) (reacting) | ignition delay, 36 H<sub>2</sub>/air and CH<sub>4</sub>/air mixtures; final temperature | within 3 × 10<sup>−6</sup> (H<sub>2</sub>), 2 × 10<sup>−4</sup> (CH<sub>4</sub>); within 10<sup>−5</sup> K | Cantera reactor; Cantera equilibrium |
 | [Reactive shock tube](#reactive-shock-tube) (reacting) | reaction front at 230 µs, 50 / 25 / 12.5 µm cells | 99.63 / 99.66 / 99.66 mm | converged within one 50 µm cell |
 | [CJ detonation](#detonation) (reacting) | front speed; induction length; peak pressure, at 10 / 20 / 40 cells per induction length | +0.11 / +0.01 / 0.00%; −4.5 / −1.8 / +2.7%; 174.8 / 175.2 / 174.7 kPa | D<sub>CJ</sub> 1616.9 m/s; ZND 1.525 mm; von Neumann 174.7 kPa |
+| [Laminar flame speed](#flame-speed) (reacting) | H<sub>2</sub>/air, φ = 0.6–1.4, two transport models | within 0.81% | Cantera `FreeFlame` |
+| [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s |
 
 ## Sod shock tube {#sod-shock-tube}
 
-The Riemann problem of Sod (1978): (ρ, u, p) = (1, 0, 1) for x < 0.5 and (0.125, 0, 0.1) for x > 0.5, γ = 1.4, at t = 0.2. The [`sod`](docs/examples.md) example: a strip of N × 4 square quadrilaterals with slip walls, HLLC flux, SSPRK3 at CFL 0.5.
+The Riemann problem of Sod (1978): (ρ, u, p) = (1, 0, 1) for x < 0.5 and (0.125, 0, 0.1) for x > 0.5, γ = 1.4, at t = 0.2. The [`sod`](docs/examples.md) example: a strip of N × 4 square quadrilaterals with slip walls, HLLC flux, SSPRK3 at CFL 0.5. Run with Mallard 0.5.0.
 
 <figure class="mallard-figure" markdown>
 ![Density, velocity and pressure of the Sod shock tube at t = 0.2 on 200 cells, TENO-E and MUSCL against the exact solution](validation/sod.png){ loading=lazy width=2158 height=718 }
@@ -44,15 +46,15 @@ L<sub>1</sub> error of the cell-averaged density, ∫|ρ − ρ<sub>exact</sub>|
 | 100 | 4.16 × 10<sup>−3</sup> |  | 4.46 × 10<sup>−3</sup> |  |
 | 200 | 2.41 × 10<sup>−3</sup> | 0.79 | 2.65 × 10<sup>−3</sup> | 0.75 |
 | 400 | 1.27 × 10<sup>−3</sup> | 0.93 | 1.43 × 10<sup>−3</sup> | 0.89 |
-| 800 | 7.24 × 10<sup>−4</sup> | 0.81 | 7.65 × 10<sup>−4</sup> | 0.90 |
+| 800 | 6.65 × 10<sup>−4</sup> | 0.93 | 7.65 × 10<sup>−4</sup> | 0.90 |
 
-Both schemes converge at close to first order, the expected rate for a solution with a shock and a contact discontinuity; TENO-E has 5–12% lower error than MUSCL. The shock spans two cells and the contact discontinuity about five.
+Both schemes converge at close to first order, the expected rate for a solution with a shock and a contact discontinuity; TENO-E has 7–13% lower error than MUSCL. The shock spans two cells and the contact discontinuity about five.
 
-The errors are taken over all cells of the strip; in Mallard 0.3.0 they were those of the bottom row (3.92, 2.28, 1.21 and 0.60 × 10<sup>−3</sup> for TENO-E), and the rows next to the slip walls differed from the inner two. With 0.4.0 the TENO-E rows agree to 10<sup>−10</sup> on 100 cells and 10<sup>−14</sup> on 200; on 400 and 800 cells they differ by up to 1.6 × 10<sup>−4</sup> and 5 × 10<sup>−3</sup> in density. MUSCL results are unchanged from 0.3.0.
+The errors are taken over all cells of the strip, whose four rows agree to round-off (5 × 10<sup>−14</sup>) at every resolution with Mallard 0.5.0. In 0.3.0 the rows next to the slip walls differed from the inner two, and the errors quoted here were those of the bottom row (3.92, 2.28, 1.21 and 0.60 × 10<sup>−3</sup> for TENO-E); in 0.4.0 the TENO-E rows differed by up to 5 × 10<sup>−3</sup> on 800 cells (error 7.24 × 10<sup>−4</sup>). MUSCL results are the same in all three versions.
 
 ## Shu–Osher problem {#shu-osher-problem}
 
-A Mach 3 shock running into a sinusoidal density field (Shu & Osher 1989), on [0, 10] (the usual [−5, 5] shifted by 5), t = 1.8, with the [`shu_osher`](docs/examples.md) example: fifth-order TENO-E and the RHLL flux on N × 4 square quadrilaterals. There is no exact solution; the reference is a one-dimensional fifth-order WENO-JS solution (characteristic, Lax–Friedrichs flux splitting, SSPRK3) on 12,800 cells, which differs from the same code on 6,400 cells by 0.007 in L<sub>1</sub>.
+A Mach 3 shock running into a sinusoidal density field (Shu & Osher 1989), on [0, 10] (the usual [−5, 5] shifted by 5), t = 1.8, with the [`shu_osher`](docs/examples.md) example: fifth-order TENO-E and the RHLL flux on N × 4 square quadrilaterals, run with Mallard 0.5.0. There is no exact solution; the reference is a one-dimensional fifth-order WENO-JS solution (characteristic, Lax–Friedrichs flux splitting, SSPRK3) on 12,800 cells, which differs from the same code on 6,400 cells by 0.007 in L<sub>1</sub>.
 
 <figure class="mallard-figure" markdown>
 ![Density of the Shu-Osher problem at t = 1.8 on 200 and 400 cells against a fine-grid reference](validation/shu_osher.png){ loading=lazy width=2158 height=778 }
@@ -64,11 +66,11 @@ L<sub>1</sub> density difference from the reference, ∫|ρ − ρ<sub>ref</sub>
 | Cells | Mallard, RHLL | Mallard, HLLC | 1D WENO5, same cells |
 |---:|---:|---:|---:|
 | 200 | 0.66 | 0.65 | 0.75 |
-| 400 | 0.20 | 0.20 | 0.29 |
-| 800 | 0.11 | 0.49 | 0.10 |
-| 1600 | 0.059 | 0.78 | 0.048 |
+| 400 | 0.20 | 0.21 | 0.29 |
+| 800 | 0.090 | 0.31 | 0.10 |
+| 1600 | 0.043 | 0.65 | 0.048 |
 
-With the rotated-hybrid RHLL flux, Mallard converges to the reference, more accurate than the one-dimensional WENO5 scheme on 200 and 400 cells and within 7% of it on 800 (0.4.0 lowered the error on 400 and 1600 cells by 22% and 28% from 0.3.0's 0.26 and 0.082). With HLLC it does not converge beyond 400 cells: behind the Mach 3 shock, which moves along the grid lines of the strip, the flow develops transverse disturbances (on 1600 × 4 cells the density differs by up to 1.1 between rows of a problem that should stay one-dimensional) that destroy the entropy waves. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. The example has used RHLL since Mallard 0.3.0 (0.2.0's used HLLC). With RHLL the rows still differ by up to 0.26 on 800 cells and 0.16 on 1600 in the entropy-wave region, which accounts for part of its remaining difference from the one-dimensional reference at 1600 cells.
+With the rotated-hybrid RHLL flux, Mallard converges to the reference and is more accurate than the one-dimensional WENO5 scheme on every grid (0.3.0 had 0.26, 0.12 and 0.082 on 400, 800 and 1600 cells; 0.4.0 0.20, 0.11 and 0.059). With HLLC it does not converge beyond 400 cells: behind the Mach 3 shock, which moves along the grid lines of the strip, the rows of a problem that should stay one-dimensional differ by up to 1.1 in density on 800 and 1600 cells, and the entropy waves are lost. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. The example has used RHLL since Mallard 0.3.0 (0.2.0's used HLLC). With RHLL the rows differ by up to 0.07 on 800 cells and 10<sup>−5</sup> on 1600.
 
 <figure class="mallard-figure" markdown>
 ![Entropy waves of the Shu-Osher problem on 1600 cells with HLLC and RHLL fluxes](validation/shu_osher_flux.png){ loading=lazy width=1258 height=714 style="max-width: 32rem" }
@@ -189,8 +191,8 @@ Drag and lift on both meshes, with the averaging window shaded and the means of 
 
 | Source | St | mean C<sub>D</sub> | C<sub>D</sub> amplitude | C<sub>L</sub> amplitude |
 |---|---:|---:|---:|---:|
-| Mallard, 384 × 128 | 0.1651 | 1.368 | 0.015 | 0.331 |
-| Mallard, 768 × 256, first cell 0.005 D | 0.1651 | 1.365 | 0.016 | 0.330 |
+| Mallard, 384 × 128 | 0.1651 | 1.368 | 0.014 | 0.331 |
+| Mallard, 768 × 256, first cell 0.005 D | 0.1651 | 1.365 | 0.015 | 0.330 |
 | Liu, Zheng & Sung (1998) | 0.164 | 1.350 | 0.012 | 0.339 |
 | Park, Kwon & Choi (1998) | 0.165 | 1.33 | | 0.33 |
 | Williamson (1996), experiment | 0.164 | | | |
@@ -317,11 +319,11 @@ Refining the mesh by 1.4 in every direction changes the Strouhal number by 0.2%,
 
 ## Reacting flow {#reacting-flow}
 
-Mallard 0.4.0 adds thermally perfect gas mixtures and finite-rate chemistry: mechanisms in Cantera's YAML format, mixtures carried by the flow solver (MUSCL or TENO-E, optionally with double flux), kinetics with an analytical Jacobian integrated by a Rosenbrock method (RODAS), and Strang splitting between chemistry and flow, set up with `gas = "mixture"` in [`[physics]`](docs/input.md#physics) and the [`[chemistry]`](docs/input.md#chemistry) table. The design note on [finite-rate chemistry](docs/design/chemistry.md) explains the choices and the validation plan; the cases below are its V1, V2, V6 and V7. They use the H<sub>2</sub>/O<sub>2</sub> submechanism of GRI-Mech 3.0 with Ar and N<sub>2</sub> (`mechanisms/h2o2.yaml`: 10 species, 29 reactions) or the full GRI-Mech 3.0 (53 species, 325 reactions), with the default chemistry tolerances (relative 10<sup>−6</sup>, absolute 10<sup>−10</sup>). The flow is inviscid: molecular transport comes in a later release.
+Mallard 0.4.0 added thermally perfect gas mixtures and finite-rate chemistry: mechanisms in Cantera's YAML format, mixtures carried by the flow solver (MUSCL or TENO-E, optionally with double flux), kinetics with an analytical Jacobian integrated by a Rosenbrock method (RODAS), Strang splitting between chemistry and flow, and mixture-averaged, unity- or constant-Lewis-number transport; 0.5.0 runs the chemistry efficiently on GPUs ([performance](docs/performance.md#chemistry)). It is set up with `gas = "mixture"` in [`[physics]`](docs/input.md#physics) and the [`[chemistry]`](docs/input.md#chemistry) table. The design note on [finite-rate chemistry](docs/design/chemistry.md) explains the choices and the validation plan; the cases below are its V1, V2 and V6 to V8, and two 2D demonstrations, a cellular detonation and a lean hydrogen flame. The runs of the first five used Mallard 0.4.0, the 2D runs 0.5.0. They use the H<sub>2</sub>/O<sub>2</sub> submechanism of GRI-Mech 3.0 with Ar and N<sub>2</sub> (`mechanisms/h2o2.yaml`: 10 species, 29 reactions) or the full GRI-Mech 3.0 (53 species, 325 reactions), with the default chemistry tolerances (relative 10<sup>−6</sup>, absolute 10<sup>−10</sup>). The shock and detonation cases are inviscid; the flames include molecular transport.
 
 ### Ignition {#ignition}
 
-`MallardReactor`, a tool built with Mallard, integrates an adiabatic constant-volume reactor with the solver's chemistry kernels (the `h2_ignition` example). It ran H<sub>2</sub>/air and CH<sub>4</sub>/air at T<sub>0</sub> = 1000 to 1500 K, equivalence ratios φ = 0.5, 1 and 2 and 1 atm, 36 mixtures, against Cantera's `IdealGasReactor` with tolerances of 10<sup>−12</sup>, both sampled at the same 1500 times (1000 per ignition delay); the ignition delay is the time of the largest dT/dt.
+`MallardReactor`, a tool built with Mallard, integrates an adiabatic constant-volume reactor with the solver's chemistry kernels (the [`h2_ignition`](docs/examples.md#h2-ignition) example). It ran H<sub>2</sub>/air and CH<sub>4</sub>/air at T<sub>0</sub> = 1000 to 1500 K, equivalence ratios φ = 0.5, 1 and 2 and 1 atm, 36 mixtures, against Cantera's `IdealGasReactor` with tolerances of 10<sup>−12</sup>, both sampled at the same 1500 times (1000 per ignition delay); the ignition delay is the time of the largest dT/dt.
 
 <figure class="mallard-figure" markdown>
 ![Temperature of a constant-volume H2/air reactor against Cantera, and ignition delays of H2/air and CH4/air against Cantera over 1000 to 1500 K](validation/ignition.png){ loading=lazy width=2102 height=753 }
@@ -332,7 +334,7 @@ The ignition delays agree with Cantera's within 2.7 × 10<sup>−6</sup> (relati
 
 ### Reactive shock tube {#reactive-shock-tube}
 
-The reactive shock tube of Fedkiw, Merriman & Osher (1997), studied in detail by Martínez Ferrer et al. (2014): in H<sub>2</sub>:O<sub>2</sub>:Ar = 2:1:7, a shock running into the closed end of a 12 cm tube reflects, the gas behind the reflected shock ignites, and the reaction front turns into a detonation that overtakes the reflected shock. The [`reactive_shock_tube`](https://github.com/MatthewBonanni/mallard/tree/v0.4.0/examples/reactive_shock_tube) example starts from the published states (p, T, u) = (7173 Pa, 378 K, 0) for x < 6 cm and (35,594 Pa, 748 K, −487 m/s) beyond, on 2400, 4800 and 9600 cells (50, 25 and 12.5 µm), with MUSCL, HLLC and SSPRK3 at CFL 0.5.
+The reactive shock tube of Fedkiw, Merriman & Osher (1997), studied in detail by Martínez Ferrer et al. (2014): in H<sub>2</sub>:O<sub>2</sub>:Ar = 2:1:7, a shock running into the closed end of a 12 cm tube reflects, the gas behind the reflected shock ignites, and the reaction front turns into a detonation that overtakes the reflected shock. The [`reactive_shock_tube`](docs/examples.md#reactive-shock-tube) example starts from the published states (p, T, u) = (7173 Pa, 378 K, 0) for x < 6 cm and (35,594 Pa, 748 K, −487 m/s) beyond, on 2400, 4800 and 9600 cells (50, 25 and 12.5 µm), with MUSCL, HLLC and SSPRK3 at CFL 0.5.
 
 <figure class="mallard-figure" markdown>
 ![Temperature and pressure of the reactive shock tube at 170 and 230 microseconds on cells of 50, 25 and 12.5 micrometers](validation/reactive_shock_tube.png){ loading=lazy width=2101 height=1263 }
@@ -349,7 +351,7 @@ The front is the last cell above 1800 K. At 230 µs the three meshes put the det
 
 ### CJ detonation {#detonation}
 
-A planar Chapman–Jouguet detonation in 2H<sub>2</sub>-O<sub>2</sub>-7Ar at 6.67 kPa and 298 K, the [`detonation_1d`](https://github.com/MatthewBonanni/mallard/tree/v0.4.0/examples/detonation_1d) example. With this mechanism the recombination zone behind the front is about 0.8 m long, so a detonation started by a driver gas runs below the CJ speed over any practical tube (9% below over 0.6 m); the run therefore starts from the steady ZND structure, computed with Cantera by `tools/detonation_reference.py` (the formulation of Shepherd's [Shock and Detonation Toolbox](https://shepherd.caltech.edu/EDL/PublicResources/sdt/)) and placed on the mesh by `tools/znd_restart.py`, and must keep it: the CJ speed D<sub>CJ</sub> = 1616.9 m/s, the induction length (from the shock to the peak heat release) 1.525 mm, and the von Neumann pressure spike, 174.7 kPa. A 0.6 m tube with the shock at 0.25 m, run for 200 µs (about 0.32 m of travel) on 10, 20 and 40 cells per induction length; MUSCL, HLLC, SSPRK3 at CFL 0.5. The front speed is a line fit to the shock position (the last cell above twice the initial pressure) over the second half of the run, and the induction length the mean over the same outputs.
+A planar Chapman–Jouguet detonation in 2H<sub>2</sub>-O<sub>2</sub>-7Ar at 6.67 kPa and 298 K, the [`detonation_1d`](docs/examples.md#detonation-1d) example. With this mechanism the recombination zone behind the front is about 0.8 m long, so a detonation started by a driver gas runs below the CJ speed over any practical tube (9% below over 0.6 m); the run therefore starts from the steady ZND structure, computed with Cantera by `tools/detonation_reference.py` (the formulation of Shepherd's [Shock and Detonation Toolbox](https://shepherd.caltech.edu/EDL/PublicResources/sdt/)) and placed on the mesh by `tools/znd_restart.py`, and must keep it: the CJ speed D<sub>CJ</sub> = 1616.9 m/s, the induction length (from the shock to the peak heat release) 1.525 mm, and the von Neumann pressure spike, 174.7 kPa. A 0.6 m tube with the shock at 0.25 m, run for 200 µs (about 0.32 m of travel) on 10, 20 and 40 cells per induction length; MUSCL, HLLC, SSPRK3 at CFL 0.5. The front speed is a line fit to the shock position (the last cell above twice the initial pressure) over the second half of the run, and the induction length the mean over the same outputs.
 
 <figure class="mallard-figure" markdown>
 ![Front speed of the detonation against the CJ speed over 200 microseconds, and the pressure behind the front against the ZND profile, at three resolutions](validation/detonation.png){ loading=lazy width=2101 height=783 }
@@ -365,6 +367,48 @@ A planar Chapman–Jouguet detonation in 2H<sub>2</sub>-O<sub>2</sub>-7Ar at 6.6
 
 The front keeps the CJ speed to 0.01% from 20 cells per induction length: the shock stays within two cells of the position of a wave moving at D<sub>CJ</sub> (left of the figure; the shock position moves in whole cells). The induction length is within 5% of the ZND value at all three resolutions, a difference of at most one cell at 40 (2.5%), and the peak pressure, the largest over the second half of the run, matches the von Neumann pressure, the pressure right behind a non-reacting shock at D<sub>CJ</sub>.
 
+### Laminar flame speed {#flame-speed}
+
+Freely propagating premixed H<sub>2</sub>/air flames at 300 K and 1 atm, φ = 0.6 to 1.4, with mixture-averaged and unity-Lewis-number transport, against Cantera's `FreeFlame` with the same mechanism and transport model (the [`premixed_flame`](docs/examples.md#premixed-flame) example). Each run is a strip in the flame's frame, started from Cantera's flame, from 6 thermal thicknesses δ<sub>T</sub> upstream of the flame to 9 downstream, with 20 cells per δ<sub>T</sub>; the fresh mixture enters at Cantera's flame speed, and the flame speed is the consumption speed of the deficient reactant, averaged over the last third of two flame times δ<sub>T</sub>/S<sub>L</sub>. Navier–Stokes, MUSCL, HLLC, SSPRK3 at CFL 0.4.
+
+<figure class="mallard-figure" markdown>
+![Flame speed of H2/air flames against equivalence ratio, Mallard against Cantera, and the temperature profile of the stoichiometric flame](validation/flames.png){ loading=lazy width=2100 height=753 }
+<figcaption>Left: flame speeds with both transport models. Right: temperature through the stoichiometric flame with mixture-averaged transport.</figcaption>
+</figure>
+
+| φ | 0.6 | 0.8 | 1.0 | 1.2 | 1.4 |
+|---|---:|---:|---:|---:|---:|
+| Cantera, mixture-averaged [m/s] | 0.8075 | 1.6567 | 2.3317 | 2.7806 | 3.0341 |
+| Mallard | +0.38% | +0.31% | +0.24% | +0.32% | −0.20% |
+| Cantera, unity Lewis [m/s] | 0.9575 | 1.3716 | 1.6431 | 1.8013 | 1.8713 |
+| Mallard | −0.81% | −0.72% | −0.68% | −0.65% | −0.56% |
+
+All ten flame speeds are within 0.81% of Cantera's (the lean mixture-averaged run stopped after 1.35 of its two flame times). For CH<sub>4</sub>/air at φ = 1 with GRI-Mech 3.0, the design note reports −0.93% (mixture-averaged) and −0.04% (unity Lewis).
+
+### Cellular detonation {#cellular-detonation}
+
+The detonation of the [previous section](#detonation) in two dimensions, the [`detonation_2d`](docs/examples.md#detonation-2d) example: a 6 cm wide channel with slip walls, 0.15 mm cells (10 per induction length, as in Oran et al. 1998), 1.2 million cells, 18,900 time steps in 39 minutes on two A100 GPUs, 71% of it in the chemistry. The run starts from the ZND solution with six seeded pockets of fresh gas behind the front: a planar ZND front, with or without one such pocket, stays planar at 5 to 20 cells per induction length, so the cells here grow from the seeds and not from the front's own instability. The [`[[write_data]]`](docs/input.md#write_data) variable `P_MAX`, the largest pressure each cell has seen, gives the numerical soot foil.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/detonation_2d_poster.jpg" aria-label="Pressure and numerical soot foil of the cellular detonation"><source src="../media/detonation_2d.mp4" type="video/mp4"></video>
+<figcaption>Pressure and the numerical soot foil near the front, and the whole foil below.</figcaption>
+</figure>
+
+![Numerical soot foil of the whole run: the six seeded triple points at x = 100 mm and the cells that grow from them](validation/detonation_2d_foil.png){ loading=lazy width=2100 height=412 }
+
+The front runs at 1617.0 m/s, the CJ speed to 0.01%. The seeds give eight strong triple points at x = 140 to 180 mm, cells about 15 mm wide, which coarsen to three or four (30 to 40 mm) by x ≈ 260 mm; after 33 cm of travel the cells are not yet regular. Published numerical cell widths for this mixture are about 3 cm (Oran et al. 1998; Deiterding 2011).
+
+### Lean hydrogen flame {#lean-flame}
+
+A lean H<sub>2</sub>/air flame, φ = 0.4, 700 K, 1 atm, in a periodic channel 7.8 mm wide and 12.2 mm long on 36 µm cells (72,576), started from the same wrinkled planar flame with mixture-averaged transport and with unity Lewis numbers (the [`flame_2d`](docs/examples.md#flame-2d) example; 82 and 67 minutes on one A100). On the same mesh, the planar flame runs at 3.3446 m/s (mixture-averaged) and 3.1093 m/s (unity Lewis), against Cantera's 3.346 and 3.129 m/s (−0.04% and −0.6%).
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/flame_2d_poster.jpg" aria-label="Temperature over the adiabatic flame temperature of the lean hydrogen flame with both transport models, and their consumption speeds"><source src="../media/flame_2d.mp4" type="video/mp4"></video>
+<figcaption>Temperature over the adiabatic flame temperature with mixture-averaged transport (left) and unity Lewis numbers (right), and the consumption speeds over the planar flame's.</figcaption>
+</figure>
+
+With unity Lewis numbers the burnt gas stays within 0.996 to 1.000 of the adiabatic flame temperature T<sub>ad</sub>, and the wrinkle grows only by the Darrieus–Landau instability: the consumption speed peaks at 1.08 S<sub>L</sub> at 2.4 ms. With mixture-averaged transport, the differential diffusion of hydrogen makes the burnt gas behind the bulges superadiabatic, from 0.958 to 1.017 T<sub>ad</sub>, and the consumption speed peaks at 1.14 S<sub>L</sub> at 1.1 ms.
+
 ## References
 
 The sources of the reference data and test cases on this page. The sources of the numerical methods themselves, with where Mallard uses each, are on the [References](docs/references.md) page.
@@ -373,12 +417,14 @@ The sources of the reference data and test cases on this page. The sources of th
 - M. E. Brachet, D. I. Meiron, S. A. Orszag, B. G. Nickel, R. H. Morf and U. Frisch, Small-scale structure of the Taylor–Green vortex, *J. Fluid Mech.* 130, 411–452 (1983).
 - G. S. Constantinescu and K. D. Squires, LES and DES investigations of turbulent flow over a sphere at Re = 10,000, *Flow Turbul. Combust.* 70, 267–298 (2003). [doi:10.1023/B:APPL.0000004937.34078.71](https://doi.org/10.1023/B:APPL.0000004937.34078.71)
 - V. Daru and C. Tenaud, Numerical simulation of the viscous shock tube problem by using a high resolution monotonicity-preserving scheme, *Computers & Fluids* 38, 664–676 (2009).
+- R. Deiterding, High-resolution numerical simulation and analysis of Mach reflection structures in detonation waves in low-pressure H<sub>2</sub>–O<sub>2</sub>–Ar mixtures: a summary of results obtained with the adaptive mesh refinement framework AMROC, *J. Combust.* 2011, 738969 (2011). [doi:10.1155/2011/738969](https://doi.org/10.1155/2011/738969)
 - R. P. Fedkiw, B. Merriman and S. Osher, High accuracy numerical methods for thermally perfect gas flows with chemistry, *J. Comput. Phys.* 132, 175–190 (1997). [doi:10.1006/jcph.1996.5622](https://doi.org/10.1006/jcph.1996.5622)
 - D. G. Goodwin, R. L. Speth, H. K. Moffat and B. W. Weber, Cantera: an object-oriented software toolkit for chemical kinetics, thermodynamics, and transport processes, version 3.2.0, [cantera.org](https://www.cantera.org).
 - T. A. Johnson and V. C. Patel, Flow past a sphere up to a Reynolds number of 300, *J. Fluid Mech.* 378, 19–70 (1999). [doi:10.1017/S0022112098003206](https://doi.org/10.1017/S0022112098003206)
 - J. Kim, D. Kim and H. Choi, An immersed-boundary finite-volume method for simulations of flow in complex geometries, *J. Comput. Phys.* 171, 132–150 (2001). [doi:10.1006/jcph.2001.6778](https://doi.org/10.1006/jcph.2001.6778)
 - C. Liu, X. Zheng and C. H. Sung, Preconditioned multigrid methods for unsteady incompressible flows, *J. Comput. Phys.* 139, 35–57 (1998).
 - P. J. Martínez Ferrer, R. Buttay, G. Lehnasch and A. Mura, A detailed verification procedure for compressible reactive multicomponent Navier–Stokes solvers, *Computers & Fluids* 89, 88–110 (2014). [doi:10.1016/j.compfluid.2013.10.014](https://doi.org/10.1016/j.compfluid.2013.10.014)
+- E. S. Oran, J. W. Weber, E. I. Stefaniw, M. H. Lefebvre and J. D. Anderson, A numerical study of a two-dimensional H<sub>2</sub>-O<sub>2</sub>-Ar detonation using a detailed chemical reaction model, *Combust. Flame* 113, 147–163 (1998). [doi:10.1016/S0010-2180(97)00218-6](https://doi.org/10.1016/S0010-2180(97)00218-6)
 - J. Park, K. Kwon and H. Choi, Numerical solutions of flow past a circular cylinder at Reynolds numbers up to 160, *KSME Int. J.* 12, 1200–1205 (1998).
 - J. J. Quirk, A contribution to the great Riemann solver debate, *Int. J. Numer. Methods Fluids* 18, 555–574 (1994).
 - L. I. Sedov, *Similarity and Dimensional Methods in Mechanics*, Academic Press (1959).

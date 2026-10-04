@@ -84,5 +84,20 @@
     "image": "validation/detonation.png",
     "alt": "Front speed of the 1D CJ detonation against the CJ speed, and pressure behind the front against the ZND profile",
     "more": "validation.md#detonation"
+  },
+  "detonation_2d": {
+    "image": "validation/detonation_2d_foil.png",
+    "alt": "Numerical soot foil of the 2D cellular detonation",
+    "more": "validation.md#cellular-detonation"
+  },
+  "flame_2d": {
+    "image": "media/flame_2d_poster.jpg",
+    "alt": "Temperature of the lean hydrogen flame with mixture-averaged and unity Lewis number transport",
+    "more": "validation.md#lean-flame"
+  },
+  "premixed_flame": {
+    "image": "validation/flames.png",
+    "alt": "Flame speeds of H2/air flames against Cantera",
+    "more": "validation.md#flame-speed"
   }
 }

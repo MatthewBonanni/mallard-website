@@ -44,7 +44,7 @@ hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangle
 
     ---
 
-    Thermally perfect gas mixtures and finite-rate chemistry from Cantera YAML mechanisms, with a stiff Rosenbrock (RODAS) integrator, Strang splitting, and the `MallardReactor` 0D tool.
+    Thermally perfect gas mixtures, finite-rate chemistry from Cantera YAML mechanisms and mixture-averaged transport, with a stiff Rosenbrock (RODAS) integrator on CPUs and GPUs, Strang splitting, and the `MallardReactor` 0D tool.
 
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
