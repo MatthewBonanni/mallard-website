@@ -51,8 +51,8 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 </figure>
 
 <figure markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_poster.jpg" aria-label="Mach number and schlieren of Mach 3 flow over a sphere, with the bow-shock standoff distance against Billig's correlation"><source src="../media/sphere.mp4" type="video/mp4"></video>
-<figcaption markdown>**Mach 3 flow over a sphere, in 3D.** The bow shock forms from an impulsive start and settles by t u<sub>∞</sub>/D ≈ 1.2 at a standoff of 0.226 R, against 0.205 R from Billig's correlation; the stagnation pressure, 12.0 p<sub>∞</sub>, matches the Rayleigh pitot value 12.06. 800,000 tetrahedra in a quarter domain with two symmetry planes, fifth-order TENO-E with bound-preserving scaling, HLL flux, on 4 GPUs; the `sphere_mach3` example. [Validation details](validation.md#mach-3-sphere).</figcaption>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_poster.jpg" aria-label="Mach 3 flow over a sphere: Mach number on the horizontal meridian, numerical schlieren on the vertical one and the revolved bow shock, with the standoff distance against Billig's correlation and the stagnation-line pressure"><source src="../media/sphere.mp4" type="video/mp4"></video>
+<figcaption markdown>**Mach 3 flow over a sphere, in 3D.** Mach number on the horizontal meridian, numerical schlieren on the vertical one, and the revolved bow shock. The bow shock forms from an impulsive start and settles by t u<sub>∞</sub>/D ≈ 1.2 at a standoff of 0.226 R, against 0.205 R from Billig's correlation; the stagnation pressure, 12.0 p<sub>∞</sub>, matches the Rayleigh pitot value 12.06. 800,000 tetrahedra in a quarter domain with two symmetry planes, fifth-order TENO-E with bound-preserving scaling, HLL flux, on 4 GPUs; the `sphere_mach3` example. [Validation details](validation.md#mach-3-sphere).</figcaption>
 </figure>
 
 <figure markdown>
