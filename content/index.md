@@ -14,49 +14,93 @@ hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangle
 
 ## What's inside
 
-<div class="grid cards" markdown>
+<div class="grid cards mallard-features" markdown>
 
--   :material-vector-triangle:{ .lg .middle } __Unstructured meshes__
-
-    ---
-
-    Triangles and quadrilaterals in 2D; tetrahedra, hexahedra, prisms and pyramids in 3D. Generated, or read from Gmsh 2.2 and 4.1 or HDF5 files; periodic boundaries; boundary zones can be split by expressions.
-
--   :material-chart-bell-curve:{ .lg .middle } __High-order reconstruction__
+-   :material-vector-triangle:{ .lg .middle } __Meshes__
 
     ---
 
-    TENO-E (Liang, Shyy & Fu 2025) of orders 3 to 6: k-exact least squares, characteristic stencil selection, adaptive cutoff and boundary mirror cells. MUSCL with Barth–Jespersen or Venkatakrishnan limiters.
+    - 2D triangles and quadrilaterals; 3D tetrahedra, hexahedra, prisms, pyramids and mixed meshes
+    - Gmsh 2.2/4.1 or HDF5 mesh files, or generated boxes
+    - Periodic boundaries, on generated meshes or paired zones of mesh files
+    - Axisymmetric (r-z) flows, at design order up to the axis
 
--   :material-flash:{ .lg .middle } __Shock-capturing fluxes__
+    [Mesh input](docs/input.md#mesh) · [Periodic](docs/design/periodic.md) · [Axisymmetric](docs/design/axisymmetric.md)
+
+-   :material-chart-bell-curve:{ .lg .middle } __Numerics__
 
     ---
 
-    Rusanov, HLL, HLLC, Roe and the carbuncle-free rotated-hybrid HLL–Roe solver.
+    - First order, MUSCL (Barth–Jespersen or Venkatakrishnan) and TENO-E of orders 3 to 6, optionally bound preserving
+    - Rusanov, HLL, HLLC, Roe and the carbuncle-free RHLL, for single gases and mixtures
+    - Low-Mach correction of the upwind dissipation
+    - Forward Euler, SSPRK3 and RK4 at a CFL number or a fixed step
 
--   :material-water:{ .lg .middle } __Navier–Stokes__
+    [Numerical methods](docs/numerics/overview.md) · [TENO-E details](docs/numerics/teno_e.md)
+
+-   :material-water:{ .lg .middle } __Physics__
 
     ---
 
-    Viscous fluxes with constant or Sutherland viscosity; slip, no-slip, moving, isothermal and heat-flux walls; wall force monitors.
+    - Compressible Euler and Navier–Stokes; constant, Sutherland or power-law viscosity
+    - Thermally perfect multicomponent mixtures, with an optional double-flux scheme for interfaces
+    - Gravity and arbitrary source terms
+
+    [Physics input](docs/input.md#physics)
 
 -   :material-fire:{ .lg .middle } __Reacting flow__
 
     ---
 
-    Thermally perfect gas mixtures, finite-rate chemistry from Cantera YAML mechanisms and mixture-averaged transport, with a stiff Rosenbrock (RODAS) integrator on CPUs and GPUs, Strang splitting, and the `MallardReactor` 0D tool.
+    - Finite-rate chemistry from Cantera YAML mechanisms: elementary, three-body, falloff, PLOG and Chebyshev reactions
+    - RODAS Rosenbrock integrator per cell with analytical Jacobians, Strang-split from the flow
+    - Mixture-averaged, unity-Lewis or constant-Lewis transport
+    - `MallardReactor`, a 0D constant-volume reactor
+
+    [Chemistry design](docs/design/chemistry.md) · [Chemistry input](docs/input.md#chemistry)
 
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
     ---
 
-    Characteristic far field, inflow, pressure outlets (local or area-averaged), symmetry, and time-dependent Dirichlet states from expressions in x, y and t. Sources and gravity.
+    - Slip, adiabatic, isothermal and heat-flux walls, optionally moving
+    - Inflow, characteristic far field, pressure outlets, transmissive, time-dependent expressions
+    - Non-reflecting characteristic (NSCBC) inlets and outlets with transverse terms; sponge layers
+    - Zones split between conditions by expressions
 
--   :material-chip:{ .lg .middle } __Performance portable__
+    [Boundary input](docs/input.md#boundaries) · [NSCBC design](docs/design/nscbc.md)
+
+-   :material-chip:{ .lg .middle } __Performance and parallelism__
 
     ---
 
-    Kokkos Serial, Threads, OpenMP and CUDA backends from one code base, MPI across GPUs and nodes, double or single precision, SSPRK3 and RK4 time integration and restart files.
+    - Kokkos Serial, Threads, OpenMP, CUDA (NVIDIA) and HIP (AMD) backends; double or single precision
+    - MPI with GPU-aware halo exchange overlapped with computation; no rank holds the whole mesh
+    - Bitwise-identical results on any number of threads or ranks; restarts on a different rank count
+    - Stiff chemistry on GPUs, with a sparse LU for large mechanisms
+
+    [Running in parallel](docs/parallel.md) · [Performance](docs/performance.md) · [Design: MPI](docs/design/mpi.md)
+
+-   :material-file-chart:{ .lg .middle } __Input, output and diagnostics__
+
+    ---
+
+    - TOML input; initial and boundary states, sources and sponges as expressions
+    - VTU (ParaView) or parallel HDF5 with XDMF; boundary-zone surfaces
+    - Running means and covariances, point and line probes, domain integrals, wall forces
+    - Heat release, production rates and detonation soot foils
+
+    [Input reference](docs/input.md) · [Examples](docs/examples.md)
+
+-   :material-check-decagram:{ .lg .middle } __Validated and tested__
+
+    ---
+
+    - 28 examples against exact solutions, theory, DNS and Cantera
+    - 300+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision
+    - Nightly sanitizers; a performance suite with per-hardware baselines
+
+    [Validation](validation.md) · [Examples](docs/examples.md)
 
 </div>
 
@@ -82,9 +126,17 @@ Every number below comes from a Mallard run compared with an exact solution, the
 
     difference in wall density (which ranges from 37 to 118) between the viscous shock tube and the grid-converged reference of Zhou et al. ([viscous shock tube](validation.md#viscous-shock-tube))
 
+-   __St 0.133, C<sub>D</sub> 0.669__
+
+    hairpin-vortex shedding of a sphere at Re = 300; Johnson & Patel give 0.137 and 0.656 ([sphere](validation.md#sphere-re300))
+
+-   __0.01%__
+
+    from the Chapman–Jouguet speed: front speed of a planar detonation in 2H<sub>2</sub>-O<sub>2</sub>-7Ar with finite-rate chemistry ([CJ detonation](validation.md#detonation))
+
 </div>
 
-The test suite (more than 240 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
+The test suite (more than 300 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
 
 ## Quick start
 
