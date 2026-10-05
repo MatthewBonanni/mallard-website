@@ -99,5 +99,25 @@
     "image": "validation/flames.png",
     "alt": "Flame speeds of H2/air flames against Cantera",
     "more": "validation.md#flame-speed"
+  },
+  "isotropic_turbulence": {
+    "image": "media/isotropic_turbulence_poster.jpg",
+    "alt": "Q-criterion isosurfaces of decaying compressible isotropic turbulence colored by dilatation, with enstrophy and dilatation variance against Johnsen et al.",
+    "more": "gallery.md#isotropic-turbulence"
+  },
+  "counterflow_diffusion": {
+    "image": "media/counterflow_strain.png",
+    "alt": "Peak temperature of the counterflow diffusion flame against strain rate, Mallard against Cantera",
+    "more": "gallery.md#counterflow-flame"
+  },
+  "triple_flame": {
+    "image": "media/triple_flame_poster.jpg",
+    "alt": "Heat release of triple flames in hydrogen/air mixing layers of two thicknesses, with their propagation speed",
+    "more": "gallery.md#triple-flame"
+  },
+  "flame_vortex": {
+    "image": "media/flame_vortex_poster.jpg",
+    "alt": "Temperature of eleven premixed flame-vortex interactions on the spectral diagram of Poinsot, Veynante and Candel",
+    "more": "gallery.md#flame-vortex"
   }
 }
