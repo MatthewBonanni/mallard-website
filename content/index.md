@@ -12,6 +12,13 @@ hero_alt: Density fields of a double Mach reflection, a 2D Riemann problem and a
 hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangles), 3D Taylor–Green vortex at Re = 1600 (full periodic box, 2.1 million hexahedra), 2D Riemann problem (1 million quadrilaterals) and viscous shock tube (500,000 quadrilaterals). The shock tube wall density lands on the reference of Zhou et al. (2018); the vortex dissipation rate follows the 512³ spectral DNS."
 ---
 
+## 16.8 million cells, fifth order
+
+<figure class="mallard-figure mallard-featured" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="media/riemann4k_poster.jpg" aria-label="Density and numerical schlieren of the 2D Riemann problem on 4096 by 4096 quadrilaterals, t = 0 to 0.8"><source src="media/riemann4k.mp4" type="video/mp4"></video>
+<figcaption markdown>The 2D Riemann problem (configuration 3) on 4096 × 4096 quadrilaterals with fifth-order TENO-E: the slip lines roll up into cascades of Kelvin–Helmholtz vortices. 72,570 time steps in 3 hours on two A100 GPUs, 112 million cell updates per second. [Details in the gallery](gallery.md#riemann-4k) · [full-resolution still](media/riemann4k_density.jpg)</figcaption>
+</figure>
+
 ## What's inside
 
 <div class="grid cards mallard-features" markdown>
@@ -96,7 +103,7 @@ hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangle
 
     ---
 
-    - 28 examples against exact solutions, theory, DNS and Cantera
+    - 29 examples against exact solutions, theory, DNS and Cantera
     - 300+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision
     - Nightly sanitizers; a performance suite with per-hardware baselines
 

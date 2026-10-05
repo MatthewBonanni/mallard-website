@@ -209,3 +209,19 @@
 .md-typeset .mallard-features > ul > li > ul { font-size: 0.72rem; line-height: 1.45; margin: 0 0 0.6rem; flex-grow: 1; }
 .md-typeset .mallard-features > ul > li > ul > li { margin: 0 0 0.3rem 1rem; }
 .md-typeset .mallard-features > ul > li > p:last-child { font-size: 0.72rem; margin: 0; }
+
+/* Gallery: two stills side by side, and plots on white */
+.mallard-gallery__duo-media {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.8rem;
+}
+.mallard-gallery__duo-media a { display: block; }
+@media screen and (max-width: 44.9375em) {
+  .mallard-gallery__duo-media { grid-template-columns: 1fr; }
+}
+.mallard-gallery img.mallard-gallery__plot { background: #fff; }
+
+/* Home: featured run */
+.md-typeset figure.mallard-featured { max-width: none; margin: 1em 0 2em; }
+.md-typeset figure.mallard-featured video { background: #000; }
