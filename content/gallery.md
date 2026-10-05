@@ -26,16 +26,6 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 </figure>
 
 <figure markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="2100" height="1080" poster="../media/riemann_2d_quads_poster.jpg" aria-label="Density in the 2D Riemann problem on quadrilaterals, t = 0 to 0.8"><source src="../media/riemann_2d_quads.mp4" type="video/mp4"></video>
-<figcaption markdown>**The same problem on one million quadrilaterals**, the `riemann_2d_quads` example. One million quadrilaterals, fifth-order TENO-E, HLLC flux, SSPRK3; density and numerical schlieren, t = 0 to 0.8.</figcaption>
-</figure>
-
-<figure class="mallard-gallery__pair" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="2100" height="1080" poster="../media/riemann_2d_poster.jpg" aria-label="Density in the 2D Riemann problem on triangles, t = 0 to 0.8"><source src="../media/riemann_2d.mp4" type="video/mp4"></video>
-<figcaption markdown>**The same problem on triangles.** 980,000 triangles, same scheme. The shock pattern is the same as on quadrilaterals; the Kelvin–Helmholtz roll-ups along the slip lines are not, since their growth from grid-scale perturbations depends on the mesh, as it does between schemes in the literature.</figcaption>
-</figure>
-
-<figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="2100" height="1540" poster="../media/double_mach_poster.jpg" aria-label="Density in the double Mach reflection, t = 0 to 0.2"><source src="../media/double_mach.mp4" type="video/mp4"></video>
 <figcaption markdown>**Double Mach reflection.** A Mach 10 shock reflecting off a 30° wedge (Woodward & Colella 1984), t = 0 to 0.2, on 1.84 million triangles. Fifth-order TENO-E with the rotated-hybrid HLL–Roe flux and SSPRK3. Density and numerical schlieren.</figcaption>
 </figure>
