@@ -2,7 +2,7 @@
 title: Validation
 hide:
   - navigation
-description: Mallard against exact solutions, theory and reference data - shock tubes, oblique shock, design-order convergence, viscous exact solutions, cylinder wake, viscous shock tube, in 3D the spherical explosion, Sedov-Taylor blast wave, Taylor-Green vortex, Mach 3 sphere and sphere wake at Re = 300, and reacting flow - ignition, a reactive shock tube and a CJ detonation.
+description: Mallard against exact solutions, theory and reference data - shock tubes, oblique shock, design-order convergence, viscous exact solutions, cylinder wake, viscous shock tube, in 3D the spherical explosion, Sedov-Taylor blast wave, Taylor-Green vortex, Mach 3 sphere, sphere wake at Re = 300, turbulent channel flow and a shock-helium bubble interaction, and reacting flow - ignition, a reactive shock tube, CJ detonations in 1D, 2D and 3D and stratified autoignition.
 ---
 
 # Validation
@@ -24,11 +24,15 @@ Each result on this page comes from a run of Mallard 0.4.0 (double precision, de
 | [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D) | kinetic energy, largest deviation over t = 0–20; peak dissipation rate, at t | 2.6%; 0.01161 at 8.39 (128³) | 512³ spectral DNS: 0.01286 at 8.97 |
 | [Sphere, Re = 300](#sphere-re300) (3D) | St, mean C<sub>D</sub>, mean C<sub>L</sub> (2.06M cells) | 0.133, 0.666, 0.070 | 0.134–0.137, 0.655–0.671, 0.065–0.069 |
 | [Mach 3 sphere](#mach-3-sphere) (3D) | bow-shock standoff Δ/R; stagnation pressure | 0.226; 12.0 | 0.205 (Billig); 12.06 (pitot) |
+| [Channel flow, Re<sub>τ</sub> = 180](#channel-retau180) (3D) | Re<sub>τ</sub>; C<sub>f</sub>; peaks of u<sub>rms</sub>, v<sub>rms</sub>, w<sub>rms</sub>, −u′v′ | 180.8; +2.0%; −0.5, +1.8, +1.4, +1.5% | DNS of Moser, Kim & Mansour (1999): 178.1 |
+| [Shock–helium bubble](#shock-bubble) (3D) | refracted and transmitted shock, vortex ring, downstream interface velocities | 961, 359, 178, 166 m/s | Haas & Sturtevant (1987): 960, 365, 165, 165 m/s |
 | [0D ignition](#ignition) (reacting) | ignition delay, 36 H<sub>2</sub>/air and CH<sub>4</sub>/air mixtures; final temperature | within 3 × 10<sup>−6</sup> (H<sub>2</sub>), 2 × 10<sup>−4</sup> (CH<sub>4</sub>); within 10<sup>−5</sup> K | Cantera reactor; Cantera equilibrium |
 | [Reactive shock tube](#reactive-shock-tube) (reacting) | reaction front at 230 µs, 50 / 25 / 12.5 µm cells | 99.63 / 99.66 / 99.66 mm | converged within one 50 µm cell |
 | [CJ detonation](#detonation) (reacting) | front speed; induction length; peak pressure, at 10 / 20 / 40 cells per induction length | +0.11 / +0.01 / 0.00%; −4.5 / −1.8 / +2.7%; 174.8 / 175.2 / 174.7 kPa | D<sub>CJ</sub> 1616.9 m/s; ZND 1.525 mm; von Neumann 174.7 kPa |
 | [Laminar flame speed](#flame-speed) (reacting) | H<sub>2</sub>/air, φ = 0.6–1.4, two transport models | within 0.81% | Cantera `FreeFlame` |
 | [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s |
+| [Cellular detonation in 3D](#cellular-detonation-3d) (reacting) | front speed over 17 cm | 1620.6 m/s | D<sub>CJ</sub> 1617 m/s |
+| [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) |
 
 ## Sod shock tube {#sod-shock-tube}
 
@@ -252,6 +256,7 @@ A point explosion in a gas at rest (Taylor 1950; Sedov 1959), the `sedov_3d` exa
 
 The shock-radius error decays as the run forgets the finite radius of the initial blast. The density profile follows the exact curve, with the peak behind the shock smeared to 4.2 (averaged over the shell) against 6 at this resolution, and varies by 2.5% over the shell at the peak; mass is conserved to round-off.
 
+<!-- SLOT: the 256^3 Taylor-Green vortex run replaces media/tgv.mp4 and media/tgv_poster.jpg; update this section's text, the summary-table row and the gallery caption with its numbers. -->
 ### Taylor–Green vortex at Re = 1600 {#taylor-green-vortex}
 
 The Taylor–Green vortex is the standard test of a scheme's resolution of transition and decaying turbulence (case C3.5 of the International Workshop on High-Order CFD Methods; Brachet et al. 1983): in the periodic box [0, 2π]³, the velocity u = sin x cos y cos z, v = −cos x sin y cos z, w = 0 rolls up, breaks down into small vortices and decays, at Re = V<sub>0</sub>L/ν = 1600, Mach 0.1 and Pr = 0.71. Mallard computes the full periodic box (`examples/taylor_green_3d/input_periodic.toml`) on 128³ hexahedra (2,097,152 cells) with fifth-order TENO-E, HLLC and SSPRK3 at CFL 0.8, with the defaults of Mallard 0.3.0, which include the low-Mach correction of the convective flux, to t = 20 (run with the development code shortly after 0.3.0; 0.4.0 gives the same results on hexahedra): 32,274 time steps, 1 h 18 min on 8 NVIDIA A100 GPUs. The reference is the workshop's 512³ pseudo-spectral DNS. The resolved dissipation 2μΩ is computed from the enstrophy of the TENO-E reconstruction polynomials' velocity gradients.
@@ -316,6 +321,65 @@ Viscous flow past a sphere at Re = U D / ν = 300 and Mach 0.2, the `sphere_re30
 ![Drag and lift coefficient histories on the 0.85M- and 2.06M-cell meshes](validation/sphere_re300_forces.png){ loading=lazy width=1350 height=900 }
 
 Refining the mesh by 1.4 in every direction changes the Strouhal number by 0.2%, the mean drag by 0.4% and the mean lift by 5%. On the finer mesh the Strouhal number is 1–3% below the references, the mean drag within the spread of the references (0.655 to 0.671), and the mean lift within 7% of them (0.065 to 0.069).
+
+### Turbulent channel flow, Re<sub>τ</sub> = 180 {#channel-retau180}
+
+Direct numerical simulation of turbulent channel flow at Re<sub>τ</sub> = 180, against the spectral DNS of Moser, Kim & Mansour (1999, MKM), the [`channel_retau180`](docs/examples.md#channel-retau180) example. Run after Mallard 0.6.0, with the kinetic-energy-preserving hybrid convective flux ([#205](https://github.com/MatthewBonanni/mallard/pull/205), [#216](https://github.com/MatthewBonanni/mallard/pull/216)). It uses MKM's box, 4πh × 2h × 4/3πh, periodic in x and z, between isothermal walls at bulk Mach 0.2. The mass flow is held at Re<sub>b</sub> = 5600, so Re<sub>τ</sub> is an outcome of the run. The mesh is 192 × 96 × 128 hexahedra (2.36 million), tanh-stretched in y: Δx<sup>+</sup> = 11.8, Δz<sup>+</sup> = 5.9, Δy<sup>+</sup> = 0.88 at the wall. Navier–Stokes with no turbulence model. MUSCL states with the hybrid flux, which is the central KEEP flux everywhere except where the compression sensor calls the Riemann solver. Statistics are averaged over t = 120–320 h/U<sub>b</sub> (12.9 h/u<sub>τ</sub>), with both halves of the channel folded. The run took 489,000 steps, 2.3 hours on two A100 GPUs.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/channel_retau180_poster.jpg" aria-label="Q-criterion isosurfaces of the near-wall vortices of turbulent channel flow colored by streamwise velocity, over the velocity streaks at y+ = 11"><source src="../media/channel_retau180.mp4" type="video/mp4"></video>
+<figcaption>Near-wall vortices (Q<sup>+</sup> = 0.01, colored by streamwise velocity) over the low- and high-speed streaks at y<sup>+</sup> = 11.</figcaption>
+</figure>
+
+<figure class="mallard-figure" markdown>
+![Mean velocity, RMS velocities and Reynolds shear stress in wall units against Moser, Kim and Mansour, and the history of the friction Reynolds number](validation/channel_retau180.png){ loading=lazy width=2250 height=1275 }
+<figcaption>Mean velocity, RMS velocity fluctuations and Reynolds shear stress in wall units against MKM, and Re<sub>τ</sub>(t) from the wall shear with the averaging window.</figcaption>
+</figure>
+
+| | Mallard | MKM | difference |
+|---|---:|---:|---:|
+| Re<sub>τ</sub> | 180.8 | 178.1 | +1.5% |
+| C<sub>f</sub> = 2τ<sub>w</sub> / ρU<sub>b</sub>² | 0.00830 | 0.00814 | +2.0% |
+| peak u<sub>rms</sub><sup>+</sup> | 2.645 | 2.658 | −0.5% |
+| peak v<sub>rms</sub><sup>+</sup> | 0.851 | 0.836 | +1.8% |
+| peak w<sub>rms</sub><sup>+</sup> | 1.102 | 1.087 | +1.4% |
+| peak −u′v′<sup>+</sup> | 0.734 | 0.723 | +1.5% |
+
+The kinetic-energy budget of `[integrals]` attributes 0.9% of the dissipation to the scheme and the rest to molecular viscosity. A second run, continued from a developed state and averaged over t = 365–560, reproduces these values to 0.5%. The mean momentum balance closes to 0.6% of τ<sub>w</sub>.
+
+The upwind dissipation of a Riemann solver at every face sets the friction. Each variant below starts from the same developed state and averages over 12 h/u<sub>τ</sub> ([#209](https://github.com/MatthewBonanni/mallard/issues/209)):
+
+| Convective flux and mesh | Re<sub>τ</sub> | C<sub>f</sub> vs MKM | peak u<sub>rms</sub><sup>+</sup> |
+|---|---:|---:|---:|
+| HLLC, low-Mach correction (cutoff 0.1) | 172.9 | −6.8% | 2.894 |
+| Roe | 171.9 | −7.9% | 2.913 |
+| HLLC, low-Mach cutoff 0.01 | 173.9 | −5.8% | 2.872 |
+| HLLC, low-Mach correction off | 157.1 | −23.0% | 3.343 |
+| HLLC with TENO3 instead of MUSCL | 169.3 | −10.6% | 2.926 |
+| HLLC, 384 × 96 × 128 (Δx<sup>+</sup> 6) | 174.1 | −5.5% | 2.822 |
+| HLLC, 192 × 96 × 256 (Δz<sup>+</sup> 3) | 176.8 | −2.6% | 2.803 |
+| HLLC, 384 × 96 × 256 | 178.4 | −0.8% | 2.716 |
+| hybrid (KEEP central), continuation window | 181.0 | +2.1% | 2.648 |
+
+On the example's mesh HLLC removes about 7% of the kinetic-energy dissipation, and the wall shear comes out 7% low. Without the low-Mach correction its dissipation is about five times larger in the core, and C<sub>f</sub> is 23% low. HLLC reaches MKM, with v<sub>rms</sub>, w<sub>rms</sub> and −u′v′ within 2%, only with both Δx and Δz halved, at about five times the GPU time. Halving the time step changes nothing to 1%.
+
+### Shock–helium bubble interaction {#shock-bubble}
+
+A Mach 1.25 shock in air hits a helium bubble, the spherical case of Haas & Sturtevant (1987), in the [`shock_bubble_3d`](docs/examples.md#shock-bubble-3d) example. Run after Mallard 0.6.0. Navier–Stokes with mixture-averaged transport in He + N<sub>2</sub>/O<sub>2</sub>; the bubble holds 28% air, which gives a sound speed of 871.5 m/s (Haas & Sturtevant estimate 872). The gases, Mach number and tube are the experiment's in units of the bubble diameter D, but the bubble is scaled down to 0.18 mm, so Re = 1.5 × 10<sup>3</sup> instead of 3 × 10<sup>5</sup>. The domain is a quarter of the square tube with symmetry planes, at 128 cells per D: 11.4 million hexahedra. The run took 52,091 steps, 3.4 hours on four A100 GPUs.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/shock_bubble_3d_poster.jpg" aria-label="Helium surface and vortex ring of a shock-accelerated helium bubble, numerical schlieren on the symmetry plane and interface positions against Haas and Sturtevant"><source src="../media/shock_bubble_3d.mp4" type="video/mp4"></video>
+<figcaption>The helium surface (Y = 0.15), and the vortex sheet and ring colored by helium fraction; numerical schlieren on the symmetry plane; positions on the axis against the measured velocities. Times and lengths at the experiment's scale.</figcaption>
+</figure>
+
+| Velocity [m/s] | Mallard, 128 cells per D | Haas & Sturtevant |
+|---|---:|---:|
+| refracted shock | 961 | 960 |
+| transmitted shock | 359 | 365 |
+| vortex ring | 178 | 165 |
+| downstream interface, late | 166 | 165 |
+
+All four are within 0–8% of the measurements, inside their 10% uncertainty, and within 1.2% of a run at 96 cells per D. The upstream interface, the air jet and the late upstream face move differently from the experiment. At this Reynolds number and a Péclet number of about 190, the trailing helium is drawn into the ring.
 
 ## Reacting flow {#reacting-flow}
 
@@ -398,6 +462,17 @@ The detonation of the [previous section](#detonation) in two dimensions, the [`d
 
 The front runs at 1617.0 m/s, the CJ speed to 0.01%. The seeds give eight strong triple points at x = 140 to 180 mm, cells about 15 mm wide, which coarsen to three or four (30 to 40 mm) by x ≈ 260 mm; after 33 cm of travel the cells are not yet regular. Published numerical cell widths for this mixture are about 3 cm (Oran et al. 1998; Deiterding 2011).
 
+### Cellular detonation in 3D {#cellular-detonation-3d}
+
+The detonation of the [previous section](#cellular-detonation) in a 3 cm square duct, the configuration of Deiterding's (2011) and Tsuboi et al.'s (2002) 3D runs, in the [`detonation_3d`](docs/examples.md#detonation-3d) example. Run after Mallard 0.6.0. The resolution is that of the 2D case, 0.15 mm hexahedra (10 per induction length), 200 × 200 across the duct. A 7.2 cm window follows the front: 480 × 200 × 200 = 19.2 million cells. Every 6 µs the run drops the burnt gas more than 5 cm behind the front, appends fresh gas ahead, and keeps the peak pressure of the dropped wall cells for the soot foils. The run starts from a 2D cellular detonation turned into in-phase transverse waves in y and z. MUSCL with HLL: HLLC grows grid-scale odd–even noise on the planar 3D front within 15 µs. The run took 12,180 steps, 4.6 hours on four A100 GPUs.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/detonation_3d_poster.jpg" aria-label="Leading shock of a cellular detonation in a square duct colored by the pressure behind it, and the numerical soot foils of the four walls"><source src="../media/detonation_3d.mp4" type="video/mp4"></video>
+<figcaption>The leading shock colored by the pressure behind it, the soot foils on the two far walls, and the foils of all four walls over 17 cm of travel.</figcaption>
+</figure>
+
+Over t = 96–204 µs (17 cm of travel), the front runs at 1620.6 m/s over the second half, D<sub>CJ</sub> to 0.2%. Its transverse waves stay as two orthogonal families of lines parallel to the walls, crossing in phase. This is the rectangular mode of Deiterding's and Tsuboi et al.'s runs. The peak pressure behind the shock stays at 200–215 kPa (von Neumann: 175 kPa) to the end, while in the 2D precursor it decays. On every wall the foil shows diagonal triple-point tracks crossing every 6.4 cm of travel (6.5 cm in the 2D precursor). It also shows dark bands across the whole wall, every 4–8.6 cm and alternating between opposite walls, where a wave family hits the wall face-on (the slapping waves of Williams, Bauwens & Oran 1996). The start is symmetric under exchanging y and z, and so is the solution: the foils of opposite wall pairs are identical.
+
 ### Lean hydrogen flame {#lean-flame}
 
 A lean H<sub>2</sub>/air flame, φ = 0.4, 700 K, 1 atm, in a periodic channel 7.8 mm wide and 12.2 mm long on 36 µm cells (72,576), started from the same wrinkled planar flame with mixture-averaged transport and with unity Lewis numbers (the [`flame_2d`](docs/examples.md#flame-2d) example; 82 and 67 minutes on one A100). On the same mesh, the planar flame runs at 3.3446 m/s (mixture-averaged) and 3.1093 m/s (unity Lewis), against Cantera's 3.346 and 3.129 m/s (−0.04% and −0.6%).
@@ -409,24 +484,81 @@ A lean H<sub>2</sub>/air flame, φ = 0.4, 700 K, 1 atm, in a periodic channel 7.
 
 With unity Lewis numbers the burnt gas stays within 0.996 to 1.000 of the adiabatic flame temperature T<sub>ad</sub>, and the wrinkle grows only by the Darrieus–Landau instability: the consumption speed peaks at 1.08 S<sub>L</sub> at 2.4 ms. With mixture-averaged transport, the differential diffusion of hydrogen makes the burnt gas behind the bulges superadiabatic, from 0.958 to 1.017 T<sub>ad</sub>, and the consumption speed peaks at 1.14 S<sub>L</sub> at 1.1 ms.
 
+### Stratified autoignition {#autoignition}
+
+Autoignition of a thermally stratified lean H<sub>2</sub>/air mixture at constant volume, the configuration of the DNS of Chen et al. (2006), Hawkes et al. (2006) and Sankaran et al. (2005), in the [`autoignition_2d`](docs/examples.md#autoignition-2d) example. Run after Mallard 0.6.0.
+
+- **Mixture:** φ = 0.1, a mean 1070 K and 41 atm, in a 4.1 mm periodic square.
+- **Initial fields:** random temperature fluctuations T′ of 3.75, 7.5, 15 and 30 K, and decaying turbulence (u′ = 0.5 m/s). Both follow Passot–Pouquet spectra with most energetic lengths of 1.25 mm, from one seed.
+- **Mesh and models:** 400 × 400 cells of 10.25 µm, 11–15 per deflagration thickness. H<sub>2</sub>/O<sub>2</sub> chemistry and mixture-averaged transport.
+- **Reference delay:** τ<sub>0</sub> = 3.650 ms, the homogeneous ignition delay, from both Cantera and `MallardReactor`.
+- **Cost:** 1.4–2.0 million steps per run, 4.7–5.5 hours on four A100 GPUs.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/autoignition_2d_poster.jpg" aria-label="Temperature and heat release rate of four autoignition runs with temperature fluctuations of 3.75 to 30 K, and their mean heat release rate"><source src="../media/autoignition_2d.mp4" type="video/mp4"></video>
+<figcaption>Temperature (top) and heat release rate (bottom) of the four runs, and their mean heat release rate against the multizone model and the homogeneous reactor.</figcaption>
+</figure>
+
+<figure class="mallard-figure" markdown>
+![Mean heat release rate over time of the four runs against the multizone model without transport and the homogeneous reactor](validation/autoignition_hrr.png){ loading=lazy width=1200 height=750 }
+<figcaption>Mean heat release rate over the homogeneous reactor's peak: DNS (solid), multizone model of each initial field without transport (dashed), homogeneous reactor (dotted).</figcaption>
+</figure>
+
+| T′ [K] | peak time / τ<sub>0</sub> | FWHM / τ<sub>0</sub> | peak / homogeneous | deflagrative share | median front speed |
+|---|---:|---:|---:|---:|---:|
+| 3.75 | 0.993 (0.990) | 0.062 (0.110) | 0.95 (0.64) | 0.0% | 16.7 S<sub>L</sub> |
+| 7.5 | 0.986 (0.973) | 0.069 (0.187) | 0.86 (0.41) | 0.2% | 9.1 S<sub>L</sub> |
+| 15 | 0.952 (0.924) | 0.089 (0.354) | 0.67 (0.24) | 2.9% | 5.1 S<sub>L</sub> |
+| 30 | 0.822 (0.791) | 0.164 (0.697) | 0.42 (0.13) | 25% | 2.4 S<sub>L</sub> |
+
+Columns 2–4 describe the mean heat release rate; the multizone model is in brackets. The deflagrative share is the heat released where the H<sub>2</sub>O isolines move slower than 1.5 S<sub>L</sub>. The median front speed is the heat-release-weighted median of the displacement speed |S<sub>d</sub><sup>*</sup>| over the deflagration speed S<sub>L</sub>(T<sub>u</sub>, p) of the local fresh gas.
+
+<figure class="mallard-figure" markdown>
+![Peak time, burn duration and deflagrative share of heat release against the temperature fluctuation, for the DNS, the multizone model and the beta criterion](validation/autoignition_timing.png){ loading=lazy width=1950 height=600 }
+<figcaption>Peak time, burn duration and deflagrative share against T′: DNS, multizone model, and Sankaran et al.'s β criterion applied to the initial field and at 10% heat release.</figcaption>
+</figure>
+
+<figure class="mallard-figure" markdown>
+![Heat-release-weighted distributions of the front displacement speed over the deflagration speed for the four runs](validation/autoignition_speed.png){ loading=lazy width=1050 height=675 }
+<figcaption>Heat-release-weighted distribution of the front speed |S<sub>d</sub><sup>*</sup>| / S<sub>L</sub>; the dashed line is 1.5 S<sub>L</sub>.</figcaption>
+</figure>
+
+As the papers describe, larger fluctuations ignite earlier and burn longer, and the fronts slow from spontaneous ignition towards deflagration. The comparison is qualitative: the papers' figures were not available for a quantitative one, and they used another H<sub>2</sub> mechanism.
+
+- **Multizone model:** without transport, it predicts bursts 2–4 times wider than the DNS. Turbulent mixing halves T′ before ignition (at T′ = 15 K, to 8.5 K by 0.45 τ<sub>0</sub>), and deflagrations consume the coldest gas.
+- **β criterion:** Sankaran et al.'s criterion marks a larger part of the mixture as deflagrative than the DNS front speeds show (figure above).
+- **Threshold:** the deflagrative share depends on the threshold. At T′ = 30 K it is 15%, 25% and 51% at 1.1, 1.5 and 3 S<sub>L</sub>, but the shift of the front-speed distribution with T′ does not depend on it.
+
+<!-- SLOT for Mallard #199 (large-eddy simulation), to fill when its validation runs are done:
+     ### Decaying isotropic turbulence, Comte-Bellot & Corrsin (LES)
+     ### Channel flow at Re_tau = 395 and 590 (LES, against Moser, Kim & Mansour)
+     ### Thickened-flame (TFLES) checks
+     ### Premixed flame in turbulence (LES)
+     Each needs a summary-table row above and its references below. -->
+
 ## References
 
 The sources of the reference data and test cases on this page. The sources of the numerical methods themselves, with where Mallard uses each, are on the [References](docs/references.md) page.
 
 - F. S. Billig, Shock-wave shapes around spherical- and cylindrical-nosed bodies, *J. Spacecraft Rockets* 4, 822–823 (1967). [doi:10.2514/3.28969](https://doi.org/10.2514/3.28969)
 - M. E. Brachet, D. I. Meiron, S. A. Orszag, B. G. Nickel, R. H. Morf and U. Frisch, Small-scale structure of the Taylor–Green vortex, *J. Fluid Mech.* 130, 411–452 (1983).
+- J. H. Chen, E. R. Hawkes, R. Sankaran, S. D. Mason and H. G. Im, Direct numerical simulation of ignition front propagation in a constant volume with temperature inhomogeneities: I. Fundamental analysis and diagnostics, *Combust. Flame* 145, 128–144 (2006). [doi:10.1016/j.combustflame.2005.09.017](https://doi.org/10.1016/j.combustflame.2005.09.017)
 - G. S. Constantinescu and K. D. Squires, LES and DES investigations of turbulent flow over a sphere at Re = 10,000, *Flow Turbul. Combust.* 70, 267–298 (2003). [doi:10.1023/B:APPL.0000004937.34078.71](https://doi.org/10.1023/B:APPL.0000004937.34078.71)
 - V. Daru and C. Tenaud, Numerical simulation of the viscous shock tube problem by using a high resolution monotonicity-preserving scheme, *Computers & Fluids* 38, 664–676 (2009).
 - R. Deiterding, High-resolution numerical simulation and analysis of Mach reflection structures in detonation waves in low-pressure H<sub>2</sub>–O<sub>2</sub>–Ar mixtures: a summary of results obtained with the adaptive mesh refinement framework AMROC, *J. Combust.* 2011, 738969 (2011). [doi:10.1155/2011/738969](https://doi.org/10.1155/2011/738969)
 - R. P. Fedkiw, B. Merriman and S. Osher, High accuracy numerical methods for thermally perfect gas flows with chemistry, *J. Comput. Phys.* 132, 175–190 (1997). [doi:10.1006/jcph.1996.5622](https://doi.org/10.1006/jcph.1996.5622)
 - D. G. Goodwin, R. L. Speth, H. K. Moffat and B. W. Weber, Cantera: an object-oriented software toolkit for chemical kinetics, thermodynamics, and transport processes, version 3.2.0, [cantera.org](https://www.cantera.org).
+- J.-F. Haas and B. Sturtevant, Interaction of weak shock waves with cylindrical and spherical gas inhomogeneities, *J. Fluid Mech.* 181, 41–76 (1987). [doi:10.1017/S0022112087002003](https://doi.org/10.1017/S0022112087002003)
+- E. R. Hawkes, R. Sankaran, P. P. Pébay and J. H. Chen, Direct numerical simulation of ignition front propagation in a constant volume with temperature inhomogeneities: II. Parametric study, *Combust. Flame* 145, 145–159 (2006). [doi:10.1016/j.combustflame.2005.09.018](https://doi.org/10.1016/j.combustflame.2005.09.018)
 - T. A. Johnson and V. C. Patel, Flow past a sphere up to a Reynolds number of 300, *J. Fluid Mech.* 378, 19–70 (1999). [doi:10.1017/S0022112098003206](https://doi.org/10.1017/S0022112098003206)
 - J. Kim, D. Kim and H. Choi, An immersed-boundary finite-volume method for simulations of flow in complex geometries, *J. Comput. Phys.* 171, 132–150 (2001). [doi:10.1006/jcph.2001.6778](https://doi.org/10.1006/jcph.2001.6778)
 - C. Liu, X. Zheng and C. H. Sung, Preconditioned multigrid methods for unsteady incompressible flows, *J. Comput. Phys.* 139, 35–57 (1998).
 - P. J. Martínez Ferrer, R. Buttay, G. Lehnasch and A. Mura, A detailed verification procedure for compressible reactive multicomponent Navier–Stokes solvers, *Computers & Fluids* 89, 88–110 (2014). [doi:10.1016/j.compfluid.2013.10.014](https://doi.org/10.1016/j.compfluid.2013.10.014)
+- R. D. Moser, J. Kim and N. N. Mansour, Direct numerical simulation of turbulent channel flow up to Re<sub>τ</sub> = 590, *Phys. Fluids* 11, 943–945 (1999). [doi:10.1063/1.869966](https://doi.org/10.1063/1.869966)
 - E. S. Oran, J. W. Weber, E. I. Stefaniw, M. H. Lefebvre and J. D. Anderson, A numerical study of a two-dimensional H<sub>2</sub>-O<sub>2</sub>-Ar detonation using a detailed chemical reaction model, *Combust. Flame* 113, 147–163 (1998). [doi:10.1016/S0010-2180(97)00218-6](https://doi.org/10.1016/S0010-2180(97)00218-6)
 - J. Park, K. Kwon and H. Choi, Numerical solutions of flow past a circular cylinder at Reynolds numbers up to 160, *KSME Int. J.* 12, 1200–1205 (1998).
 - J. J. Quirk, A contribution to the great Riemann solver debate, *Int. J. Numer. Methods Fluids* 18, 555–574 (1994).
+- R. Sankaran, H. G. Im, E. R. Hawkes and J. H. Chen, The effects of non-uniform temperature distribution on the ignition of a lean homogeneous hydrogen–air mixture, *Proc. Combust. Inst.* 30, 875–882 (2005). [doi:10.1016/j.proci.2004.08.176](https://doi.org/10.1016/j.proci.2004.08.176)
 - L. I. Sedov, *Similarity and Dimensional Methods in Mechanics*, Academic Press (1959).
 - J. E. Shepherd, Shock and Detonation Toolbox, Explosion Dynamics Laboratory, Caltech, [shepherd.caltech.edu/EDL/PublicResources/sdt](https://shepherd.caltech.edu/EDL/PublicResources/sdt/).
 - C.-W. Shu, Essentially non-oscillatory and weighted essentially non-oscillatory schemes for hyperbolic conservation laws, in *Advanced Numerical Approximation of Nonlinear Hyperbolic Equations*, Lecture Notes in Mathematics 1697, 325–432 (1998).
@@ -436,5 +568,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - G. I. Taylor, The formation of a blast wave by a very intense explosion. I. Theoretical discussion, *Proc. R. Soc. Lond. A* 201, 159–174 (1950). [doi:10.1098/rspa.1950.0049](https://doi.org/10.1098/rspa.1950.0049)
 - A. G. Tomboulides, S. A. Orszag and G. E. Karniadakis, Direct and large-eddy simulation of the flow past a sphere, in *Engineering Turbulence Modelling and Experiments 2*, Elsevier, 273–282 (1993). [doi:10.1016/B978-0-444-89802-9.50030-7](https://doi.org/10.1016/B978-0-444-89802-9.50030-7)
 - E. F. Toro, *Riemann Solvers and Numerical Methods for Fluid Dynamics*, 3rd ed., Springer (2009).
+- N. Tsuboi, S. Katoh and A. K. Hayashi, Three-dimensional numerical simulation for hydrogen/air detonation: rectangular and diagonal structures, *Proc. Combust. Inst.* 29, 2783–2788 (2002). [doi:10.1016/S1540-7489(02)80339-X](https://doi.org/10.1016/S1540-7489(02)80339-X)
+- D. N. Williams, L. Bauwens and E. S. Oran, Detailed structure and propagation of three-dimensional detonations, *Proc. Combust. Inst.* 26, 2991–2998 (1996). [doi:10.1016/S0082-0784(96)80142-1](https://doi.org/10.1016/S0082-0784(96)80142-1)
 - C. H. K. Williamson, Vortex dynamics in the cylinder wake, *Annu. Rev. Fluid Mech.* 28, 477–539 (1996).
 - G. Zhou, K. Xu and F. Liu, Grid-converged solution and analysis of the unsteady viscous flow in a two-dimensional shock tube, *Phys. Fluids* 30, 016102 (2018), [doi:10.1063/1.4998300](https://doi.org/10.1063/1.4998300); [arXiv:1705.09062](https://arxiv.org/abs/1705.09062).
