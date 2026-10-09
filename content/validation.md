@@ -136,10 +136,24 @@ The errors are taken over all cells of the strip, whose four rows agree to round
 
 #### Sod shock tube in 3D {#sod-3d}
 
-Mallard 0.3.0
+Text: Mallard 0.3.0. Figure and table: rerun with Mallard 0.7.0
 { .mallard-provenance }
 
 The Sod problem of the [Sod shock tube](#sod-shock-tube) section on a 200 × 4 × 4 box of hexahedra with slip walls on all six faces, MUSCL with the Venkatakrishnan limiter, HLLC, SSPRK3. The solution stays one-dimensional to round-off (transverse velocities below 10<sup>−13</sup>), and its L<sub>1</sub> density error against the exact solution, 2.653 × 10<sup>−3</sup>, equals that of the same scheme on 200 × 4 quadrilaterals in 2D to all four digits.
+
+
+<figure class="mallard-figure" markdown>
+![Density, velocity and pressure of every cell of the 3D Sod shock tube against the exact solution](validation/sod_3d.png){ loading=lazy width=2158 height=718 }
+<figcaption>Every one of the 200 × 4 × 4 cells at t = 0.2 (MUSCL with the Venkatakrishnan limiter, HLLC), against the exact solution; Mallard 0.7.0.</figcaption>
+</figure>
+
+| Run | L<sub>1</sub> density error | largest transverse velocity | largest density spread across a cross-section |
+|---|---:|---:|---:|
+| 3D, 200 × 4 × 4 hexahedra, Mallard 0.7.0 | 2.662 × 10<sup>−3</sup> | 1.5 × 10<sup>−14</sup> | 3.4 × 10<sup>−14</sup> |
+| 3D, the same, Mallard 0.3.0 | 2.653 × 10<sup>−3</sup> | below 10<sup>−13</sup> | |
+| 2D, 200 × 4 quadrilaterals, Mallard 0.5.0 ([table above](#sod-shock-tube)) | 2.65 × 10<sup>−3</sup> | | |
+
+The 0.7.0 rerun uses the `sod` example's settings in 0.7.0 (CFL 1.0 in that release's time-step convention, [#175](https://github.com/MatthewBonanni/mallard/pull/175)); the solution stays one-dimensional to round-off.
 
 ### Shu–Osher problem {#shu-osher-problem}
 
