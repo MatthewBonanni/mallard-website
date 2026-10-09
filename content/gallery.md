@@ -30,6 +30,8 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figcaption markdown>**Double Mach reflection.** A Mach 10 shock reflecting off a 30° wedge (Woodward & Colella 1984), t = 0 to 0.2, on 1.84 million triangles. Fifth-order TENO-E with the rotated-hybrid HLL–Roe flux and SSPRK3. Density and numerical schlieren.</figcaption>
 </figure>
 
+<!-- SLOT: the 256^3 Taylor-Green vortex video replaces media/tgv.mp4 and media/tgv_poster.jpg (1920 x 1080);
+     update this caption and the validation page's Taylor-Green section with the new run's resolution, GPUs and numbers. -->
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex in the full periodic box, beside the dissipation rate against the spectral DNS"><source src="../media/tgv.mp4" type="video/mp4"></video>
 <figcaption markdown>**Taylor–Green vortex, Re = 1600, in 3D.** Transition to turbulence in the full periodic box: Q-criterion isosurfaces colored by vorticity magnitude, and the dissipation rate against the 512³ spectral DNS of the High-Order CFD Workshop. Fifth-order TENO-E on 128³ hexahedra, Mach 0.1, Mallard 0.3.0 defaults, on 8 GPUs; the `taylor_green_3d` example (`input_periodic.toml`). [Validation details](validation.md#taylor-green-vortex).</figcaption>
@@ -50,6 +52,11 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figcaption markdown>**Sphere at Re = 300, in 3D.** Periodic shedding of hairpin vortices from a wake with one plane of symmetry: smoothed Q-criterion isosurfaces (Q = 0.02 (U/D)²) colored by streamwise velocity, and the drag and lift coefficients. St = 0.133, C<sub>D</sub> = 0.669 and C<sub>L</sub> = 0.073 over seven shedding periods, against 0.137, 0.656 and 0.069 (Johnson & Patel 1999). Navier–Stokes at Mach 0.2 on 850,000 prisms and tetrahedra, MUSCL, HLLC, on 4 GPUs; the `sphere_re300` example. [Validation details](validation.md#sphere-re300).</figcaption>
 </figure>
 
+<figure id="shock-bubble" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/shock_bubble_3d_poster.jpg" aria-label="Helium surface and vortex ring of a shock-accelerated helium bubble, numerical schlieren on the symmetry plane and interface positions against Haas and Sturtevant"><source src="../media/shock_bubble_3d.mp4" type="video/mp4"></video>
+<figcaption markdown>**Shock–helium bubble interaction, in 3D** (Haas & Sturtevant 1987). A Mach 1.25 shock in air hits a helium bubble, which rolls up into a vortex ring: the helium surface, the vortex sheet and ring colored by helium fraction, and numerical schlieren on the symmetry plane. The refracted and transmitted shocks, the ring and the late downstream interface move at 961, 359, 178 and 166 m/s, against the measured 960, 365, 165 and 165. Navier–Stokes with mixture-averaged transport at Re = 1.5 × 10<sup>3</sup>, 11.4 million hexahedra (128 cells per bubble diameter), 3.4 hours on four A100 GPUs; the `shock_bubble_3d` example. [Validation details](validation.md#shock-bubble).</figcaption>
+</figure>
+
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sedov_poster.jpg" aria-label="Density of the Sedov-Taylor blast wave on three symmetry planes, with the shock radius and density profile against the exact similarity solution"><source src="../media/sedov.mp4" type="video/mp4"></video>
 <figcaption markdown>**Sedov–Taylor blast wave, in 3D.** A point explosion: density on the three symmetry planes of the computed octant, the shock radius against the exact similarity solution, and the radial density profile. 128³ hexahedra, fifth-order TENO-E with bound-preserving scaling, HLLC; the `sedov_3d` example. [Validation details](validation.md#sedov-taylor).</figcaption>
@@ -58,6 +65,11 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/detonation_2d_poster.jpg" aria-label="Pressure and numerical soot foil of a cellular detonation in hydrogen-oxygen-argon"><source src="../media/detonation_2d.mp4" type="video/mp4"></video>
 <figcaption markdown>**Cellular detonation.** A detonation in 2H<sub>2</sub>–O<sub>2</sub>–7Ar at 6.67 kPa, started from its ZND structure with six seeded pockets of fresh gas, in a 6 cm channel: pressure, and the numerical soot foil (the peak pressure of each cell), on which triple points trace the detonation cells. Finite-rate H<sub>2</sub>/O<sub>2</sub> chemistry (10 species, 29 reactions), MUSCL, HLLC, 1.2 million cells (10 per induction length), 39 minutes on two A100s; the front runs at the CJ speed to 0.01%. The `detonation_2d` example (new in Mallard 0.5.0). [Validation details](validation.md#cellular-detonation).</figcaption>
+</figure>
+
+<figure id="detonation-3d" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/detonation_3d_poster.jpg" aria-label="Leading shock of a cellular detonation in a square duct colored by the pressure behind it, and the numerical soot foils of the four walls"><source src="../media/detonation_3d.mp4" type="video/mp4"></video>
+<figcaption markdown>**Cellular detonation in 3D.** The 2H<sub>2</sub>–O<sub>2</sub>–7Ar detonation of the 2D case in a 3 cm square duct: the leading shock colored by the pressure behind it, and the numerical soot foils of the four walls. The transverse waves cross in phase, in the rectangular mode, drawing diagonal triple-point tracks and slapping-wave bands that alternate between opposite walls; the front keeps the CJ speed to 0.2% over 17 cm. 19.2 million hexahedra in a window that follows the front (10 cells per induction length), finite-rate chemistry, 4.6 hours on four A100 GPUs; the `detonation_3d` example. [Validation details](validation.md#cellular-detonation-3d).</figcaption>
 </figure>
 
 <figure markdown>
