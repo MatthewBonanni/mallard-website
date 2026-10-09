@@ -120,7 +120,7 @@ cd examples/explosion_3d
 ../../build3d/src/Mallard -i input.toml --kokkos-num-threads=6
 ```
 
-The [validation page](../validation.md#3d-cases) compares it with a one-dimensional radial solution, and also shows the Sod shock tube in 3D and the Taylor–Green vortex.
+The [validation page](../validation.md#spherical-explosion) compares it with a one-dimensional radial solution, and also shows the Sod shock tube in 3D and the Taylor–Green vortex.
 
 ## Next steps
 

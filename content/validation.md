@@ -2,109 +2,49 @@
 title: Validation
 hide:
   - navigation
-description: Mallard against exact solutions, theory and reference data - shock tubes, oblique shock, design-order convergence, viscous exact solutions, cylinder wake, viscous shock tube, in 3D the spherical explosion, Sedov-Taylor blast wave, Taylor-Green vortex, Mach 3 sphere, sphere wake at Re = 300, turbulent channel flow with periodic and synthetic inflow, a shock-helium bubble interaction, large-eddy simulation (decaying turbulence, channel flow, thickened flames), and reacting flow - ignition, a reactive shock tube, CJ detonations in 1D, 2D and 3D and stratified autoignition.
+description: Mallard against exact solutions, theory and reference data in 2D and 3D - order of accuracy, shock tubes and blast waves, shocks on bodies, viscous flow, turbulence (DNS), reacting flow and large-eddy simulation.
 ---
 
 # Validation
 
-Each result on this page comes from a run of Mallard 0.4.0 (double precision, default settings, including the low-Mach correction of the convective flux), unless a section says otherwise, with the inputs described, compared with an exact solution, theory, or published reference data. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). Mallard's test suite checks many of the same properties at smaller scale on every change. Mallard 0.5.0 changed two things that affect results: 2D cell centroids are now exact to round-off ([#127](https://github.com/MatthewBonanni/mallard/pull/127)), which keeps the Sod and Shu–Osher strips one-dimensional (both rerun with 0.5.0) and changes other 2D results at round-off level; and TENO-E ranks stencil candidates by the local mesh spacing on strongly stretched cells ([#120](https://github.com/MatthewBonanni/mallard/pull/120)), which leaves hexahedral and regular meshes unchanged.
+Each result on this page comes from a run of Mallard 0.4.0 (double precision, default settings, including the low-Mach correction of the convective flux), unless a section says otherwise, with the inputs described, compared with an exact solution, theory, or published reference data. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). Mallard's test suite checks many of the same properties at smaller scale on every change. Mallard 0.5.0 changed two things that affect results: 2D cell centroids are now exact to round-off ([#127](https://github.com/MatthewBonanni/mallard/pull/127)), which keeps the Sod and Shu–Osher strips one-dimensional (both rerun with 0.5.0) and changes other 2D results at round-off level; and TENO-E ranks stencil candidates by the local mesh spacing on strongly stretched cells ([#120](https://github.com/MatthewBonanni/mallard/pull/120)), which leaves hexahedral and regular meshes unchanged. Cases marked 3D use Mallard's 3D build (`-DMallard_DIM=3`); see [a 3D case](docs/tutorial.md#6-a-3d-case) for how to build and run in 3D.
 
 | Case | Quantity | Mallard | Reference |
 |---|---|---|---|
-| [Sod shock tube](#sod-shock-tube) | L<sub>1</sub> density error, 200 cells | 2.4 × 10<sup>−3</sup> | exact solution |
-| [Shu–Osher problem](#shu-osher-problem) | L<sub>1</sub> density difference, 400 / 800 cells | 0.20 / 0.090 | WENO5 at 12,800 cells; WENO5 at the same resolution: 0.29 / 0.10 |
-| [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.82°, 1.4984 | 42.82°, 1.4984 (theory) |
 | [Isentropic vortex](#design-order-convergence) | order of accuracy, TENO-E orders 3–6 | 2.99, 4.02, 4.98, 6.03 (quads); 3.00, 4.01, 4.99, 5.99 (triangles) | 3, 4, 5, 6 |
 | [Vortex across a periodic seam](#periodic-seams) | order of accuracy, TENO-E orders 3–6 | 2.91, 4.08, 4.87, 6.15 (quads); 2.98, 4.03, 4.94, 6.05 (triangles) | 3, 4, 5, 6 |
-| [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.0099% of U (quads); order 1.9–2.0, 0.0093% of U (triangles) | exact solution |
-| [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude | 0.165, 1.368, 0.331 | 0.164–0.165, 1.33–1.35, 0.33–0.34 |
-| [Viscous shock tube](#viscous-shock-tube) | wall density RMS difference; lambda-shock triple point | 0.56 (range 37–118); (0.581, 0.138) | Zhou et al. (2018), 1500 × 750 grid: (0.58, 0.137) |
+| [Sod shock tube](#sod-shock-tube) | L<sub>1</sub> density error, 200 cells | 2.4 × 10<sup>−3</sup> | exact solution |
+| [Shu–Osher problem](#shu-osher-problem) | L<sub>1</sub> density difference, 400 / 800 cells | 0.20 / 0.090 | WENO5 at 12,800 cells; WENO5 at the same resolution: 0.29 / 0.10 |
 | [Spherical explosion](#spherical-explosion) (3D) | mean density difference, 64³ hexahedra | 0.004 | 1D radial solution, 4000 cells |
 | [Sedov–Taylor blast wave](#sedov-taylor) (3D) | shock radius error at t = 0.8 | +1.1% | exact similarity solution |
-| [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D) | kinetic energy, largest deviation over t = 0–20; peak dissipation rate, at t | 2.6%; 0.01161 at 8.39 (128³) | 512³ spectral DNS: 0.01286 at 8.97 |
-| [Sphere, Re = 300](#sphere-re300) (3D) | St, mean C<sub>D</sub>, mean C<sub>L</sub> (2.06M cells) | 0.133, 0.666, 0.070 | 0.134–0.137, 0.655–0.671, 0.065–0.069 |
+| [Shock–helium bubble](#shock-bubble) (3D) | refracted and transmitted shock, vortex ring, downstream interface velocities | 961, 359, 178, 166 m/s | Haas & Sturtevant (1987): 960, 365, 165, 165 m/s |
+| [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.82°, 1.4984 | 42.82°, 1.4984 (theory) |
 | [Mach 3 sphere](#mach-3-sphere) (3D) | bow-shock standoff Δ/R; stagnation pressure | 0.226; 12.0 | 0.205 (Billig); 12.06 (pitot) |
+| [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.0099% of U (quads); order 1.9–2.0, 0.0093% of U (triangles) | exact solution |
+| [Viscous shock tube](#viscous-shock-tube) | wall density RMS difference; lambda-shock triple point | 0.56 (range 37–118); (0.581, 0.138) | Zhou et al. (2018), 1500 × 750 grid: (0.58, 0.137) |
+| [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude | 0.165, 1.368, 0.331 | 0.164–0.165, 1.33–1.35, 0.33–0.34 |
+| [Sphere, Re = 300](#sphere-re300) (3D) | St, mean C<sub>D</sub>, mean C<sub>L</sub> (2.06M cells) | 0.133, 0.666, 0.070 | 0.134–0.137, 0.655–0.671, 0.065–0.069 |
+| [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D) | kinetic energy, largest deviation over t = 0–20; peak dissipation rate, at t | 2.6%; 0.01161 at 8.39 (128³) | 512³ spectral DNS: 0.01286 at 8.97 |
 | [Channel flow, Re<sub>τ</sub> = 180](#channel-retau180) (3D) | Re<sub>τ</sub>; C<sub>f</sub>; peaks of u<sub>rms</sub>, v<sub>rms</sub>, w<sub>rms</sub>, −u′v′ | 180.8; +2.0%; −0.5, +1.8, +1.4, +1.5% | DNS of Moser, Kim & Mansour (1999): 178.1 |
 | [Synthetic turbulent inflow](#synthetic-inflow) (3D) | distance from the inlet to within 5% of the developed channel, all statistics | about 17h | about 20h (Keating et al. 2004) |
-| [Shock–helium bubble](#shock-bubble) (3D) | refracted and transmitted shock, vortex ring, downstream interface velocities | 961, 359, 178, 166 m/s | Haas & Sturtevant (1987): 960, 365, 165, 165 m/s |
 | [0D ignition](#ignition) (reacting) | ignition delay, 36 H<sub>2</sub>/air and CH<sub>4</sub>/air mixtures; final temperature | within 3 × 10<sup>−6</sup> (H<sub>2</sub>), 2 × 10<sup>−4</sup> (CH<sub>4</sub>); within 10<sup>−5</sup> K | Cantera reactor; Cantera equilibrium |
 | [Reactive shock tube](#reactive-shock-tube) (reacting) | reaction front at 230 µs, 50 / 25 / 12.5 µm cells | 99.63 / 99.66 / 99.66 mm | converged within one 50 µm cell |
 | [CJ detonation](#detonation) (reacting) | front speed; induction length; peak pressure, at 10 / 20 / 40 cells per induction length | +0.11 / +0.01 / 0.00%; −4.5 / −1.8 / +2.7%; 174.8 / 175.2 / 174.7 kPa | D<sub>CJ</sub> 1616.9 m/s; ZND 1.525 mm; von Neumann 174.7 kPa |
 | [Laminar flame speed](#flame-speed) (reacting) | H<sub>2</sub>/air, φ = 0.6–1.4, two transport models | within 0.81% | Cantera `FreeFlame` |
 | [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s |
 | [Cellular detonation in 3D](#cellular-detonation-3d) (reacting) | front speed over 17 cm | 1620.6 m/s | D<sub>CJ</sub> 1617 m/s |
+| [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) |
 | [LES, decaying isotropic turbulence](#les-cbc) (3D) | log<sub>10</sub> RMS spectral error at two stations, 128³, Sigma | 0.063 / 0.085 | Comte-Bellot & Corrsin (1971) |
 | [LES, channel flow, Re<sub>τ</sub> = 395 / 590](#les-channel) (3D) | Re<sub>τ</sub>, Sigma with Scotti's width (64³ / 96³) | +0.7% / +1.6% | 392.2 / 587.2 (Moser, Kim & Mansour 1999) |
 | [LES, thickened flame](#les-tfles) (reacting) | consumption speed at F = 7.9 / 31.6 | −0.2% / −0.2% | Cantera s<sub>L</sub> = 2.3324 m/s |
 | [LES, flame in turbulence](#les-flame) (reacting, 3D) | S<sub>T</sub>/S<sub>L</sub>, TFLES at Δ = 0.4 / 0.8 / 1.6 δ<sub>L</sub> | 1.056 / 1.053 / 2.240 | DNS 1.132 |
 | [LES, non-premixed flame, PaSR](#les-pasr) (reacting, 3D, experimental) | heat release, Δ = 0.27 / 0.53 mm | −10.7% / −50% (quasi-laminar +16.6% / +41%) | DNS |
-| [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) |
 
-## Sod shock tube {#sod-shock-tube}
+## Order of accuracy {#accuracy}
 
-The Riemann problem of Sod (1978): (ρ, u, p) = (1, 0, 1) for x < 0.5 and (0.125, 0, 0.1) for x > 0.5, γ = 1.4, at t = 0.2. The [`sod`](docs/examples.md) example: a strip of N × 4 square quadrilaterals with slip walls, HLLC flux, SSPRK3 at CFL 0.5. Run with Mallard 0.5.0.
+Design order on smooth solutions, in 2D, including across periodic seams.
 
-<figure class="mallard-figure" markdown>
-![Density, velocity and pressure of the Sod shock tube at t = 0.2 on 200 cells, TENO-E and MUSCL against the exact solution](validation/sod.png){ loading=lazy width=2158 height=718 }
-<figcaption>Sod shock tube at t = 0.2 on 200 cells. Fifth-order TENO-E (dots) and MUSCL with the Venkatakrishnan limiter (line) against the exact solution.</figcaption>
-</figure>
-
-L<sub>1</sub> error of the cell-averaged density, ∫|ρ − ρ<sub>exact</sub>| dx, with the exact solution averaged over each cell, over all cells of the strip:
-
-| Cells | TENO-E 5 | rate | MUSCL | rate |
-|---:|---:|---:|---:|---:|
-| 100 | 4.16 × 10<sup>−3</sup> |  | 4.46 × 10<sup>−3</sup> |  |
-| 200 | 2.41 × 10<sup>−3</sup> | 0.79 | 2.65 × 10<sup>−3</sup> | 0.75 |
-| 400 | 1.27 × 10<sup>−3</sup> | 0.93 | 1.43 × 10<sup>−3</sup> | 0.89 |
-| 800 | 6.65 × 10<sup>−4</sup> | 0.93 | 7.65 × 10<sup>−4</sup> | 0.90 |
-
-Both schemes converge at close to first order, the expected rate for a solution with a shock and a contact discontinuity; TENO-E has 7–13% lower error than MUSCL. The shock spans two cells and the contact discontinuity about five.
-
-The errors are taken over all cells of the strip, whose four rows agree to round-off (5 × 10<sup>−14</sup>) at every resolution with Mallard 0.5.0. In 0.3.0 the rows next to the slip walls differed from the inner two, and the errors quoted here were those of the bottom row (3.92, 2.28, 1.21 and 0.60 × 10<sup>−3</sup> for TENO-E); in 0.4.0 the TENO-E rows differed by up to 5 × 10<sup>−3</sup> on 800 cells (error 7.24 × 10<sup>−4</sup>). MUSCL results are the same in all three versions.
-
-## Shu–Osher problem {#shu-osher-problem}
-
-A Mach 3 shock running into a sinusoidal density field (Shu & Osher 1989), on [0, 10] (the usual [−5, 5] shifted by 5), t = 1.8, with the [`shu_osher`](docs/examples.md) example: fifth-order TENO-E and the RHLL flux on N × 4 square quadrilaterals, run with Mallard 0.5.0. There is no exact solution; the reference is a one-dimensional fifth-order WENO-JS solution (characteristic, Lax–Friedrichs flux splitting, SSPRK3) on 12,800 cells, which differs from the same code on 6,400 cells by 0.007 in L<sub>1</sub>.
-
-<figure class="mallard-figure" markdown>
-![Density of the Shu-Osher problem at t = 1.8 on 200 and 400 cells against a fine-grid reference](validation/shu_osher.png){ loading=lazy width=2158 height=778 }
-<figcaption>Shu–Osher problem at t = 1.8: fifth-order TENO-E with the RHLL flux on 200 and 400 cells against the 12,800-cell reference. Right: the entropy waves generated behind the shock, the part of the solution that separates high-order schemes.</figcaption>
-</figure>
-
-L<sub>1</sub> density difference from the reference, ∫|ρ − ρ<sub>ref</sub>| dx:
-
-| Cells | Mallard, RHLL | Mallard, HLLC | 1D WENO5, same cells |
-|---:|---:|---:|---:|
-| 200 | 0.66 | 0.65 | 0.75 |
-| 400 | 0.20 | 0.21 | 0.29 |
-| 800 | 0.090 | 0.31 | 0.10 |
-| 1600 | 0.043 | 0.65 | 0.048 |
-
-With the rotated-hybrid RHLL flux, Mallard converges to the reference and is more accurate than the one-dimensional WENO5 scheme on every grid (0.3.0 had 0.26, 0.12 and 0.082 on 400, 800 and 1600 cells; 0.4.0 0.20, 0.11 and 0.059). With HLLC it does not converge beyond 400 cells: behind the Mach 3 shock, which moves along the grid lines of the strip, the rows of a problem that should stay one-dimensional differ by up to 1.1 in density on 800 and 1600 cells, and the entropy waves are lost. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. The example has used RHLL since Mallard 0.3.0 (0.2.0's used HLLC). With RHLL the rows differ by up to 0.07 on 800 cells and 10<sup>−5</sup> on 1600.
-
-<figure class="mallard-figure" markdown>
-![Entropy waves of the Shu-Osher problem on 1600 cells with HLLC and RHLL fluxes](validation/shu_osher_flux.png){ loading=lazy width=1258 height=714 style="max-width: 32rem" }
-<figcaption>Entropy waves on 1600 cells with the HLLC and RHLL fluxes.</figcaption>
-</figure>
-
-## Oblique shock {#oblique-shock}
-
-Mach 1.758 flow (u = 600 m/s, T = 300 K, R = 277.4 J/(kg K)) over an 8° compression ramp, the [`wedge`](docs/examples.md) example: 160 × 120 quadrilaterals, HLLC, SSPRK3, run to t = 0.02 s (six flow-through times). The oblique-shock relations give a shock angle β = 42.816° and a pressure ratio p<sub>2</sub>/p<sub>1</sub> = 1.4984. The measured angle is a straight-line fit to the half-jump pressure contour for 0.7 < x < 1.6 m; the pressure ratio is the mean over the cells 0.03–0.12 m above the ramp for 0.9 < x < 1.1 m.
-
-<figure class="mallard-figure" markdown>
-![Pressure field over the 8 degree ramp with the theoretical shock angle, and a pressure profile across the shock](validation/wedge.png){ loading=lazy width=2136 height=808 }
-<figcaption>Left: pressure with the theoretical shock (dashed). Right: pressure across the shock at x = 1.51 m with MUSCL and fifth-order TENO-E against the theoretical jump.</figcaption>
-</figure>
-
-| Source | Shock angle | Error | p<sub>2</sub>/p<sub>1</sub> | Error |
-|---|---:|---:|---:|---:|
-| Theory | 42.816° | | 1.4984 | |
-| MUSCL | 42.814° | −0.002° | 1.4984 | < 0.01% |
-| TENO-E 5 | 42.826° | +0.011° | 1.4985 | +0.01% |
-
-The fitted shock passes through x = 0.4997 m at y = 0, the ramp corner being at x = 0.5 m. MUSCL results are unchanged from Mallard 0.3.0; with 0.4.0's TENO-E changes next to walls, the TENO-E shock angle moved from 42.821° to 42.826°.
-
-## Design-order convergence {#design-order-convergence}
+### Design-order convergence {#design-order-convergence}
 
 The isentropic vortex (Shu 1998) is an exact solution of the Euler equations: a vortex of strength β = 5 in a uniform stream (ρ, u, v, p) = (1, 1, 0.5, 1), γ = 1.4, translating without change of shape. It runs on [0, 14]² from (6.5, 6.75) to t = 1, with the exact moving solution imposed on all four boundaries (`dirichlet` conditions with expressions in x, y and t), on N × N quadrilaterals and on the same grids split into 2N² triangles, N = 28 to 448. TENO-E of orders 3 to 6, HLLC flux, RK4. The time step is 0.1 h for orders 3 and 4 and 0.1 h (h / h<sub>0</sub>)<sup>(p − 4)/4</sup> for orders p = 5 and 6 (h<sub>0</sub> = 1/2), so that the fourth-order time error falls at least as fast as the spatial error. The error is the area-weighted mean of |ρ − ρ<sub>exact</sub>| over all cells, with the exact cell averages from a degree-5 quadrature on 16 sub-triangles of each triangle.
 
@@ -135,7 +75,7 @@ Every order converges at its design rate on both meshes: between the two finest 
 | 1/16 | 1.99 × 10<sup>−6</sup> | 2.99 | 5.24 × 10<sup>−8</sup> | 4.05 | 3.89 × 10<sup>−8</sup> | 4.96 | 8.69 × 10<sup>−10</sup> | 6.01 |
 | 1/32 | 2.48 × 10<sup>−7</sup> | 3.00 | 3.26 × 10<sup>−9</sup> | 4.01 | 1.22 × 10<sup>−9</sup> | 4.99 | 1.36 × 10<sup>−11</sup> | 5.99 |
 
-### Across periodic seams {#periodic-seams}
+#### Across periodic seams {#periodic-seams}
 
 Mallard 0.3.0 makes generated meshes periodic (`[mesh] periodic = ["x", "y"]`): the faces on opposite sides of the box become interior faces, and every stencil reaches across them. To check that the seam costs no accuracy, the same vortex runs in the doubly periodic box [0, 14]², starting centered 1 unit inside the right edge, so that it straddles the seam, and moving with (u, v) = (1, 0) to t = 2, through the seam to the other side. Initial data and the exact solution use the nearest periodic image; everything else is as above, on N = 28 to 224.
 
@@ -159,7 +99,144 @@ Between the two finest grids the observed orders are 2.91, 4.08, 4.87 and 6.15 o
 | 1/8 | 2.19 × 10<sup>−5</sup> | 2.86 | 1.16 × 10<sup>−6</sup> | 4.11 | 1.85 × 10<sup>−6</sup> | 4.65 | 8.41 × 10<sup>−8</sup> | 5.94 |
 | 1/16 | 2.77 × 10<sup>−6</sup> | 2.98 | 7.14 × 10<sup>−8</sup> | 4.03 | 6.06 × 10<sup>−8</sup> | 4.94 | 1.27 × 10<sup>−9</sup> | 6.05 |
 
-## Viscous exact solutions {#viscous-exact-solutions}
+## Shock tubes and blast waves {#shocks}
+
+Discontinuous solutions against exact or converged references, in 1D strips, 2D and 3D.
+
+### Sod shock tube {#sod-shock-tube}
+
+The Riemann problem of Sod (1978): (ρ, u, p) = (1, 0, 1) for x < 0.5 and (0.125, 0, 0.1) for x > 0.5, γ = 1.4, at t = 0.2. The [`sod`](docs/examples.md) example: a strip of N × 4 square quadrilaterals with slip walls, HLLC flux, SSPRK3 at CFL 0.5. Run with Mallard 0.5.0.
+
+<figure class="mallard-figure" markdown>
+![Density, velocity and pressure of the Sod shock tube at t = 0.2 on 200 cells, TENO-E and MUSCL against the exact solution](validation/sod.png){ loading=lazy width=2158 height=718 }
+<figcaption>Sod shock tube at t = 0.2 on 200 cells. Fifth-order TENO-E (dots) and MUSCL with the Venkatakrishnan limiter (line) against the exact solution.</figcaption>
+</figure>
+
+L<sub>1</sub> error of the cell-averaged density, ∫|ρ − ρ<sub>exact</sub>| dx, with the exact solution averaged over each cell, over all cells of the strip:
+
+| Cells | TENO-E 5 | rate | MUSCL | rate |
+|---:|---:|---:|---:|---:|
+| 100 | 4.16 × 10<sup>−3</sup> |  | 4.46 × 10<sup>−3</sup> |  |
+| 200 | 2.41 × 10<sup>−3</sup> | 0.79 | 2.65 × 10<sup>−3</sup> | 0.75 |
+| 400 | 1.27 × 10<sup>−3</sup> | 0.93 | 1.43 × 10<sup>−3</sup> | 0.89 |
+| 800 | 6.65 × 10<sup>−4</sup> | 0.93 | 7.65 × 10<sup>−4</sup> | 0.90 |
+
+Both schemes converge at close to first order, the expected rate for a solution with a shock and a contact discontinuity; TENO-E has 7–13% lower error than MUSCL. The shock spans two cells and the contact discontinuity about five.
+
+The errors are taken over all cells of the strip, whose four rows agree to round-off (5 × 10<sup>−14</sup>) at every resolution with Mallard 0.5.0. In 0.3.0 the rows next to the slip walls differed from the inner two, and the errors quoted here were those of the bottom row (3.92, 2.28, 1.21 and 0.60 × 10<sup>−3</sup> for TENO-E); in 0.4.0 the TENO-E rows differed by up to 5 × 10<sup>−3</sup> on 800 cells (error 7.24 × 10<sup>−4</sup>). MUSCL results are the same in all three versions.
+
+#### Sod shock tube in 3D {#sod-3d}
+
+The Sod problem of the [Sod shock tube](#sod-shock-tube) section on a 200 × 4 × 4 box of hexahedra with slip walls on all six faces, MUSCL with the Venkatakrishnan limiter, HLLC, SSPRK3. The solution stays one-dimensional to round-off (transverse velocities below 10<sup>−13</sup>), and its L<sub>1</sub> density error against the exact solution, 2.653 × 10<sup>−3</sup>, equals that of the same scheme on 200 × 4 quadrilaterals in 2D to all four digits.
+
+### Shu–Osher problem {#shu-osher-problem}
+
+A Mach 3 shock running into a sinusoidal density field (Shu & Osher 1989), on [0, 10] (the usual [−5, 5] shifted by 5), t = 1.8, with the [`shu_osher`](docs/examples.md) example: fifth-order TENO-E and the RHLL flux on N × 4 square quadrilaterals, run with Mallard 0.5.0. There is no exact solution; the reference is a one-dimensional fifth-order WENO-JS solution (characteristic, Lax–Friedrichs flux splitting, SSPRK3) on 12,800 cells, which differs from the same code on 6,400 cells by 0.007 in L<sub>1</sub>.
+
+<figure class="mallard-figure" markdown>
+![Density of the Shu-Osher problem at t = 1.8 on 200 and 400 cells against a fine-grid reference](validation/shu_osher.png){ loading=lazy width=2158 height=778 }
+<figcaption>Shu–Osher problem at t = 1.8: fifth-order TENO-E with the RHLL flux on 200 and 400 cells against the 12,800-cell reference. Right: the entropy waves generated behind the shock, the part of the solution that separates high-order schemes.</figcaption>
+</figure>
+
+L<sub>1</sub> density difference from the reference, ∫|ρ − ρ<sub>ref</sub>| dx:
+
+| Cells | Mallard, RHLL | Mallard, HLLC | 1D WENO5, same cells |
+|---:|---:|---:|---:|
+| 200 | 0.66 | 0.65 | 0.75 |
+| 400 | 0.20 | 0.21 | 0.29 |
+| 800 | 0.090 | 0.31 | 0.10 |
+| 1600 | 0.043 | 0.65 | 0.048 |
+
+With the rotated-hybrid RHLL flux, Mallard converges to the reference and is more accurate than the one-dimensional WENO5 scheme on every grid (0.3.0 had 0.26, 0.12 and 0.082 on 400, 800 and 1600 cells; 0.4.0 0.20, 0.11 and 0.059). With HLLC it does not converge beyond 400 cells: behind the Mach 3 shock, which moves along the grid lines of the strip, the rows of a problem that should stay one-dimensional differ by up to 1.1 in density on 800 and 1600 cells, and the entropy waves are lost. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. The example has used RHLL since Mallard 0.3.0 (0.2.0's used HLLC). With RHLL the rows differ by up to 0.07 on 800 cells and 10<sup>−5</sup> on 1600.
+
+<figure class="mallard-figure" markdown>
+![Entropy waves of the Shu-Osher problem on 1600 cells with HLLC and RHLL fluxes](validation/shu_osher_flux.png){ loading=lazy width=1258 height=714 style="max-width: 32rem" }
+<figcaption>Entropy waves on 1600 cells with the HLLC and RHLL fluxes.</figcaption>
+</figure>
+
+### Spherical explosion (3D) {#spherical-explosion}
+
+The spherical explosion of Toro (*Riemann Solvers and Numerical Methods for Fluid Dynamics*, 3rd ed., §17.1.3), the [`explosion_3d`](docs/examples.md#explosion-3d) example: a sphere of radius 0.4 at ρ = 1, p = 1 in a gas at ρ = 0.125, p = 0.1, run to t = 0.25. One octant, [0, 1]³, is computed on 64³ hexahedra with symmetry planes at x, y, z = 0 and transmissive outer faces; fifth-order TENO-E, HLLC, SSPRK3. The reference is a solution of the radial Euler equations (fifth-order WENO on 4000 cells), from the validation scripts.
+
+<figure class="mallard-figure" markdown>
+![Density of every cell of the spherical explosion against its distance from the center, on top of a one-dimensional radial reference solution](validation/explosion.png){ loading=lazy width=2158 height=838 }
+<figcaption>Density at t = 0.25 of all 262,144 cells against their distance from the center, and the radial reference: the rarefaction running into the center, the contact near r = 0.6 and the shock near r = 0.8.</figcaption>
+</figure>
+
+The cells collapse onto one curve, so the computed flow stays spherically symmetric on the Cartesian mesh, and that curve follows the reference: the mean absolute difference in density is 0.004 (cells with r < 0.95), most of it at the discontinuities, which the 64³ mesh spreads over two to three cells. Mallard 0.4.0 reproduces the 0.3.0 run bit for bit.
+
+### Sedov–Taylor blast wave (3D) {#sedov-taylor}
+
+A point explosion in a gas at rest (Taylor 1950; Sedov 1959), the `sedov_3d` example (new in Mallard 0.4.0): the energy is deposited in a small sphere at the origin, and only the octant x, y, z ≥ 0 is computed, with three symmetry planes, on 128³ hexahedra (2,097,152 cells); fifth-order TENO-E with bound-preserving scaling, HLLC, SSPRK3, to t = 0.8, on A100 GPUs, run with the development code between 0.3.0 and 0.4.0 (0.4.0's changes to TENO-E leave results on hexahedra bitwise the same). The exact similarity solution for γ = 1.4 puts the shock at R = ξ<sub>0</sub>(E t²/ρ<sub>0</sub>)<sup>1/5</sup> with ξ<sub>0</sub> = 1.0328.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sedov_poster.jpg" aria-label="Density of the Sedov-Taylor blast wave on three symmetry planes, with the shock radius and density profile against the exact similarity solution"><source src="../media/sedov.mp4" type="video/mp4"></video>
+<figcaption>Density on the three symmetry planes, the shock radius against the similarity solution, and the density of the cells on the planes against the exact profile.</figcaption>
+</figure>
+
+| t | 0.1 | 0.2 | 0.4 | 0.6 | 0.8 |
+|---|---:|---:|---:|---:|---:|
+| Shock radius, error against the similarity solution | +2.6% | +1.9% | +1.5% | +1.2% | +1.1% |
+
+The shock-radius error decays as the run forgets the finite radius of the initial blast. The density profile follows the exact curve, with the peak behind the shock smeared to 4.2 (averaged over the shell) against 6 at this resolution, and varies by 2.5% over the shell at the peak; mass is conserved to round-off.
+
+### Shock–helium bubble interaction (3D) {#shock-bubble}
+
+A Mach 1.25 shock in air hits a helium bubble, the spherical case of Haas & Sturtevant (1987), in the [`shock_bubble_3d`](docs/examples.md#shock-bubble-3d) example. Run after Mallard 0.6.0. Navier–Stokes with mixture-averaged transport in He + N<sub>2</sub>/O<sub>2</sub>; the bubble holds 28% air, which gives a sound speed of 871.5 m/s (Haas & Sturtevant estimate 872). The gases, Mach number and tube are the experiment's in units of the bubble diameter D, but the bubble is scaled down to 0.18 mm, so Re = 1.5 × 10<sup>3</sup> instead of 3 × 10<sup>5</sup>. The domain is a quarter of the square tube with symmetry planes, at 128 cells per D: 11.4 million hexahedra. The run took 52,091 steps, 3.4 hours on four A100 GPUs.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/shock_bubble_3d_poster.jpg" aria-label="Helium surface and vortex ring of a shock-accelerated helium bubble, numerical schlieren on the symmetry plane and interface positions against Haas and Sturtevant"><source src="../media/shock_bubble_3d.mp4" type="video/mp4"></video>
+<figcaption>The helium surface (Y = 0.15), and the vortex sheet and ring colored by helium fraction; numerical schlieren on the symmetry plane; positions on the axis against the measured velocities. Times and lengths at the experiment's scale.</figcaption>
+</figure>
+
+| Velocity [m/s] | Mallard, 128 cells per D | Haas & Sturtevant |
+|---|---:|---:|
+| refracted shock | 961 | 960 |
+| transmitted shock | 359 | 365 |
+| vortex ring | 178 | 165 |
+| downstream interface, late | 166 | 165 |
+
+All four are within 0–8% of the measurements, inside their 10% uncertainty, and within 1.2% of a run at 96 cells per D. The upstream interface, the air jet and the late upstream face move differently from the experiment. At this Reynolds number and a Péclet number of about 190, the trailing helium is drawn into the ring.
+
+## Shocks on bodies {#shocks-on-bodies}
+
+### Oblique shock (2D) {#oblique-shock}
+
+Mach 1.758 flow (u = 600 m/s, T = 300 K, R = 277.4 J/(kg K)) over an 8° compression ramp, the [`wedge`](docs/examples.md) example: 160 × 120 quadrilaterals, HLLC, SSPRK3, run to t = 0.02 s (six flow-through times). The oblique-shock relations give a shock angle β = 42.816° and a pressure ratio p<sub>2</sub>/p<sub>1</sub> = 1.4984. The measured angle is a straight-line fit to the half-jump pressure contour for 0.7 < x < 1.6 m; the pressure ratio is the mean over the cells 0.03–0.12 m above the ramp for 0.9 < x < 1.1 m.
+
+<figure class="mallard-figure" markdown>
+![Pressure field over the 8 degree ramp with the theoretical shock angle, and a pressure profile across the shock](validation/wedge.png){ loading=lazy width=2136 height=808 }
+<figcaption>Left: pressure with the theoretical shock (dashed). Right: pressure across the shock at x = 1.51 m with MUSCL and fifth-order TENO-E against the theoretical jump.</figcaption>
+</figure>
+
+| Source | Shock angle | Error | p<sub>2</sub>/p<sub>1</sub> | Error |
+|---|---:|---:|---:|---:|
+| Theory | 42.816° | | 1.4984 | |
+| MUSCL | 42.814° | −0.002° | 1.4984 | < 0.01% |
+| TENO-E 5 | 42.826° | +0.011° | 1.4985 | +0.01% |
+
+The fitted shock passes through x = 0.4997 m at y = 0, the ramp corner being at x = 0.5 m. MUSCL results are unchanged from Mallard 0.3.0; with 0.4.0's TENO-E changes next to walls, the TENO-E shock angle moved from 42.821° to 42.826°.
+
+### Mach 3 flow over a sphere (3D) {#mach-3-sphere}
+
+Inviscid Mach 3 flow past a sphere of diameter D, started impulsively, the `sphere_mach3` example (new in Mallard 0.4.0): 796,962 tetrahedra in the quarter domain y, z ≥ 0 with two symmetry planes, refined on the sphere and through the shock layer; fifth-order TENO-E with bound-preserving scaling, HLL flux, SSPRK3, to t u<sub>∞</sub>/D = 3, on 4 GPUs. HLL rather than RHLL, because RHLL develops a carbuncle on the axis where the two symmetry planes meet ([issue #80](https://github.com/MatthewBonanni/mallard/issues/80)). This run used the development code before two 0.4.0 changes to TENO-E, the conditioning bound and complete stencils near boundaries ([#109](https://github.com/MatthewBonanni/mallard/pull/109)), which change results on tetrahedra; it has not been repeated with 0.4.0.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_poster.jpg" aria-label="Mach 3 flow over a sphere: Mach number on the horizontal meridian, numerical schlieren on the vertical one and the revolved bow shock, with the standoff distance against Billig's correlation and the stagnation-line pressure"><source src="../media/sphere.mp4" type="video/mp4"></video>
+<figcaption>Mach number on the horizontal meridian, numerical schlieren on the vertical one and the revolved bow shock; the shock standoff distance against Billig's correlation, and the pressure along the stagnation line.</figcaption>
+</figure>
+
+| | Mallard | Reference |
+|---|---:|---:|
+| Shock standoff Δ/R | 0.226 | 0.205 (Billig 1967 correlation) |
+| Stagnation pressure p<sub>0</sub>/p<sub>∞</sub> | 12.0 | 12.06 (Rayleigh pitot formula) |
+| Pressure drag coefficient | 0.95 | |
+
+The standoff is steady from t u<sub>∞</sub>/D ≈ 1.2. It is 10% above Billig's empirical correlation, a difference of 0.01 D, under half the 0.025 D edge of the tetrahedra in the shock layer.
+
+## Viscous flow {#viscous-flow}
+
+### Viscous exact solutions {#viscous-exact-solutions}
 
 Three exact solutions of the compressible Navier–Stokes equations in a channel 0 < y < 1, computed on strips 0.25 wide of N/4 × N square cells (quadrilaterals, or the same split into triangles) with transmissive ends, μ constant, Pr = 0.72, R = 1, γ = 1.4, MUSCL reconstruction (Venkatakrishnan limiter), HLLC, SSPRK3 at CFL 0.8:
 
@@ -183,7 +260,26 @@ On quadrilaterals the linear Couette and conduction profiles are reproduced to r
 
 The viscous terms converge at second order on quadrilaterals and at 1.9 to 2.0 on these right triangles (0.0093% of U at 128 rows). With Mallard 0.2.0, on strips only 4 cells wide, the triangle error stalled near 0.4% of U. That came from the transmissive ends of the strip, not from the interior scheme: the viscous fluxes on triangles next to transmissive boundaries, which Mallard 0.3.0 makes second-order, and a one-sided gradient at those ends, which dominates when the strip narrows with refinement. The strip now keeps a fixed width of 0.25.
 
-## Cylinder at Re = 100 {#cylinder-at-re-100}
+### Viscous shock tube (2D) {#viscous-shock-tube}
+
+The viscous shock tube of Daru & Tenaud (2009) at Re = 200: a diaphragm at x = 0.5 in a closed unit box releases a Mach 2.37 shock (density ratio 100) that reflects off the end wall and interacts with the boundary layer it has laid down on the floor, forming a lambda shock and a primary vortex by t = 1. The [`viscous_shock_tube`](docs/examples.md) example computes the lower half, [0, 1] × [0, 0.5], on 1000 × 500 quadrilaterals with no-slip adiabatic walls and a symmetry plane on top; Navier–Stokes, Pr = 0.73, fifth-order TENO-E, HLLC, SSPRK3 at CFL 0.8 (about 58,500 time steps, limited by viscosity). The reference is the grid-converged solution of Zhou et al. (2018) on 1500 × 750 cells.
+
+<figure class="mallard-figure" markdown>
+![Density contours of the viscous shock tube near the floor at t = 1, and wall density against the reference](validation/vst.png){ loading=lazy width=2157 height=1925 }
+<figcaption>Viscous shock tube at t = 1 on 1000 × 500 quadrilaterals. Top: density near the floor with the reference triple point and primary-vortex height. Bottom: density in the first row of cells against the tabulated wall density of Zhou et al. (2018).</figcaption>
+</figure>
+
+| Quantity | Mallard, 1000 × 500 | Zhou et al., 1500 × 750 (Table 1) |
+|---|---:|---:|
+| Lambda-shock triple point (x, y) | (0.581, 0.138) | (0.58, 0.137) |
+| Wall density minimum, at x | 36.90, 0.6575 | 36.96, 0.6577 |
+| Wall density maximum, at x | 118.19, 0.8605 | 117.65, 0.8617 |
+| Wall density, RMS difference at the 20 tabulated points | 0.56 | |
+| Wall density, largest difference | 1.78 (at x = 0.707, on the steep rise to the second peak) | |
+
+The triple point is the intersection of straight-line fits to the density-gradient ridges of the lambda's front leg and the reflected shock above it. The wall density varies from 37 to 118 along the floor, so the RMS difference is 0.7% of that range. On a mesh coarsened by a factor of two in each direction (500 × 250) the RMS difference is 2.21, the largest 7.33, and the triple point is at (0.580, 0.140): the solution converges toward the reference with the mesh.
+
+### Cylinder at Re = 100 (2D) {#cylinder-at-re-100}
 
 Viscous flow past a circular cylinder at Re = U D / ν = 100 and Mach 0.2, the [`cylinder`](docs/examples.md) example: an O-grid of 384 × 128 quadrilaterals reaching 25 D, first cell 0.01 D, generated with `tools/make_cylinder_mesh.py`. Adiabatic no-slip wall, characteristic far field, third-order TENO-E, HLLC, SSPRK3 at CFL 0.8, run to t U / D = 80. Shedding is fully developed by t U / D = 12, and the statistics are taken over the ten complete lift cycles after that.
 
@@ -209,58 +305,31 @@ Drag and lift on both meshes, with the averaging window shaded and the means of 
 
 The references are incompressible computations (Liu et al., Park et al.) and experiments (Williamson); Mallard's run is compressible at Mach 0.2. On a mesh refined by a factor of two in each direction (768 × 256 cells, first cell 0.005 D, run to t U / D = 60: seven lift cycles) the Strouhal number does not change (to 0.01%), and the mean drag and lift amplitude change by 0.2% and 0.4%.
 
-## Viscous shock tube {#viscous-shock-tube}
+### Sphere at Re = 300 (3D) {#sphere-re300}
 
-The viscous shock tube of Daru & Tenaud (2009) at Re = 200: a diaphragm at x = 0.5 in a closed unit box releases a Mach 2.37 shock (density ratio 100) that reflects off the end wall and interacts with the boundary layer it has laid down on the floor, forming a lambda shock and a primary vortex by t = 1. The [`viscous_shock_tube`](docs/examples.md) example computes the lower half, [0, 1] × [0, 0.5], on 1000 × 500 quadrilaterals with no-slip adiabatic walls and a symmetry plane on top; Navier–Stokes, Pr = 0.73, fifth-order TENO-E, HLLC, SSPRK3 at CFL 0.8 (about 58,500 time steps, limited by viscosity). The reference is the grid-converged solution of Zhou et al. (2018) on 1500 × 750 cells.
-
-<figure class="mallard-figure" markdown>
-![Density contours of the viscous shock tube near the floor at t = 1, and wall density against the reference](validation/vst.png){ loading=lazy width=2157 height=1925 }
-<figcaption>Viscous shock tube at t = 1 on 1000 × 500 quadrilaterals. Top: density near the floor with the reference triple point and primary-vortex height. Bottom: density in the first row of cells against the tabulated wall density of Zhou et al. (2018).</figcaption>
-</figure>
-
-| Quantity | Mallard, 1000 × 500 | Zhou et al., 1500 × 750 (Table 1) |
-|---|---:|---:|
-| Lambda-shock triple point (x, y) | (0.581, 0.138) | (0.58, 0.137) |
-| Wall density minimum, at x | 36.90, 0.6575 | 36.96, 0.6577 |
-| Wall density maximum, at x | 118.19, 0.8605 | 117.65, 0.8617 |
-| Wall density, RMS difference at the 20 tabulated points | 0.56 | |
-| Wall density, largest difference | 1.78 (at x = 0.707, on the steep rise to the second peak) | |
-
-The triple point is the intersection of straight-line fits to the density-gradient ridges of the lambda's front leg and the reflected shock above it. The wall density varies from 37 to 118 along the floor, so the RMS difference is 0.7% of that range. On a mesh coarsened by a factor of two in each direction (500 × 250) the RMS difference is 2.21, the largest 7.33, and the triple point is at (0.580, 0.140): the solution converges toward the reference with the mesh.
-
-## 3D cases {#3d-cases}
-
-The cases below use Mallard's 3D build (`-DMallard_DIM=3`). See [a 3D case](docs/tutorial.md#6-a-3d-case) for how to build and run in 3D.
-
-### Sod shock tube in 3D {#sod-3d}
-
-The Sod problem of the [Sod shock tube](#sod-shock-tube) section on a 200 × 4 × 4 box of hexahedra with slip walls on all six faces, MUSCL with the Venkatakrishnan limiter, HLLC, SSPRK3. The solution stays one-dimensional to round-off (transverse velocities below 10<sup>−13</sup>), and its L<sub>1</sub> density error against the exact solution, 2.653 × 10<sup>−3</sup>, equals that of the same scheme on 200 × 4 quadrilaterals in 2D to all four digits.
-
-### Spherical explosion {#spherical-explosion}
-
-The spherical explosion of Toro (*Riemann Solvers and Numerical Methods for Fluid Dynamics*, 3rd ed., §17.1.3), the [`explosion_3d`](docs/examples.md#explosion-3d) example: a sphere of radius 0.4 at ρ = 1, p = 1 in a gas at ρ = 0.125, p = 0.1, run to t = 0.25. One octant, [0, 1]³, is computed on 64³ hexahedra with symmetry planes at x, y, z = 0 and transmissive outer faces; fifth-order TENO-E, HLLC, SSPRK3. The reference is a solution of the radial Euler equations (fifth-order WENO on 4000 cells), from the validation scripts.
+Viscous flow past a sphere at Re = U D / ν = 300 and Mach 0.2, the `sphere_re300` example (new in Mallard 0.4.0; run with 0.4.0's MUSCL, whose gradients on tetrahedra use vertex neighbours, [#111](https://github.com/MatthewBonanni/mallard/pull/111)). At this Reynolds number the wake sheds hairpin vortices periodically and keeps one plane of symmetry, so the sphere feels a mean lift as well as drag (Johnson & Patel 1999). The mesh, from `tools/make_sphere_re300_mesh.py`, has 10 layers of prisms on the sphere, from 0.005 D, and tetrahedra refined through the near wake, on the full box −15 < x/D < 30, |y|, |z| < 15. Navier–Stokes, MUSCL with HLLC, SSPRK3 at CFL 0.8; MUSCL rather than TENO-E, which is currently unstable on the thin boundary-layer prisms. The coefficients are averaged over the 7 shedding periods of t U / D = 90–150; the 0.85M-cell run took 4.7 h on 4 A100 GPUs, and the 2.06M-cell one, refined by 1.4 in every direction, 6.7 h on 8.
 
 <figure class="mallard-figure" markdown>
-![Density of every cell of the spherical explosion against its distance from the center, on top of a one-dimensional radial reference solution](validation/explosion.png){ loading=lazy width=2158 height=838 }
-<figcaption>Density at t = 0.25 of all 262,144 cells against their distance from the center, and the radial reference: the rarefaction running into the center, the contact near r = 0.6 and the shock near r = 0.8.</figcaption>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_re300_poster.jpg" aria-label="Q-criterion isosurfaces of the hairpin vortices shed by a sphere at Re = 300, colored by streamwise velocity, with drag and lift histories"><source src="../media/sphere_re300.mp4" type="video/mp4"></video>
+<figcaption>Q-criterion isosurfaces colored by streamwise velocity, and the drag and lift coefficients over time.</figcaption>
 </figure>
 
-The cells collapse onto one curve, so the computed flow stays spherically symmetric on the Cartesian mesh, and that curve follows the reference: the mean absolute difference in density is 0.004 (cells with r < 0.95), most of it at the discontinuities, which the 64³ mesh spreads over two to three cells. Mallard 0.4.0 reproduces the 0.3.0 run bit for bit.
+| | St | mean C<sub>D</sub> | mean C<sub>L</sub> |
+|---|---:|---:|---:|
+| Mallard, 0.85M cells | 0.1331 | 0.6688 | 0.0731 |
+| Mallard, 2.06M cells | 0.1328 | 0.6664 | 0.0697 |
+| Johnson & Patel (1999) | 0.137 | 0.656 | 0.069 |
+| Kim, Kim & Choi (2001) | 0.134 | 0.657 | 0.067 |
+| Constantinescu & Squires (2003) | 0.136 | 0.655 | 0.065 |
+| Tomboulides, Orszag & Karniadakis (1993) | 0.136 | 0.671 | |
 
-### Sedov–Taylor blast wave {#sedov-taylor}
+![Drag and lift coefficient histories on the 0.85M- and 2.06M-cell meshes](validation/sphere_re300_forces.png){ loading=lazy width=1350 height=900 }
 
-A point explosion in a gas at rest (Taylor 1950; Sedov 1959), the `sedov_3d` example (new in Mallard 0.4.0): the energy is deposited in a small sphere at the origin, and only the octant x, y, z ≥ 0 is computed, with three symmetry planes, on 128³ hexahedra (2,097,152 cells); fifth-order TENO-E with bound-preserving scaling, HLLC, SSPRK3, to t = 0.8, on A100 GPUs, run with the development code between 0.3.0 and 0.4.0 (0.4.0's changes to TENO-E leave results on hexahedra bitwise the same). The exact similarity solution for γ = 1.4 puts the shock at R = ξ<sub>0</sub>(E t²/ρ<sub>0</sub>)<sup>1/5</sup> with ξ<sub>0</sub> = 1.0328.
+Refining the mesh by 1.4 in every direction changes the Strouhal number by 0.2%, the mean drag by 0.4% and the mean lift by 5%. On the finer mesh the Strouhal number is 1–3% below the references, the mean drag within the spread of the references (0.655 to 0.671), and the mean lift within 7% of them (0.065 to 0.069).
 
-<figure class="mallard-figure" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sedov_poster.jpg" aria-label="Density of the Sedov-Taylor blast wave on three symmetry planes, with the shock radius and density profile against the exact similarity solution"><source src="../media/sedov.mp4" type="video/mp4"></video>
-<figcaption>Density on the three symmetry planes, the shock radius against the similarity solution, and the density of the cells on the planes against the exact profile.</figcaption>
-</figure>
+## Turbulence {#turbulence}
 
-| t | 0.1 | 0.2 | 0.4 | 0.6 | 0.8 |
-|---|---:|---:|---:|---:|---:|
-| Shock radius, error against the similarity solution | +2.6% | +1.9% | +1.5% | +1.2% | +1.1% |
-
-The shock-radius error decays as the run forgets the finite radius of the initial blast. The density profile follows the exact curve, with the peak behind the shock smeared to 4.2 (averaged over the shell) against 6 at this resolution, and varies by 2.5% over the shell at the peak; mass is conserved to round-off.
+Direct numerical simulations, all in 3D; the large-eddy simulations are in [their own section](#les).
 
 <!-- SLOT: the 256^3 Taylor-Green vortex run replaces media/tgv.mp4 and media/tgv_poster.jpg; update this section's text, the summary-table row and the gallery caption with its numbers. -->
 ### Taylor–Green vortex at Re = 1600 {#taylor-green-vortex}
@@ -288,45 +357,6 @@ The Taylor–Green vortex is the standard test of a scheme's resolution of trans
 | Mallard, 128³ | 0.01161 | 8.39 | 0.00719 | 8.28 |
 
 The kinetic energy stays within 2.6% of the DNS through t = 20. Its dissipation rate peaks 10% low and 0.6 time units early. At its peak the resolved velocity gradients account for 56% of the DNS dissipation (2μΩ = 0.00719 against 0.01286): at this resolution the rest of the dissipation is numerical, supplied by the scheme in place of the scales the 128³ grid cannot represent.
-
-### Mach 3 flow over a sphere {#mach-3-sphere}
-
-Inviscid Mach 3 flow past a sphere of diameter D, started impulsively, the `sphere_mach3` example (new in Mallard 0.4.0): 796,962 tetrahedra in the quarter domain y, z ≥ 0 with two symmetry planes, refined on the sphere and through the shock layer; fifth-order TENO-E with bound-preserving scaling, HLL flux, SSPRK3, to t u<sub>∞</sub>/D = 3, on 4 GPUs. HLL rather than RHLL, because RHLL develops a carbuncle on the axis where the two symmetry planes meet ([issue #80](https://github.com/MatthewBonanni/mallard/issues/80)). This run used the development code before two 0.4.0 changes to TENO-E, the conditioning bound and complete stencils near boundaries ([#109](https://github.com/MatthewBonanni/mallard/pull/109)), which change results on tetrahedra; it has not been repeated with 0.4.0.
-
-<figure class="mallard-figure" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_poster.jpg" aria-label="Mach 3 flow over a sphere: Mach number on the horizontal meridian, numerical schlieren on the vertical one and the revolved bow shock, with the standoff distance against Billig's correlation and the stagnation-line pressure"><source src="../media/sphere.mp4" type="video/mp4"></video>
-<figcaption>Mach number on the horizontal meridian, numerical schlieren on the vertical one and the revolved bow shock; the shock standoff distance against Billig's correlation, and the pressure along the stagnation line.</figcaption>
-</figure>
-
-| | Mallard | Reference |
-|---|---:|---:|
-| Shock standoff Δ/R | 0.226 | 0.205 (Billig 1967 correlation) |
-| Stagnation pressure p<sub>0</sub>/p<sub>∞</sub> | 12.0 | 12.06 (Rayleigh pitot formula) |
-| Pressure drag coefficient | 0.95 | |
-
-The standoff is steady from t u<sub>∞</sub>/D ≈ 1.2. It is 10% above Billig's empirical correlation, a difference of 0.01 D, under half the 0.025 D edge of the tetrahedra in the shock layer.
-
-### Sphere at Re = 300 {#sphere-re300}
-
-Viscous flow past a sphere at Re = U D / ν = 300 and Mach 0.2, the `sphere_re300` example (new in Mallard 0.4.0; run with 0.4.0's MUSCL, whose gradients on tetrahedra use vertex neighbours, [#111](https://github.com/MatthewBonanni/mallard/pull/111)). At this Reynolds number the wake sheds hairpin vortices periodically and keeps one plane of symmetry, so the sphere feels a mean lift as well as drag (Johnson & Patel 1999). The mesh, from `tools/make_sphere_re300_mesh.py`, has 10 layers of prisms on the sphere, from 0.005 D, and tetrahedra refined through the near wake, on the full box −15 < x/D < 30, |y|, |z| < 15. Navier–Stokes, MUSCL with HLLC, SSPRK3 at CFL 0.8; MUSCL rather than TENO-E, which is currently unstable on the thin boundary-layer prisms. The coefficients are averaged over the 7 shedding periods of t U / D = 90–150; the 0.85M-cell run took 4.7 h on 4 A100 GPUs, and the 2.06M-cell one, refined by 1.4 in every direction, 6.7 h on 8.
-
-<figure class="mallard-figure" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_re300_poster.jpg" aria-label="Q-criterion isosurfaces of the hairpin vortices shed by a sphere at Re = 300, colored by streamwise velocity, with drag and lift histories"><source src="../media/sphere_re300.mp4" type="video/mp4"></video>
-<figcaption>Q-criterion isosurfaces colored by streamwise velocity, and the drag and lift coefficients over time.</figcaption>
-</figure>
-
-| | St | mean C<sub>D</sub> | mean C<sub>L</sub> |
-|---|---:|---:|---:|
-| Mallard, 0.85M cells | 0.1331 | 0.6688 | 0.0731 |
-| Mallard, 2.06M cells | 0.1328 | 0.6664 | 0.0697 |
-| Johnson & Patel (1999) | 0.137 | 0.656 | 0.069 |
-| Kim, Kim & Choi (2001) | 0.134 | 0.657 | 0.067 |
-| Constantinescu & Squires (2003) | 0.136 | 0.655 | 0.065 |
-| Tomboulides, Orszag & Karniadakis (1993) | 0.136 | 0.671 | |
-
-![Drag and lift coefficient histories on the 0.85M- and 2.06M-cell meshes](validation/sphere_re300_forces.png){ loading=lazy width=1350 height=900 }
-
-Refining the mesh by 1.4 in every direction changes the Strouhal number by 0.2%, the mean drag by 0.4% and the mean lift by 5%. On the finer mesh the Strouhal number is 1–3% below the references, the mean drag within the spread of the references (0.655 to 0.671), and the mean lift within 7% of them (0.065 to 0.069).
 
 ### Turbulent channel flow, Re<sub>τ</sub> = 180 {#channel-retau180}
 
@@ -393,24 +423,6 @@ A spatially developing channel at Re<sub>τ</sub> = 180 fed by synthetic turbule
 | peak v<sub>rms</sub><sup>+</sup> | 16.6h |
 
 Every statistic is within 5% from about 17h; Keating et al. (2004) report about 20h for synthetic inflow into a channel. The shear stress recovers quickly because the full Reynolds-stress tensor and the precursor's mean profile are imposed. The normal stresses take longest: u<sub>rms</sub> and v<sub>rms</sub> first dip to about 85% at x = 2–4h, as the inflow sheds its non-turbulent, dilatational part.
-
-### Shock–helium bubble interaction {#shock-bubble}
-
-A Mach 1.25 shock in air hits a helium bubble, the spherical case of Haas & Sturtevant (1987), in the [`shock_bubble_3d`](docs/examples.md#shock-bubble-3d) example. Run after Mallard 0.6.0. Navier–Stokes with mixture-averaged transport in He + N<sub>2</sub>/O<sub>2</sub>; the bubble holds 28% air, which gives a sound speed of 871.5 m/s (Haas & Sturtevant estimate 872). The gases, Mach number and tube are the experiment's in units of the bubble diameter D, but the bubble is scaled down to 0.18 mm, so Re = 1.5 × 10<sup>3</sup> instead of 3 × 10<sup>5</sup>. The domain is a quarter of the square tube with symmetry planes, at 128 cells per D: 11.4 million hexahedra. The run took 52,091 steps, 3.4 hours on four A100 GPUs.
-
-<figure class="mallard-figure" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/shock_bubble_3d_poster.jpg" aria-label="Helium surface and vortex ring of a shock-accelerated helium bubble, numerical schlieren on the symmetry plane and interface positions against Haas and Sturtevant"><source src="../media/shock_bubble_3d.mp4" type="video/mp4"></video>
-<figcaption>The helium surface (Y = 0.15), and the vortex sheet and ring colored by helium fraction; numerical schlieren on the symmetry plane; positions on the axis against the measured velocities. Times and lengths at the experiment's scale.</figcaption>
-</figure>
-
-| Velocity [m/s] | Mallard, 128 cells per D | Haas & Sturtevant |
-|---|---:|---:|
-| refracted shock | 961 | 960 |
-| transmitted shock | 359 | 365 |
-| vortex ring | 178 | 165 |
-| downstream interface, late | 166 | 165 |
-
-All four are within 0–8% of the measurements, inside their 10% uncertainty, and within 1.2% of a run at 96 cells per D. The upstream interface, the air jet and the late upstream face move differently from the experiment. At this Reynolds number and a Péclet number of about 190, the trailing helium is drawn into the ring.
 
 ## Reacting flow {#reacting-flow}
 
@@ -702,7 +714,6 @@ PaSR scales the chemical rates of each cell by κ = τ<sub>c</sub> / (τ<sub>c</
 - **Finer width:** PaSR moves the heat release the right way.
 - **Coarser width:** it overcorrects. The mixing time τ<sub>mix</sub> = Δ²/(ν + ν<sub>t</sub>), with the constant C<sub>mix</sub> = 1, is overestimated, and the flame comes spuriously close to extinction.
 - **Budget:** |ε<sub>num</sub>/ε<sub>SGS</sub>| ≤ 0.10 with PaSR, 0.23 quasi-laminar.
-
 
 ## References
 
