@@ -47,7 +47,7 @@
   },
   "taylor_green_3d": {
     "image": "media/tgv_poster.jpg",
-    "alt": "Q-criterion isosurfaces of the Taylor-Green vortex and its dissipation rate against the spectral DNS",
+    "alt": "Q-criterion isosurfaces of the Taylor-Green vortex at 256 cubed and its dissipation rate against the spectral DNS",
     "more": "validation.md#taylor-green-vortex"
   },
   "sphere_mach3": {
