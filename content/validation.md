@@ -20,6 +20,7 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Shock–helium bubble](#shock-bubble) (3D) | refracted and transmitted shock, vortex ring, downstream interface velocities | 961, 359, 178, 166 m/s | Haas & Sturtevant (1987): 960, 365, 165, 165 m/s | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
 | [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.83°, 1.4985 (TENO-E) | 42.82°, 1.4984 (theory) | <span class="mallard-nowrap">0.4.0</span> |
 | [Mach 3 sphere](#mach-3-sphere) (3D) | bow-shock standoff Δ/R; stagnation pressure | 0.226; 12.0 | 0.205 (Billig); 12.06 (pitot) | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
+| [RHLL on the Mach 3 sphere](#mach-3-sphere-rhll) (3D) | shock on the axis / stagnation pressure, MUSCL, 796k tetrahedra | −0.6151 / 11.93 (before the fix: bulge to −0.624 / 10.6) | HLL: −0.6149 / 11.86 | <span class="mallard-nowrap">20239fc (after 0.7.0)</span> |
 | [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.0099% of U (quads); order 1.9–2.0, 0.0093% of U (triangles) | exact solution | <span class="mallard-nowrap">0.3.0</span> |
 | [Viscous shock tube](#viscous-shock-tube) | wall density RMS difference; lambda-shock triple point | 0.56 (range 37–118); (0.581, 0.138) | Zhou et al. (2018), 1500 × 750 grid: (0.58, 0.137) | <span class="mallard-nowrap">0.4.0</span> |
 | [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude | 0.165, 1.368, 0.331 | 0.164–0.165, 1.33–1.35, 0.33–0.34 | <span class="mallard-nowrap">not recorded</span> |
@@ -31,6 +32,9 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Reactive shock tube](#reactive-shock-tube) (reacting) | reaction front at 230 µs, 50 / 25 / 12.5 µm cells | 99.63 / 99.66 / 99.66 mm | converged within one 50 µm cell | <span class="mallard-nowrap">0.4.0</span> |
 | [CJ detonation](#detonation) (reacting) | front speed; induction length; peak pressure, at 10 / 20 / 40 cells per induction length | +0.11 / +0.01 / 0.00%; −4.5 / −1.8 / +2.7%; 174.8 / 175.2 / 174.7 kPa | D<sub>CJ</sub> 1616.9 m/s; ZND 1.525 mm; von Neumann 174.7 kPa | <span class="mallard-nowrap">0.4.0</span> |
 | [Laminar flame speed](#flame-speed) (reacting) | H<sub>2</sub>/air, φ = 0.6–1.4, two transport models | within 0.81% | Cantera `FreeFlame` | <span class="mallard-nowrap">0.4.0</span> |
+| [Laminar flame speed, CH<sub>4</sub>/air](#flame-speed-ch4) (reacting) | GRI-3.0, φ = 0.6–1.4, two transport models, 20 cells per thermal thickness | within 1.82% | Cantera `FreeFlame` | <span class="mallard-nowrap">040fb35 (after 0.6.0)</span> |
+| [Thermal diffusion (Soret)](#soret) (reacting) | change of the H<sub>2</sub>/air flame speed, φ = 0.5 / 1.0 | −7.23 / −8.26% | Cantera: −6.98 / −8.44% | <span class="mallard-nowrap">caa9b4a (after 0.6.0)</span> |
+| [SIMPLER splitting](#simpler) (reacting) | detonation induction length vs ZND at CFL 1.0, 10 cells; Strang / SIMPLER | −25.5 / −0.9% | ZND 1.525 mm | <span class="mallard-nowrap">beb3c3f (after 0.6.0)</span> |
 | [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
 | [Cellular detonation in 3D](#cellular-detonation-3d) (reacting) | front speed over 17 cm | 1620.6 m/s | D<sub>CJ</sub> 1617 m/s | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
 | [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
@@ -277,6 +281,21 @@ Inviscid Mach 3 flow past a sphere of diameter D, started impulsively, the `sphe
 | Pressure drag coefficient | 0.95 | |
 
 The standoff is steady from t u<sub>∞</sub>/D ≈ 1.2. It is 10% above Billig's empirical correlation, a difference of 0.01 D, under half the 0.025 D edge of the tetrahedra in the shock layer.
+
+#### RHLL on the Mach 3 sphere {#mach-3-sphere-rhll}
+
+[`20239fc`](https://github.com/MatthewBonanni/mallard/commit/20239fc) (merge of [#248](https://github.com/MatthewBonanni/mallard/pull/248), after Mallard 0.7.0)
+{ .mallard-provenance }
+
+With MUSCL on tetrahedra, the rotated-hybrid RHLL flux grew a carbuncle on the bow shock. On faces that cross the shock at an angle, its rotation turned the HLL part onto the shock normal instead of the face normal. Since [#248](https://github.com/MatthewBonanni/mallard/pull/248), RHLL blends the rotated flux toward HLL along the face normal by the pressure jump across the face, w = min(p<sub>l</sub>/p<sub>r</sub>, p<sub>r</sub>/p<sub>l</sub>)<sup>3</sup>. Contacts and shear layers have no pressure jump, so they keep the rotated flux. Inviscid Mach 3 flow over the sphere with MUSCL, at t = 2, gives the shock position on the axis and the stagnation pressure:
+
+| Mesh | RHLL before the fix | RHLL with the fix | HLL |
+|---|---:|---:|---:|
+| quarter sphere, 121k tetrahedra | carbuncle: −0.687 / 9.0 at t = 1.2 | −0.6086 / 11.62 | −0.6087 / 11.71 |
+| full sphere, 475k tetrahedra | −0.630 / 9.1 | −0.6163 / 12.04 | −0.6163 / 12.11 |
+| example mesh, 796k tetrahedra (quarter) | bulges to −0.624 / 10.6 at t = 1.2–1.4 | −0.6151 / 11.93, steady | −0.6149 / 11.86 |
+
+With the fix, RHLL matches HLL's shock position to 10<sup>−4</sup> D. With TENO5 on the example mesh it gives −0.6157 to t = 1.8, as before the fix. Results of the other Riemann solvers are unchanged.
 
 ## Viscous flow {#viscous-flow}
 
@@ -584,12 +603,67 @@ Freely propagating premixed H<sub>2</sub>/air flames at 300 K and 1 atm, φ = 0.
 
 All ten flame speeds are within 0.81% of Cantera's (the lean mixture-averaged run stopped after 1.35 of its two flame times). For CH<sub>4</sub>/air at φ = 1 with GRI-Mech 3.0, the design note reports −0.93% (mixture-averaged) and −0.04% (unity Lewis).
 
+### Laminar flame speed, CH<sub>4</sub>/air {#flame-speed-ch4}
+
+[`040fb35`](https://github.com/MatthewBonanni/mallard/commit/040fb35) (0.6.0 + 114 commits), merged in [#241](https://github.com/MatthewBonanni/mallard/pull/241) after Mallard 0.7.0
+{ .mallard-provenance }
+
+Freely propagating CH<sub>4</sub>/air flames at 300 K and 1 atm with GRI-Mech 3.0 (53 species, 325 reactions), φ = 0.6 to 1.4, with mixture-averaged and unity-Lewis-number transport, against Cantera's `FreeFlame` with the same mechanism and transport ([#241](https://github.com/MatthewBonanni/mallard/pull/241)). Each flame starts from Cantera's and runs five flame times at CFL 1, at 10, 20 and 40 cells per thermal thickness, on A100 GPUs; the consumption speed is taken over the last flame time.
+
+<figure class="mallard-figure" markdown>
+![CH4/air flame speeds against equivalence ratio, Mallard against Cantera, and the consumption-speed error at three resolutions](validation/flame_speed_ch4.png){ loading=lazy width=1500 height=600 }
+<figcaption>Left: flame speeds at 20 cells per thermal thickness against Cantera. Right: consumption-speed error at 10, 20 and 40 cells.</figcaption>
+</figure>
+
+| φ | 0.6 | 0.8 | 1.0 | 1.2 | 1.4 |
+|---|---:|---:|---:|---:|---:|
+| Cantera, mixture-averaged [m/s] | 0.1144 | 0.2711 | 0.3758 | 0.3325 | 0.1388 |
+| Mallard, 10 / 20 / 40 cells | −2.42 / −0.97 / −0.37% | −2.50 / −1.17 / −0.70% | −3.08 / −1.31 / −0.78% | −4.19 / −1.82 / −1.01% | −3.53 / −1.11 / −0.60% |
+| Cantera, unity Lewis [m/s] | 0.1177 | 0.2460 | 0.2865 | 0.2132 | 0.1048 |
+| Mallard, 10 / 20 / 40 cells | −2.29 / −0.69 / −0.61% | −1.14 / −0.45 / −0.40% | −1.00 / −0.42 / −0.30% | −2.07 / −0.72 / −0.35% | −2.82 / −0.80 / −0.32% |
+
+At 20 cells per thermal thickness every flame speed is within 2% of Cantera's: mixture-averaged 1.0–1.8% slow, unity Lewis 0.4–0.8% slow. At 40 cells the mixture-averaged errors roughly halve. Some 40-cell runs ran 2.2–4.1 rather than five flame times and are still settling slowly downward. Halving the CFL number changes the flame speeds by at most 0.05%.
+
+### Thermal diffusion (Soret effect) {#soret}
+
+[`caa9b4a`](https://github.com/MatthewBonanni/mallard/commit/caa9b4a) with local changes (0.6.0 + 125 commits), merged in [#243](https://github.com/MatthewBonanni/mallard/pull/243) after Mallard 0.7.0
+{ .mallard-provenance }
+
+`physics.soret = true` adds thermal diffusion to the species fluxes with mixture-averaged transport, using Cantera's mixture-averaged thermal-diffusion coefficients ([#243](https://github.com/MatthewBonanni/mallard/pull/243)). The test case is freely propagating H<sub>2</sub>/air flames at 300 K and 1 atm against Cantera's `FreeFlame` with and without thermal diffusion: the setup of the [H<sub>2</sub> flame speeds](#flame-speed), with 20 cells per thermal thickness, CFL 0.2 and two flame times.
+
+| φ | 0.4 | 0.5 | 0.6 | 1.0 |
+|---|---:|---:|---:|---:|
+| consumption speed vs Cantera, without Soret | +0.40% | +0.19% | +0.28% | +0.21% |
+| consumption speed vs Cantera, with Soret | −0.58% | −0.07% | +0.34% | +0.41% |
+| change from thermal diffusion, Cantera / Mallard | −3.10 / −4.05% | −6.98 / −7.23% | −9.04 / −8.98% | −8.44 / −8.26% |
+
+Mallard reproduces Cantera's reduction of the flame speed by thermal diffusion to within 0.3 percentage points from φ = 0.5 to 1.0, and to 1 point at φ = 0.4. The coefficients themselves match Cantera's to 6 × 10<sup>−13</sup> of the largest. Runs without the option are byte-identical to those before the change.
+
+### SIMPLER splitting {#simpler}
+
+[`beb3c3f`](https://github.com/MatthewBonanni/mallard/commit/beb3c3f) with local changes, and [`3500760`](https://github.com/MatthewBonanni/mallard/commit/3500760) (0.6.0 + 85 and 87 commits), merged in [#235](https://github.com/MatthewBonanni/mallard/pull/235) after Mallard 0.7.0
+{ .mallard-provenance }
+
+`[chemistry] coupling = "simpler"` balances the chemistry and the flow with the SIMPLER splitting of Wu, Ma & Ihme (2019) instead of Strang's ([#235](https://github.com/MatthewBonanni/mallard/pull/235)). The reaction substep sees the transport rate at the start of the step as a constant forcing, so a steady state of the coupled equations is a steady state of the scheme. It stays second order, and Strang remains the default. The checks use H<sub>2</sub>/O<sub>2</sub> chemistry with MUSCL, HLLC and SSPRK3.
+
+| Case | Strang | SIMPLER |
+|---|---:|---:|
+| [CJ detonation](#detonation), induction length vs ZND, 10 cells per induction length, CFL 0.35 / 0.5 / 0.7 / 1.0 / 1.2 | −4.5 / −5.5 / −8.2 / −25.5 / −36.4% | −7.3 / −7.3 / 0.0 / −0.9 / −5.5% |
+| the same, 20 cells per induction length, CFL 0.35 / 0.7 / 1.0 | −1.4 / – / −11.4% | −0.9 / +2.3 / +3.2% |
+| detonation speed, D/D<sub>CJ</sub> − 1 | within 0.16% | within 0.16% |
+| detonation cost (8 CPU threads, 3934 cells) | 222 s at CFL 0.35 | 60 s at CFL 1.0 |
+| stirred reactor (H<sub>2</sub>/air from 300 K), extinction residence time at dt = 0.1 / 0.3 / 1 τ (exact 40–50 µs) | 50 µs / 100 µs / > 1 ms | 40–50 µs at every dt |
+| stirred reactor, τ = 100 µs, dt = 0.1 τ: temperature | 2695.8 K (+24 K) | 2671.9 K (exact) |
+| H<sub>2</sub>/air flame speeds vs Cantera, φ = 0.6 / 1.0 / 1.4 | +0.60 to −0.21% | +0.53 to −0.20% |
+
+Detonations can therefore run at CFL 1.0 instead of 0.35, 3.7 times cheaper, with the mean induction length within 5% and the detonation speed unchanged. The price is a front position that oscillates more from output to output (5.5% against 0.6% RMS at CFL 1.0 and 10 cells). For steady premixed flames, where Strang's splitting error is already below 0.1%, SIMPLER is only 9–15% cheaper.
+
 ### Cellular detonation {#cellular-detonation}
 
 Development code just before the 0.4.0 release (version string 0.3.0, run 3 October 2026, the branch of [#130](https://github.com/MatthewBonanni/mallard/pull/130); commit not recorded), released in 0.5.0
 { .mallard-provenance }
 
-The detonation of the [previous section](#detonation) in two dimensions, the [`detonation_2d`](docs/examples.md#detonation-2d) example: a 6 cm wide channel with slip walls, 0.15 mm cells (10 per induction length, as in Oran et al. 1998), 1.2 million cells, 18,900 time steps in 39 minutes on two A100 GPUs, 71% of it in the chemistry. The run starts from the ZND solution with six seeded pockets of fresh gas behind the front: a planar ZND front, with or without one such pocket, stays planar at 5 to 20 cells per induction length, so the cells here grow from the seeds and not from the front's own instability. The [`[[write_data]]`](docs/input.md#write_data) variable `P_MAX`, the largest pressure each cell has seen, gives the numerical soot foil.
+The detonation of the [CJ detonation section](#detonation) in two dimensions, the [`detonation_2d`](docs/examples.md#detonation-2d) example: a 6 cm wide channel with slip walls, 0.15 mm cells (10 per induction length, as in Oran et al. 1998), 1.2 million cells, 18,900 time steps in 39 minutes on two A100 GPUs, 71% of it in the chemistry. The run starts from the ZND solution with six seeded pockets of fresh gas behind the front: a planar ZND front, with or without one such pocket, stays planar at 5 to 20 cells per induction length, so the cells here grow from the seeds and not from the front's own instability. The [`[[write_data]]`](docs/input.md#write_data) variable `P_MAX`, the largest pressure each cell has seen, gives the numerical soot foil.
 
 <figure class="mallard-figure" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/detonation_2d_poster.jpg" aria-label="Pressure and numerical soot foil of the cellular detonation"><source src="../media/detonation_2d.mp4" type="video/mp4"></video>
@@ -876,4 +950,5 @@ The sources of the reference data and test cases on this page. The sources of th
 - N. Tsuboi, S. Katoh and A. K. Hayashi, Three-dimensional numerical simulation for hydrogen/air detonation: rectangular and diagonal structures, *Proc. Combust. Inst.* 29, 2783–2788 (2002). [doi:10.1016/S1540-7489(02)80339-X](https://doi.org/10.1016/S1540-7489(02)80339-X)
 - D. N. Williams, L. Bauwens and E. S. Oran, Detailed structure and propagation of three-dimensional detonations, *Proc. Combust. Inst.* 26, 2991–2998 (1996). [doi:10.1016/S0082-0784(96)80142-1](https://doi.org/10.1016/S0082-0784(96)80142-1)
 - C. H. K. Williamson, Vortex dynamics in the cylinder wake, *Annu. Rev. Fluid Mech.* 28, 477–539 (1996).
+- H. Wu, P. C. Ma and M. Ihme, the SIMPLER balanced splitting, *Comput. Phys. Commun.* (2019). [doi:10.1016/j.cpc.2019.04.016](https://doi.org/10.1016/j.cpc.2019.04.016)
 - G. Zhou, K. Xu and F. Liu, Grid-converged solution and analysis of the unsteady viscous flow in a two-dimensional shock tube, *Phys. Fluids* 30, 016102 (2018), [doi:10.1063/1.4998300](https://doi.org/10.1063/1.4998300); [arXiv:1705.09062](https://arxiv.org/abs/1705.09062).
