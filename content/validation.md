@@ -24,7 +24,7 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Viscous shock tube](#viscous-shock-tube) | wall density RMS difference; lambda-shock triple point | 0.56 (range 37–118); (0.581, 0.138) | Zhou et al. (2018), 1500 × 750 grid: (0.58, 0.137) | <span class="mallard-nowrap">0.4.0</span> |
 | [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude | 0.165, 1.368, 0.331 | 0.164–0.165, 1.33–1.35, 0.33–0.34 | <span class="mallard-nowrap">not recorded</span> |
 | [Sphere, Re = 300](#sphere-re300) (3D) | St, mean C<sub>D</sub>, mean C<sub>L</sub> (2.06M cells) | 0.133, 0.666, 0.070 | 0.134–0.137, 0.655–0.671, 0.065–0.069 | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
-| [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D) | kinetic energy, largest deviation over t = 0–20; peak dissipation rate, at t | 2.6%; 0.01161 at 8.39 (128³) | 512³ spectral DNS: 0.01286 at 8.97 | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
+| [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D) | peak dissipation rate, at t; largest ε error over t = 0.5–20, of the peak | 256³: 0.01289 at 8.83, 3.4%; 128³: 0.01161 at 8.39, 14.1% | 512³ spectral DNS: 0.01286 at 8.97 | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [Channel flow, Re<sub>τ</sub> = 180](#channel-retau180) (3D) | Re<sub>τ</sub>; C<sub>f</sub>; peaks of u<sub>rms</sub>, v<sub>rms</sub>, w<sub>rms</sub>, −u′v′ | 180.8; +2.0%; −0.5, +1.8, +1.4, +1.5% | DNS of Moser, Kim & Mansour (1999): 178.1 | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [Synthetic turbulent inflow](#synthetic-inflow) (3D) | distance from the inlet to within 5% of the developed channel, all statistics | about 17h | about 20h (Keating et al. 2004) | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [0D ignition](#ignition) (reacting) | ignition delay, 36 H<sub>2</sub>/air and CH<sub>4</sub>/air mixtures; final temperature | within 3 × 10<sup>−6</sup> (H<sub>2</sub>), 2 × 10<sup>−4</sup> (CH<sub>4</sub>); within 10<sup>−5</sup> K | Cantera reactor; Cantera equilibrium | <span class="mallard-nowrap">0.4.0</span> |
@@ -387,35 +387,50 @@ Refining the mesh by 1.4 in every direction changes the Strouhal number by 0.2%,
 
 Direct numerical simulations, all in 3D; the large-eddy simulations are in [their own section](#les).
 
-<!-- SLOT: the 256^3 Taylor-Green vortex run replaces media/tgv.mp4 and media/tgv_poster.jpg; update this section's text, the summary-table row and the gallery caption with its numbers. -->
 ### Taylor–Green vortex at Re = 1600 {#taylor-green-vortex}
 
-Development code shortly after Mallard 0.3.0 (version string 0.3.0; 0.4.0 is the same on hexahedra)
+256³: [`e90065d`](https://github.com/MatthewBonanni/mallard/commit/e90065d) (0.6.0 + 16 commits). 128³: development code shortly after Mallard 0.3.0 (version string 0.3.0; 0.4.0 is the same on hexahedra)
 { .mallard-provenance }
 
-The Taylor–Green vortex is the standard test of a scheme's resolution of transition and decaying turbulence (case C3.5 of the International Workshop on High-Order CFD Methods; Brachet et al. 1983): in the periodic box [0, 2π]³, the velocity u = sin x cos y cos z, v = −cos x sin y cos z, w = 0 rolls up, breaks down into small vortices and decays, at Re = V<sub>0</sub>L/ν = 1600, Mach 0.1 and Pr = 0.71. Mallard computes the full periodic box (`examples/taylor_green_3d/input_periodic.toml`) on 128³ hexahedra (2,097,152 cells) with fifth-order TENO-E, HLLC and SSPRK3 at CFL 0.8, with the defaults of Mallard 0.3.0, which include the low-Mach correction of the convective flux, to t = 20 (run with the development code shortly after 0.3.0; 0.4.0 gives the same results on hexahedra): 32,274 time steps, 1 h 18 min on 8 NVIDIA A100 GPUs. The reference is the workshop's 512³ pseudo-spectral DNS. The resolved dissipation 2μΩ is computed from the enstrophy of the TENO-E reconstruction polynomials' velocity gradients.
+The Taylor–Green vortex is the standard test of a scheme's resolution of transition and decaying turbulence (case C3.5 of the International Workshop on High-Order CFD Methods; Brachet et al. 1983): in the periodic box [0, 2π]³, the velocity u = sin x cos y cos z, v = −cos x sin y cos z, w = 0 rolls up, breaks down into small vortices and decays, at Re = V<sub>0</sub>L/ν = 1600, Mach 0.1 and Pr = 0.71. Mallard computes the full periodic box (`examples/taylor_green_3d/input_periodic.toml`) with fifth-order TENO-E, HLLC and SSPRK3, including the low-Mach correction of the convective flux, to t = 20, at two resolutions:
+
+- **256³** hexahedra (16.8 million cells), CFL 0.4: 65,162 time steps, 0.52 s per step on 14 NVIDIA A100 GPUs over four nodes (about 9.5 hours of stepping).
+- **128³** hexahedra (2.1 million cells), CFL 0.8 with the defaults of Mallard 0.3.0: 32,274 time steps, 1 h 18 min on 8 A100 GPUs.
+
+The reference is the workshop's 512³ pseudo-spectral DNS. The resolved dissipation 2μΩ is computed from the enstrophy of the TENO-E reconstruction polynomials' velocity gradients.
 
 <figure class="mallard-figure" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex in the full periodic box colored by vorticity magnitude, beside the dissipation rate against the spectral DNS"><source src="../media/tgv.mp4" type="video/mp4"></video>
-<figcaption>Q-criterion isosurfaces colored by vorticity magnitude in the full periodic box, and the dissipation rate against the 512³ spectral DNS.</figcaption>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex at 256 cubed colored by vorticity magnitude, beside the dissipation rate against the spectral DNS and the 128 cubed run"><source src="../media/tgv.mp4" type="video/mp4"></video>
+<figcaption>256³: Q-criterion isosurfaces colored by vorticity magnitude in the full periodic box, and the dissipation rate traced over the 512³ spectral DNS and the 128³ run.</figcaption>
 </figure>
 
 <figure class="mallard-figure" markdown>
+![Dissipation rate and kinetic energy of the Taylor-Green vortex at 256 and 128 cubed against the spectral DNS](validation/tgv256_dissipation.png){ loading=lazy width=1800 height=675 }
+<figcaption>Dissipation rate −dE<sub>k</sub>/dt and its resolved part 2μΩ (left), and mean kinetic energy (right), at 256³ and 128³ against the 512³ spectral DNS.</figcaption>
+</figure>
+
+| | 512³ DNS | 256³ | 128³ |
+|---|---:|---:|---:|
+| peak of −dE<sub>k</sub>/dt, at t | 0.01286 at 8.97 | 0.01289 at 8.83 (+0.3%) | 0.01161 at 8.39 (−9.7%) |
+| largest \|ε − ε<sub>DNS</sub>\|, t = 0.5–20, over the DNS peak | | 3.4% | 14.1% |
+| RMS ε error, over the DNS peak | | 1.2% | 4.0% |
+| peak of the resolved 2μΩ | 0.01286 | 0.01087 (−15%) | 0.00719 (−44%) |
+| E<sub>k</sub> error, t ≤ 12 | | below 1% | up to 2.6% |
+| E<sub>k</sub> at t = 20 | 0.02157 | 0.02021 (−6.3%) | 0.02134 (−1.1%) |
+
+- **Shape:** at 256³ the dissipation rate follows the DNS through its peak and the shoulder at t ≈ 10–11. At 128³ the peak is 10% low and 0.6 time units early, and the shoulder is lower.
+- **Resolved and numerical dissipation:** the resolved part 2μΩ rises from 56% of the DNS peak at 128³ to 85% at 256³; the rest is numerical, supplied by the scheme in place of the scales the grid cannot represent.
+- **Late decay:** 256³ dissipates slightly more than the DNS (ε within about 5% for t = 12–17), which accumulates to E<sub>k</sub> 6% low at t = 20. The 128³ E<sub>k</sub> at t = 20 is closer only because its under-dissipation near the peak compensates.
+
+<figure class="mallard-figure" markdown>
 ![Kinetic energy and dissipation rate of the Taylor-Green vortex against the spectral DNS](validation/tgv.png){ loading=lazy width=2158 height=838 }
-<figcaption>Mean kinetic energy, and the dissipation rate: −dE<sub>k</sub>/dt and the resolved part 2μΩ, against the 512³ spectral DNS, for which the two coincide.</figcaption>
+<figcaption>The 128³ run: mean kinetic energy, and the dissipation rate −dE<sub>k</sub>/dt and its resolved part 2μΩ, against the 512³ spectral DNS, for which the two coincide.</figcaption>
 </figure>
 
 | t | 5 | 9 | 12 | 20 |
 |---|---:|---:|---:|---:|
 | E<sub>k</sub>, Mallard 128³ | 0.1177 | 0.0847 | 0.0550 | 0.0213 |
 | E<sub>k</sub>, spectral DNS 512³ | 0.1184 | 0.0864 | 0.0544 | 0.0216 |
-
-| | peak of −dE<sub>k</sub>/dt | at t | peak of 2μΩ | at t |
-|---|---:|---:|---:|---:|
-| Spectral DNS, 512³ | 0.01286 | 8.97 | 0.01286 | 8.97 |
-| Mallard, 128³ | 0.01161 | 8.39 | 0.00719 | 8.28 |
-
-The kinetic energy stays within 2.6% of the DNS through t = 20. Its dissipation rate peaks 10% low and 0.6 time units early. At its peak the resolved velocity gradients account for 56% of the DNS dissipation (2μΩ = 0.00719 against 0.01286): at this resolution the rest of the dissipation is numerical, supplied by the scheme in place of the scales the 128³ grid cannot represent.
 
 ### Turbulent channel flow, Re<sub>τ</sub> = 180 {#channel-retau180}
 
