@@ -2,7 +2,7 @@
 title: Validation
 hide:
   - navigation
-description: Mallard against exact solutions, theory and reference data - shock tubes, oblique shock, design-order convergence, viscous exact solutions, cylinder wake, viscous shock tube, in 3D the spherical explosion, Sedov-Taylor blast wave, Taylor-Green vortex, Mach 3 sphere, sphere wake at Re = 300, turbulent channel flow and a shock-helium bubble interaction, and reacting flow - ignition, a reactive shock tube, CJ detonations in 1D, 2D and 3D and stratified autoignition.
+description: Mallard against exact solutions, theory and reference data - shock tubes, oblique shock, design-order convergence, viscous exact solutions, cylinder wake, viscous shock tube, in 3D the spherical explosion, Sedov-Taylor blast wave, Taylor-Green vortex, Mach 3 sphere, sphere wake at Re = 300, turbulent channel flow with periodic and synthetic inflow, a shock-helium bubble interaction, large-eddy simulation (decaying turbulence, channel flow, thickened flames), and reacting flow - ignition, a reactive shock tube, CJ detonations in 1D, 2D and 3D and stratified autoignition.
 ---
 
 # Validation
@@ -33,6 +33,9 @@ Each result on this page comes from a run of Mallard 0.4.0 (double precision, de
 | [Laminar flame speed](#flame-speed) (reacting) | H<sub>2</sub>/air, φ = 0.6–1.4, two transport models | within 0.81% | Cantera `FreeFlame` |
 | [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s |
 | [Cellular detonation in 3D](#cellular-detonation-3d) (reacting) | front speed over 17 cm | 1620.6 m/s | D<sub>CJ</sub> 1617 m/s |
+| [LES, decaying isotropic turbulence](#les-cbc) (3D) | log<sub>10</sub> RMS spectral error at two stations, 128³, Sigma | 0.063 / 0.085 | Comte-Bellot & Corrsin (1971) |
+| [LES, channel flow, Re<sub>τ</sub> = 395](#les-channel) (3D) | Re<sub>τ</sub>, 64³, Sigma (C = 1.35 / 1.8) | 402.3 / 389.4 | 392.2 (Moser, Kim & Mansour 1999) |
+| [LES, thickened flame](#les-tfles) (reacting) | consumption speed at F = 7.9 / 31.6 | −0.2% / −0.2% | Cantera s<sub>L</sub> = 2.3324 m/s |
 | [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) |
 
 ## Sod shock tube {#sod-shock-tube}
@@ -367,6 +370,7 @@ On the example's mesh HLLC removes about 7% of the kinetic-energy dissipation, a
 ### Synthetic turbulent inflow {#synthetic-inflow}
 
 A spatially developing channel at Re<sub>τ</sub> = 180 fed by synthetic turbulence, the [`channel_inflow_retau180`](https://github.com/MatthewBonanni/mallard/blob/main/examples/channel_inflow_retau180/input.toml) example. Run after Mallard 0.6.0 ([#221](https://github.com/MatthewBonanni/mallard/pull/221)); the method is in [Design: synthetic turbulent inflow](docs/design/synthetic_inflow.md).
+
 - **Inflow:** the `nscbc_inlet` takes its mean velocity and Reynolds stresses from the statistics of the [periodic channel](#channel-retau180). The digital filter of Klein, Sadiki & Janicka (2003) adds turbulence with those stresses, with integral lengths of 0.5h (streamwise velocity) and 0.1–0.2h otherwise.
 - **Domain:** the periodic example's mesh twice as long, 8πh (384 × 96 × 128), with a sponge before the outlet beyond x = 20h.
 - **Statistics:** averaged over t = 40–110 and over z, compared with the periodic channel at each x.
@@ -554,12 +558,80 @@ As the papers describe, larger fluctuations ignite earlier and burn longer, and 
 - **β criterion:** Sankaran et al.'s criterion marks a larger part of the mixture as deflagrative than the DNS front speeds show (figure above).
 - **Threshold:** the deflagrative share depends on the threshold. At T′ = 30 K it is 15%, 25% and 51% at 1.1, 1.5 and 3 S<sub>L</sub>, but the shift of the front-speed distribution with T′ does not depend on it.
 
-<!-- SLOT for Mallard #199 (large-eddy simulation), to fill when its validation runs are done:
-     ### Decaying isotropic turbulence, Comte-Bellot & Corrsin (LES)
-     ### Channel flow at Re_tau = 395 and 590 (LES, against Moser, Kim & Mansour)
-     ### Thickened-flame (TFLES) checks
-     ### Premixed flame in turbulence (LES)
-     Each needs a summary-table row above and its references below. -->
+
+## Large-eddy simulation {#les}
+
+Run after Mallard 0.6.0 with its large-eddy simulation ([#203](https://github.com/MatthewBonanni/mallard/pull/203), [#205](https://github.com/MatthewBonanni/mallard/pull/205), [#213](https://github.com/MatthewBonanni/mallard/pull/213), [#214](https://github.com/MatthewBonanni/mallard/pull/214), [#215](https://github.com/MatthewBonanni/mallard/pull/215); [design](docs/design/les.md)). The LES uses:
+
+- an explicit eddy-viscosity model, Sigma (Nicoud et al. 2011) by default, at the cell-volume filter width;
+- the hybrid convective flux: kinetic-energy-preserving and central, with the Riemann solver only where a compression sensor fires;
+- MUSCL without a limiter.
+
+The kinetic-energy budget of `[integrals]` measures how much of the dissipation comes from the model, the scheme and molecular viscosity. That tells explicit LES, where the model does the work, from implicit LES, where the scheme does. Each case also runs without the model and with HLLC at every face.
+
+### Decaying isotropic turbulence {#les-cbc}
+
+The grid turbulence of Comte-Bellot & Corrsin (1971), in the [`cbc_les`](docs/examples.md#cbc-les) example. A periodic box of eleven mesh lengths starts from the measured spectrum at the first station (t U<sub>0</sub>/M = 42). The spectra are compared at the next two stations, 98 and 171, with a fictitious sound speed for a turbulent Mach number of 0.1. Spectral error is the log<sub>10</sub> RMS of E<sub>LES</sub>/E<sub>CBC</sub> up to 2/3 of the grid cutoff wavenumber, at stations 2 / 3. The dissipation shares are averaged over the run.
+
+<figure class="mallard-figure" markdown>
+![Energy spectra of LES runs at two stations against the measurements of Comte-Bellot and Corrsin](validation/les_cbc.png){ loading=lazy width=1500 height=630 }
+<figcaption>Energy spectra at t U<sub>0</sub>/M = 98 and 171 against Comte-Bellot & Corrsin: Sigma with the hybrid flux, without a model, and with HLLC.</figcaption>
+</figure>
+
+| Mesh | Flux | Model | Spectral error | Numerical / SGS share of dissipation |
+|---|---|---|---:|---:|
+| 64³ | hybrid | Sigma | 0.107 / 0.104 | 1.3 / 69.1% |
+| 64³ | hybrid | Sigma, C = 1.8 | 0.058 / 0.063 | 1.3 / 79.6% |
+| 64³ | hybrid | none | 0.226 / 0.375 | −7.7 / 0% |
+| 64³ | HLLC | Sigma, C = 1.8 | 0.154 / 0.217 | 46.3 / 43.5% |
+| 64³ | HLLC | none (implicit LES) | 0.135 / 0.114 | 83.8 / 0% |
+| 128³ | hybrid | Sigma | 0.063 / 0.085 | 2.0 / 52.2% |
+| 128³ | hybrid | none | 0.182 / 0.249 | 1.8 / 0% |
+
+- **Hybrid flux:** the model does the work, and the scheme's share is 1–2% at every resolution. Without the model, energy piles up at the grid cutoff, and the spectral error is 2–4 times larger.
+- **HLLC at every face:** the scheme does 84% of the dissipation without a model, and still 46% with one. Such runs are implicit LES whatever the model.
+- **Model constant:** the best Sigma constant depends on the resolution, 1.8 at 64³ and the literature's 1.35 (the default) at 128³.
+
+### Turbulent channel flow, Re<sub>τ</sub> = 395 {#les-channel}
+
+Wall-resolved LES of the channel at Re<sub>τ</sub> = 395 against Moser, Kim & Mansour (1999), in the [`channel_les`](docs/examples.md#channel-les) example. The box is 2πh × 2h × πh with 64³ hexahedra: Δx<sup>+</sup> 39, Δz<sup>+</sup> 19, Δy<sup>+</sup> 0.9 at the wall. The mass flow is held at the DNS's bulk Reynolds number, with resolved fluctuations averaged over t = 100–300 h/U<sub>b</sub>. MKM's Re<sub>τ</sub> at this bulk Reynolds number is 392.2.
+
+<figure class="mallard-figure" markdown>
+![Mean velocity, RMS velocities and Reynolds shear stress of the channel LES at Re_tau = 395 against Moser, Kim and Mansour](validation/les_channel395.png){ loading=lazy width=2250 height=1275 }
+<figcaption>Mean velocity, resolved RMS velocities and Reynolds shear stress against MKM (Sigma, 64³), and Re<sub>τ</sub>(t) from the wall shear.</figcaption>
+</figure>
+
+| Mesh | Flux | Model | Re<sub>τ</sub> | C<sub>f</sub> | numerical / SGS / molecular dissipation |
+|---|---|---|---:|---:|---:|
+| 64³ | hybrid | Sigma | 402.3 (+2.6%) | +4.8% | 3.5 / 12.6 / 83.9% |
+| 64³ | hybrid | Sigma, C = 1.8 | 389.4 (−0.7%) | −1.9% | 2.8 / 16.6 / 80.6% |
+| 64³ | hybrid | none | 420.1 (+7.1%) | +14.2% | 5.0 / 0 / 95.0% |
+| 64³ | HLLC | Sigma, C = 1.8 | 317.6 (−19%) | −35% | 13.5 / 5.4 / 81.1% |
+| 48³ | hybrid | Sigma, C = 1.8 | 381.3 (−2.8%) | −5.9% | 3.2 / 17.9 / 78.9% |
+
+- **Model on, 64³:** Re<sub>τ</sub> is within 3% at both Sigma constants, and the mean velocity is within 3% across y<sup>+</sup> = 30–300.
+- **Model off:** Re<sub>τ</sub> is 7% high, more than twice the error with the model.
+- **Resolved stresses:** the resolved u<sub>rms</sub>, w<sub>rms</sub> and −u′v′ are within 10%. The resolved v<sub>rms</sub> peak is 11–15% low.
+- **HLLC instead of the hybrid flux:** the scheme removes 2.5 times as much energy as the model. Re<sub>τ</sub> is then 19% low.
+- **Refinement:** the error with the model decreases from 48³ to 64³.
+
+### Thickened flame {#les-tfles}
+
+The dynamically thickened flame model (TFLES; Colin et al. 2000), with Charlette et al.'s (2002) efficiency function, on a one-dimensional stoichiometric H<sub>2</sub>/air flame. Cantera gives s<sub>L</sub> = 2.3324 m/s and δ<sub>L</sub> = 0.330 mm; MUSCL with HLLC.
+
+| Mesh | Thickening F | Consumption speed | Displacement speed | Thermal thickness |
+|---|---:|---:|---:|---:|
+| 2 cells per δ<sub>L</sub> | 7.91 | 2.327 m/s (−0.2%) | 2.291 m/s (−1.8%) | 2.615 mm (F δ<sub>L</sub> = 2.610 mm) |
+| 0.5 cells per δ<sub>L</sub> | 31.6 | 2.328 m/s (−0.2%) | 2.251 m/s (−3.5%) | |
+| 0.5 cells per δ<sub>L</sub>, no model | 1 | 2.273 m/s (−2.5%) | 2.240 m/s (−4.0%) | one cell |
+
+The thickened flame keeps the laminar flame speed with the thickness F δ<sub>L</sub> it is designed to have. Without the model, the flame's structure is one cell wide, set by the scheme.
+
+<!-- SLOT, LES runs still to merge (numbers only from merged PRs):
+     ### Channel flow at Re_tau = 590 (#230; media ~/local/mallard-runs/les/media/channel590_sigma_Q.png)
+     ### Premixed flame in decaying turbulence (#222)
+     ### Dynamic constant / Scotti filter width (#223), PaSR (#224) if they add validation
+     Add a summary-table row and references for each. -->
 
 ## References
 
@@ -567,7 +639,10 @@ The sources of the reference data and test cases on this page. The sources of th
 
 - F. S. Billig, Shock-wave shapes around spherical- and cylindrical-nosed bodies, *J. Spacecraft Rockets* 4, 822–823 (1967). [doi:10.2514/3.28969](https://doi.org/10.2514/3.28969)
 - M. E. Brachet, D. I. Meiron, S. A. Orszag, B. G. Nickel, R. H. Morf and U. Frisch, Small-scale structure of the Taylor–Green vortex, *J. Fluid Mech.* 130, 411–452 (1983).
+- F. Charlette, C. Meneveau and D. Veynante, A power-law flame wrinkling model for LES of premixed turbulent combustion. Part I: non-dynamic formulation and initial tests, *Combust. Flame* 131, 159–180 (2002). [doi:10.1016/S0010-2180(02)00400-5](https://doi.org/10.1016/S0010-2180%2802%2900400-5)
 - J. H. Chen, E. R. Hawkes, R. Sankaran, S. D. Mason and H. G. Im, Direct numerical simulation of ignition front propagation in a constant volume with temperature inhomogeneities: I. Fundamental analysis and diagnostics, *Combust. Flame* 145, 128–144 (2006). [doi:10.1016/j.combustflame.2005.09.017](https://doi.org/10.1016/j.combustflame.2005.09.017)
+- O. Colin, F. Ducros, D. Veynante and T. Poinsot, A thickened flame model for large eddy simulations of turbulent premixed combustion, *Phys. Fluids* 12, 1843–1863 (2000). [doi:10.1063/1.870436](https://doi.org/10.1063/1.870436)
+- G. Comte-Bellot and S. Corrsin, Simple Eulerian time correlation of full- and narrow-band velocity signals in grid-generated, 'isotropic' turbulence, *J. Fluid Mech.* 48, 273–337 (1971). [doi:10.1017/S0022112071001599](https://doi.org/10.1017/S0022112071001599)
 - G. S. Constantinescu and K. D. Squires, LES and DES investigations of turbulent flow over a sphere at Re = 10,000, *Flow Turbul. Combust.* 70, 267–298 (2003). [doi:10.1023/B:APPL.0000004937.34078.71](https://doi.org/10.1023/B:APPL.0000004937.34078.71)
 - V. Daru and C. Tenaud, Numerical simulation of the viscous shock tube problem by using a high resolution monotonicity-preserving scheme, *Computers & Fluids* 38, 664–676 (2009).
 - R. Deiterding, High-resolution numerical simulation and analysis of Mach reflection structures in detonation waves in low-pressure H<sub>2</sub>–O<sub>2</sub>–Ar mixtures: a summary of results obtained with the adaptive mesh refinement framework AMROC, *J. Combust.* 2011, 738969 (2011). [doi:10.1155/2011/738969](https://doi.org/10.1155/2011/738969)
@@ -582,6 +657,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - C. Liu, X. Zheng and C. H. Sung, Preconditioned multigrid methods for unsteady incompressible flows, *J. Comput. Phys.* 139, 35–57 (1998).
 - P. J. Martínez Ferrer, R. Buttay, G. Lehnasch and A. Mura, A detailed verification procedure for compressible reactive multicomponent Navier–Stokes solvers, *Computers & Fluids* 89, 88–110 (2014). [doi:10.1016/j.compfluid.2013.10.014](https://doi.org/10.1016/j.compfluid.2013.10.014)
 - R. D. Moser, J. Kim and N. N. Mansour, Direct numerical simulation of turbulent channel flow up to Re<sub>τ</sub> = 590, *Phys. Fluids* 11, 943–945 (1999). [doi:10.1063/1.869966](https://doi.org/10.1063/1.869966)
+- F. Nicoud, H. Baya Toda, O. Cabrit, S. Bose and J. Lee, Using singular values to build a subgrid-scale model for large eddy simulations, *Phys. Fluids* 23, 085106 (2011). [doi:10.1063/1.3623274](https://doi.org/10.1063/1.3623274)
 - E. S. Oran, J. W. Weber, E. I. Stefaniw, M. H. Lefebvre and J. D. Anderson, A numerical study of a two-dimensional H<sub>2</sub>-O<sub>2</sub>-Ar detonation using a detailed chemical reaction model, *Combust. Flame* 113, 147–163 (1998). [doi:10.1016/S0010-2180(97)00218-6](https://doi.org/10.1016/S0010-2180(97)00218-6)
 - J. Park, K. Kwon and H. Choi, Numerical solutions of flow past a circular cylinder at Reynolds numbers up to 160, *KSME Int. J.* 12, 1200–1205 (1998).
 - J. J. Quirk, A contribution to the great Riemann solver debate, *Int. J. Numer. Methods Fluids* 18, 555–574 (1994).
