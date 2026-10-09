@@ -66,6 +66,18 @@ hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangle
 
     [Chemistry design](docs/design/chemistry.md) · [Chemistry input](docs/input.md#chemistry)
 
+-   :material-weather-windy:{ .lg .middle } __Large-eddy simulation__
+
+    ---
+
+    - Explicit LES: Sigma (default), WALE, Vreman or Smagorinsky eddy viscosity, with Scotti's filter width on anisotropic cells and an opt-in dynamic constant
+    - Kinetic-energy-preserving hybrid flux, with the Riemann solver only at compressions, and a dissipation budget that separates the model's, the scheme's and molecular dissipation
+    - Thickened flame (TFLES) with dynamic thickening and Charlette efficiency; PaSR closure (experimental)
+    - Synthetic turbulent inflow (digital filter) through characteristic inlets
+    - Channel flow: Re<sub>τ</sub> within 0.7% and 1.6% of DNS at 395 and 590
+
+    [LES validation](validation.md#les) · [Design: LES](docs/design/les.md) · [Synthetic inflow](docs/design/synthetic_inflow.md)
+
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
     ---
