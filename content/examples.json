@@ -119,5 +119,25 @@
     "image": "media/flame_vortex_poster.jpg",
     "alt": "Temperature of eleven premixed flame-vortex interactions on the spectral diagram of Poinsot, Veynante and Candel",
     "more": "gallery.md#flame-vortex"
+  },
+  "channel_retau180": {
+    "image": "media/channel_retau180_poster.jpg",
+    "alt": "Near-wall vortices and velocity streaks of turbulent channel flow at Re_tau = 180",
+    "more": "validation.md#channel-retau180"
+  },
+  "shock_bubble_3d": {
+    "image": "media/shock_bubble_3d_poster.jpg",
+    "alt": "Vortex ring of a shock-accelerated helium bubble with schlieren and interface positions",
+    "more": "validation.md#shock-bubble"
+  },
+  "detonation_3d": {
+    "image": "media/detonation_3d_poster.jpg",
+    "alt": "Leading shock of a 3D cellular detonation and the numerical soot foils of the duct walls",
+    "more": "validation.md#cellular-detonation-3d"
+  },
+  "autoignition_2d": {
+    "image": "media/autoignition_2d_poster.jpg",
+    "alt": "Temperature and heat release of four stratified autoignition runs",
+    "more": "validation.md#autoignition"
   }
 }

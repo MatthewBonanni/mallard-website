@@ -4,7 +4,7 @@ site_url: https://matthewbonanni.github.io/mallard/
 repo_url: https://github.com/MatthewBonanni/mallard
 repo_name: MatthewBonanni/mallard
 edit_uri: ""
-copyright: Mallard is free software under the GNU Affero General Public License v3.
+copyright: Mallard is open source under the Apache License 2.0.
 docs_dir: content
 site_dir: out
 
