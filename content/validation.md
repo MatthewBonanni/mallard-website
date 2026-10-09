@@ -37,6 +37,7 @@ Each result on this page comes from a run of Mallard 0.4.0 (double precision, de
 | [LES, channel flow, Re<sub>τ</sub> = 395 / 590](#les-channel) (3D) | Re<sub>τ</sub>, Sigma with Scotti's width (64³ / 96³) | +0.7% / +1.6% | 392.2 / 587.2 (Moser, Kim & Mansour 1999) |
 | [LES, thickened flame](#les-tfles) (reacting) | consumption speed at F = 7.9 / 31.6 | −0.2% / −0.2% | Cantera s<sub>L</sub> = 2.3324 m/s |
 | [LES, flame in turbulence](#les-flame) (reacting, 3D) | S<sub>T</sub>/S<sub>L</sub>, TFLES at Δ = 0.4 / 0.8 / 1.6 δ<sub>L</sub> | 1.056 / 1.053 / 2.240 | DNS 1.132 |
+| [LES, non-premixed flame, PaSR](#les-pasr) (reacting, 3D, experimental) | heat release, Δ = 0.27 / 0.53 mm | −10.7% / −50% (quasi-laminar +16.6% / +41%) | DNS |
 | [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) |
 
 ## Sod shock tube {#sod-shock-tube}
@@ -562,7 +563,7 @@ As the papers describe, larger fluctuations ignite earlier and burn longer, and 
 
 ## Large-eddy simulation {#les}
 
-Run after Mallard 0.6.0 with its large-eddy simulation ([#203](https://github.com/MatthewBonanni/mallard/pull/203), [#205](https://github.com/MatthewBonanni/mallard/pull/205), [#213](https://github.com/MatthewBonanni/mallard/pull/213), [#214](https://github.com/MatthewBonanni/mallard/pull/214), [#215](https://github.com/MatthewBonanni/mallard/pull/215), [#222](https://github.com/MatthewBonanni/mallard/pull/222), [#223](https://github.com/MatthewBonanni/mallard/pull/223), [#230](https://github.com/MatthewBonanni/mallard/pull/230); [design](docs/design/les.md)). The LES uses:
+Run after Mallard 0.6.0 with its large-eddy simulation ([#203](https://github.com/MatthewBonanni/mallard/pull/203), [#205](https://github.com/MatthewBonanni/mallard/pull/205), [#213](https://github.com/MatthewBonanni/mallard/pull/213), [#214](https://github.com/MatthewBonanni/mallard/pull/214), [#215](https://github.com/MatthewBonanni/mallard/pull/215), [#222](https://github.com/MatthewBonanni/mallard/pull/222), [#223](https://github.com/MatthewBonanni/mallard/pull/223), [#230](https://github.com/MatthewBonanni/mallard/pull/230), [#224](https://github.com/MatthewBonanni/mallard/pull/224); [design](docs/design/les.md)). The LES uses:
 
 - an explicit eddy-viscosity model, Sigma (Nicoud et al. 2011) by default. In 3D, its filter width is the cell-volume width with the anisotropy correction of Scotti, Meneveau & Lilly (1993), the default since [#223](https://github.com/MatthewBonanni/mallard/pull/223);
 - the hybrid convective flux: kinetic-energy-preserving and central, with the Riemann solver only where a compression sensor fires;
@@ -682,7 +683,26 @@ A stoichiometric H<sub>2</sub>/air flame in decaying turbulence, in the [`flame_
 - **The opt-in `eddy_viscosity` subgrid velocity** removes the overshoot. Its constant is calibrated on this case and is not independently validated.
 - **Quasi-laminar runs, without a flame model,** get a close mean speed on coarse meshes. They are erratic in time (33–36% rms) and up to 15% numerically dissipated.
 
-<!-- SLOT: PaSR closure (#224, experimental) if it merges with validation numbers; add a summary-table row and references. -->
+### Non-premixed flame in turbulence: PaSR (experimental) {#les-pasr}
+
+!!! warning "Experimental"
+    The partially stirred reactor closure (`[les.combustion] model = "pasr"`, [#224](https://github.com/MatthewBonanni/mallard/pull/224)) is an opt-in, not a default. It helps at moderate filter widths and overcorrects on coarse meshes.
+
+PaSR scales the chemical rates of each cell by κ = τ<sub>c</sub> / (τ<sub>c</sub> + τ<sub>mix</sub>). The chemical time comes from the heat release, and the mixing time from the filter width and the molecular plus eddy viscosity.
+
+- **DNS reference:** an H<sub>2</sub>/N<sub>2</sub> (25% H<sub>2</sub>) against air diffusion flame, started from a counterflow profile (strain 160 1/s), in the box and decaying turbulence of the [premixed case](#les-flame), to 0.4 ms. The DNS temperature at the stoichiometric surface is 1262 K.
+- **LES:** Sigma model at Δ = 0.27 and 0.53 mm (8 and 16 DNS cells), with PaSR and with quasi-laminar chemistry, i.e. the filtered state's rates without a combustion model.
+- **Measured:** the heat release over 0.2–0.4 ms, against the DNS.
+
+| Δ | PaSR | quasi-laminar |
+|---|---:|---:|
+| 0.27 mm | −10.7% (κ 0.62 at the stoichiometric surface) | +16.6% |
+| 0.53 mm | −50% (T<sub>st</sub> 892 K, near extinction; κ 0.26) | +41% |
+
+- **Finer width:** PaSR moves the heat release the right way.
+- **Coarser width:** it overcorrects. The mixing time τ<sub>mix</sub> = Δ²/(ν + ν<sub>t</sub>), with the constant C<sub>mix</sub> = 1, is overestimated, and the flame comes spuriously close to extinction.
+- **Budget:** |ε<sub>num</sub>/ε<sub>SGS</sub>| ≤ 0.10 with PaSR, 0.23 quasi-laminar.
+
 
 ## References
 
