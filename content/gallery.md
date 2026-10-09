@@ -30,11 +30,9 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figcaption markdown>**Double Mach reflection.** A Mach 10 shock reflecting off a 30° wedge (Woodward & Colella 1984), t = 0 to 0.2, on 1.84 million triangles. Fifth-order TENO-E with the rotated-hybrid HLL–Roe flux and SSPRK3. Density and numerical schlieren.</figcaption>
 </figure>
 
-<!-- SLOT: the 256^3 Taylor-Green vortex video replaces media/tgv.mp4 and media/tgv_poster.jpg (1920 x 1080);
-     update this caption and the validation page's Taylor-Green section with the new run's resolution, GPUs and numbers. -->
 <figure markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex in the full periodic box, beside the dissipation rate against the spectral DNS"><source src="../media/tgv.mp4" type="video/mp4"></video>
-<figcaption markdown>**Taylor–Green vortex, Re = 1600, in 3D.** Transition to turbulence in the full periodic box: Q-criterion isosurfaces colored by vorticity magnitude, and the dissipation rate against the 512³ spectral DNS of the High-Order CFD Workshop. Fifth-order TENO-E on 128³ hexahedra, Mach 0.1, Mallard 0.3.0 defaults, on 8 GPUs; the `taylor_green_3d` example (`input_periodic.toml`). [Validation details](validation.md#taylor-green-vortex).</figcaption>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex at 256 cubed, beside the dissipation rate against the spectral DNS and the 128 cubed run"><source src="../media/tgv.mp4" type="video/mp4"></video>
+<figcaption markdown>**Taylor–Green vortex at Re = 1600 on the full periodic box**, 256³ (16.8 million hexahedra), fifth-order TENO-E: Q-criterion isosurfaces colored by vorticity magnitude, and the dissipation rate tracing the 512³ spectral DNS (peak within 0.3%) beside the 128³ run. 14 A100 GPUs; the `taylor_green_3d` example (`input_periodic.toml`). [Validation details](validation.md#taylor-green-vortex).</figcaption>
 </figure>
 
 <figure id="isotropic-turbulence" markdown>
