@@ -204,7 +204,7 @@
 .md-typeset .mallard-facts a:hover { color: var(--mallard-flame); }
 
 /* Home: feature cards */
-.md-typeset .grid.cards.mallard-features { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.md-typeset .grid.cards.mallard-features { grid-template-columns: repeat(auto-fit, minmax(max(14rem, calc((100% - 1.6rem) / 3)), 1fr)); }
 .md-typeset .mallard-features > ul > li { display: flex; flex-direction: column; }
 .md-typeset .mallard-features > ul > li > ul { font-size: 0.72rem; line-height: 1.45; margin: 0 0 0.6rem; flex-grow: 1; }
 .md-typeset .mallard-features > ul > li > ul > li { margin: 0 0 0.3rem 1rem; }
@@ -225,3 +225,15 @@
 /* Home: featured run */
 .md-typeset figure.mallard-featured { max-width: none; margin: 1em 0 2em; }
 .md-typeset figure.mallard-featured video { background: #000; }
+
+/* Validation: the release or commit behind each result */
+.md-typeset p.mallard-provenance {
+  display: inline-block;
+  margin: -0.4em 0 0.8em;
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  font-size: 0.68rem;
+  color: var(--md-default-fg-color--light);
+}
+.md-typeset .mallard-nowrap { white-space: nowrap; }
