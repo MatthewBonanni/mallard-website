@@ -103,7 +103,7 @@ hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangle
 
     ---
 
-    - 35 examples against exact solutions, theory, DNS and Cantera
+    - 38 examples against exact solutions, theory, DNS and Cantera
     - 300+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision
     - Nightly sanitizers; a performance suite with per-hardware baselines
 

@@ -34,8 +34,9 @@ Each result on this page comes from a run of Mallard 0.4.0 (double precision, de
 | [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s |
 | [Cellular detonation in 3D](#cellular-detonation-3d) (reacting) | front speed over 17 cm | 1620.6 m/s | D<sub>CJ</sub> 1617 m/s |
 | [LES, decaying isotropic turbulence](#les-cbc) (3D) | log<sub>10</sub> RMS spectral error at two stations, 128³, Sigma | 0.063 / 0.085 | Comte-Bellot & Corrsin (1971) |
-| [LES, channel flow, Re<sub>τ</sub> = 395](#les-channel) (3D) | Re<sub>τ</sub>, 64³, Sigma (C = 1.35 / 1.8) | 402.3 / 389.4 | 392.2 (Moser, Kim & Mansour 1999) |
+| [LES, channel flow, Re<sub>τ</sub> = 395 / 590](#les-channel) (3D) | Re<sub>τ</sub>, Sigma with Scotti's width (64³ / 96³) | +0.7% / +1.6% | 392.2 / 587.2 (Moser, Kim & Mansour 1999) |
 | [LES, thickened flame](#les-tfles) (reacting) | consumption speed at F = 7.9 / 31.6 | −0.2% / −0.2% | Cantera s<sub>L</sub> = 2.3324 m/s |
+| [LES, flame in turbulence](#les-flame) (reacting, 3D) | S<sub>T</sub>/S<sub>L</sub>, TFLES at Δ = 0.4 / 0.8 / 1.6 δ<sub>L</sub> | 1.056 / 1.053 / 2.240 | DNS 1.132 |
 | [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) |
 
 ## Sod shock tube {#sod-shock-tube}
@@ -561,9 +562,9 @@ As the papers describe, larger fluctuations ignite earlier and burn longer, and 
 
 ## Large-eddy simulation {#les}
 
-Run after Mallard 0.6.0 with its large-eddy simulation ([#203](https://github.com/MatthewBonanni/mallard/pull/203), [#205](https://github.com/MatthewBonanni/mallard/pull/205), [#213](https://github.com/MatthewBonanni/mallard/pull/213), [#214](https://github.com/MatthewBonanni/mallard/pull/214), [#215](https://github.com/MatthewBonanni/mallard/pull/215); [design](docs/design/les.md)). The LES uses:
+Run after Mallard 0.6.0 with its large-eddy simulation ([#203](https://github.com/MatthewBonanni/mallard/pull/203), [#205](https://github.com/MatthewBonanni/mallard/pull/205), [#213](https://github.com/MatthewBonanni/mallard/pull/213), [#214](https://github.com/MatthewBonanni/mallard/pull/214), [#215](https://github.com/MatthewBonanni/mallard/pull/215), [#222](https://github.com/MatthewBonanni/mallard/pull/222), [#223](https://github.com/MatthewBonanni/mallard/pull/223), [#230](https://github.com/MatthewBonanni/mallard/pull/230); [design](docs/design/les.md)). The LES uses:
 
-- an explicit eddy-viscosity model, Sigma (Nicoud et al. 2011) by default, at the cell-volume filter width;
+- an explicit eddy-viscosity model, Sigma (Nicoud et al. 2011) by default. In 3D, its filter width is the cell-volume width with the anisotropy correction of Scotti, Meneveau & Lilly (1993), the default since [#223](https://github.com/MatthewBonanni/mallard/pull/223);
 - the hybrid convective flux: kinetic-energy-preserving and central, with the Riemann solver only where a compression sensor fires;
 - MUSCL without a limiter.
 
@@ -590,30 +591,49 @@ The grid turbulence of Comte-Bellot & Corrsin (1971), in the [`cbc_les`](docs/ex
 
 - **Hybrid flux:** the model does the work, and the scheme's share is 1–2% at every resolution. Without the model, energy piles up at the grid cutoff, and the spectral error is 2–4 times larger.
 - **HLLC at every face:** the scheme does 84% of the dissipation without a model, and still 46% with one. Such runs are implicit LES whatever the model.
-- **Model constant:** the best Sigma constant depends on the resolution, 1.8 at 64³ and the literature's 1.35 (the default) at 128³.
+- **Model constant:** the best Sigma constant depends on the resolution, 1.8 at 64³ and the literature's 1.35 (the default) at 128³. The opt-in dynamic procedure sets C to 1.6, 1.4 and 1.15 at 32³, 64³ and 128³. It gives the best spectra of any run at 128³ (0.060 / 0.054), but not the 1.8 that fits 64³.
+- **Budget:** these shares were measured before [#222](https://github.com/MatthewBonanni/mallard/pull/222) redefined the numerical dissipation from the scheme's own discrete pressure work. For non-reacting flows the change is small: at 64³ with C = 1.8 the numerical share goes from 0.7% to −0.9%.
 
-### Turbulent channel flow, Re<sub>τ</sub> = 395 {#les-channel}
+### Turbulent channel flow, Re<sub>τ</sub> = 395 and 590 {#les-channel}
 
 Wall-resolved LES of the channel at Re<sub>τ</sub> = 395 against Moser, Kim & Mansour (1999), in the [`channel_les`](docs/examples.md#channel-les) example. The box is 2πh × 2h × πh with 64³ hexahedra: Δx<sup>+</sup> 39, Δz<sup>+</sup> 19, Δy<sup>+</sup> 0.9 at the wall. The mass flow is held at the DNS's bulk Reynolds number, with resolved fluctuations averaged over t = 100–300 h/U<sub>b</sub>. MKM's Re<sub>τ</sub> at this bulk Reynolds number is 392.2.
 
 <figure class="mallard-figure" markdown>
 ![Mean velocity, RMS velocities and Reynolds shear stress of the channel LES at Re_tau = 395 against Moser, Kim and Mansour](validation/les_channel395.png){ loading=lazy width=2250 height=1275 }
-<figcaption>Mean velocity, resolved RMS velocities and Reynolds shear stress against MKM (Sigma, 64³), and Re<sub>τ</sub>(t) from the wall shear.</figcaption>
+<figcaption>Re<sub>τ</sub> = 395: mean velocity, resolved RMS velocities and Reynolds shear stress against MKM (Sigma with the cell-volume width, 64³), and Re<sub>τ</sub>(t) from the wall shear.</figcaption>
 </figure>
 
 | Mesh | Flux | Model | Re<sub>τ</sub> | C<sub>f</sub> | numerical / SGS / molecular dissipation |
 |---|---|---|---:|---:|---:|
-| 64³ | hybrid | Sigma | 402.3 (+2.6%) | +4.8% | 3.5 / 12.6 / 83.9% |
+| 64³ | hybrid | Sigma, Scotti width (default) | +0.7% | +0.9% | not reported |
+| 64³ | hybrid | Sigma, cell-volume width | 402.3 (+2.6%) | +4.8% | 3.5 / 12.6 / 83.9% |
 | 64³ | hybrid | Sigma, C = 1.8 | 389.4 (−0.7%) | −1.9% | 2.8 / 16.6 / 80.6% |
 | 64³ | hybrid | none | 420.1 (+7.1%) | +14.2% | 5.0 / 0 / 95.0% |
 | 64³ | HLLC | Sigma, C = 1.8 | 317.6 (−19%) | −35% | 13.5 / 5.4 / 81.1% |
 | 48³ | hybrid | Sigma, C = 1.8 | 381.3 (−2.8%) | −5.9% | 3.2 / 17.9 / 78.9% |
 
-- **Model on, 64³:** Re<sub>τ</sub> is within 3% at both Sigma constants, and the mean velocity is within 3% across y<sup>+</sup> = 30–300.
+- **Model on, 64³:** Re<sub>τ</sub> is within 3% at both Sigma constants and with either filter width, and the mean velocity is within 3% across y<sup>+</sup> = 30–300. Scotti's width brings Re<sub>τ</sub> from +2.6% to +0.7%. The opt-in dynamic constant (C = 1.09) gives +4.0%, worse than the static one.
 - **Model off:** Re<sub>τ</sub> is 7% high, more than twice the error with the model.
-- **Resolved stresses:** the resolved u<sub>rms</sub>, w<sub>rms</sub> and −u′v′ are within 10%. The resolved v<sub>rms</sub> peak is 11–15% low.
+- **Resolved stresses:** the resolved u<sub>rms</sub>, w<sub>rms</sub> and −u′v′ are within 10%. The resolved v<sub>rms</sub> peak is 11–15% low (see 590 below).
 - **HLLC instead of the hybrid flux:** the scheme removes 2.5 times as much energy as the model. Re<sub>τ</sub> is then 19% low.
 - **Refinement:** the error with the model decreases from 48³ to 64³.
+
+At Re<sub>τ</sub> = 590 (`input_590.toml`, MKM's Re<sub>τ</sub> 587.2), the numerics of the 395 case run on 96³ hexahedra: Δx<sup>+</sup> 38, Δz<sup>+</sup> 19, Δy<sup>+</sup> 0.87. Statistics are averaged over t = 60–200 h/U<sub>b</sub>.
+
+<figure class="mallard-figure" markdown>
+![Mean velocity, RMS velocities and Reynolds shear stress of the channel LES at Re_tau = 590 against Moser, Kim and Mansour](validation/les_channel590.png){ loading=lazy width=2250 height=1275 }
+<figcaption>Re<sub>τ</sub> = 590: profiles against MKM (Sigma with Scotti's width, the default), and Re<sub>τ</sub>(t).</figcaption>
+</figure>
+
+| Model | Re<sub>τ</sub> | C<sub>f</sub> | peak v<sub>rms</sub><sup>+</sup> (MKM 1.04) | numerical / SGS / molecular dissipation |
+|---|---:|---:|---:|---:|
+| Sigma, Scotti width (default) | 596.6 (+1.6%) | +2.9% | 0.95 | 3.3 / 16.2 / 80.6% |
+| Sigma, cell-volume width | 611.0 (+4.1%) | +7.9% | 0.96 | 2.3 / 13.5 / 84.2% |
+| none | 632.7 (+7.8%) | +15.7% | 1.02 | 3.3 / 0 / 96.7% |
+
+- **Scotti's width:** the targets hold at 590. Re<sub>τ</sub> is within 3%, the mean profile within 2% for y<sup>+</sup> = 30–100, and u<sub>rms</sub>, w<sub>rms</sub> and −u′v′ within 10%.
+- **Cell-volume width:** the model halves the model-off error but misses the Re<sub>τ</sub> target.
+- **v<sub>rms</sub>:** the resolved peak is 8–9% low at 590, and 8% low at 395 on a mesh with Δx<sup>+</sup> 26 and Δz<sup>+</sup> 13. It barely depends on the model, so it is the streamwise and spanwise resolution of the near-wall cycle.
 
 ### Thickened flame {#les-tfles}
 
@@ -627,11 +647,42 @@ The dynamically thickened flame model (TFLES; Colin et al. 2000), with Charlette
 
 The thickened flame keeps the laminar flame speed with the thickness F δ<sub>L</sub> it is designed to have. Without the model, the flame's structure is one cell wide, set by the scheme.
 
-<!-- SLOT, LES runs still to merge (numbers only from merged PRs):
-     ### Channel flow at Re_tau = 590 (#230; media ~/local/mallard-runs/les/media/channel590_sigma_Q.png)
-     ### Premixed flame in decaying turbulence (#222)
-     ### Dynamic constant / Scotti filter width (#223), PaSR (#224) if they add validation
-     Add a summary-table row and references for each. -->
+### Premixed flame in decaying turbulence {#les-flame}
+
+A stoichiometric H<sub>2</sub>/air flame in decaying turbulence, in the [`flame_turbulence`](docs/examples.md#flame-turbulence) example.
+
+- **DNS reference:** 224 × 128 × 128 cells of δ<sub>L</sub>/10, u′ = 2.1 S<sub>L</sub>, Karlovitz number 2, numerical dissipation 0.4%.
+- **LES:** TFLES with the Sigma model, on the same initial field box-filtered to Δ = 0.4, 0.8 and 1.6 δ<sub>L</sub> (thickening F = 2, 4, 8).
+- **Measured:** the turbulent flame speed S<sub>T</sub>, from the rate at which the fresh gas is consumed, over 0.2–0.4 ms. The DNS gives S<sub>T</sub>/S<sub>L</sub> = 1.132.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1600" height="880" poster="../media/flame_turbulence_poster.jpg" aria-label="Flame surface colored by heat release rate and vortex isosurfaces of the DNS of a premixed hydrogen-air flame in decaying turbulence"><source src="../media/flame_turbulence.mp4" type="video/mp4"></video>
+<figcaption>The DNS: the flame surface colored by heat release rate, and the turbulent eddies ahead of it in the fresh gas.</figcaption>
+</figure>
+
+<figure class="mallard-figure" markdown>
+![The DNS flame and the TFLES flame at 0.8 flame thicknesses at the same time](validation/les_flame_render.png){ loading=lazy width=1600 height=880 }
+<figcaption>The DNS (left) and TFLES at Δ = 0.8 δ<sub>L</sub> (right) at t = 0.4 ms.</figcaption>
+</figure>
+
+| Δ / δ<sub>L</sub> | TFLES, Colin efficiency (default) | TFLES, `eddy_viscosity` subgrid velocity | TFLES, E = 1 | quasi-laminar |
+|---|---:|---:|---:|---:|
+| 0.4 | 1.056 (−6.7%) | 1.065 (−5.9%) | 1.050 (−7.2%) | 1.088 (−3.9%) |
+| 0.8 | 1.053 (−6.9%) | 1.034 (−8.6%) | 0.985 (−13%) | 1.166 (+3.0%) |
+| 1.6 | 2.240 (+98%) | 1.008 (−11%) | 0.947 (−16%) | 1.051 (−7.1%) |
+
+<figure class="mallard-figure" markdown>
+![Turbulent flame speed, consumption speed, flame surface and temperature distributions over time for the DNS and the LES variants](validation/les_flame_turbulence.png){ loading=lazy width=2470 height=546 }
+<figcaption>Turbulent flame speed, fuel consumption speed and flame surface over time, and temperature distributions in the flame brush: DNS and LES variants.</figcaption>
+</figure>
+
+- **TFLES with the default efficiency** is within 10% of the DNS for Δ ≤ 0.8 δ<sub>L</sub>. It is smooth in time, and the scheme's dissipation is at most 20% of the model's.
+- **Δ = 1.6 δ<sub>L</sub>:** Colin's subgrid-velocity operator overshoots and doubles the flame speed. On the filtered DNS its subgrid velocity is 5–8 times the DNS's.
+- **Second turbulent field:** an independent case, not used for any calibration, shows the same doubling.
+- **The opt-in `eddy_viscosity` subgrid velocity** removes the overshoot. Its constant is calibrated on this case and is not independently validated.
+- **Quasi-laminar runs, without a flame model,** get a close mean speed on coarse meshes. They are erratic in time (33–36% rms) and up to 15% numerically dissipated.
+
+<!-- SLOT: PaSR closure (#224, experimental) if it merges with validation numbers; add a summary-table row and references. -->
 
 ## References
 
@@ -662,6 +713,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - J. Park, K. Kwon and H. Choi, Numerical solutions of flow past a circular cylinder at Reynolds numbers up to 160, *KSME Int. J.* 12, 1200–1205 (1998).
 - J. J. Quirk, A contribution to the great Riemann solver debate, *Int. J. Numer. Methods Fluids* 18, 555–574 (1994).
 - R. Sankaran, H. G. Im, E. R. Hawkes and J. H. Chen, The effects of non-uniform temperature distribution on the ignition of a lean homogeneous hydrogen–air mixture, *Proc. Combust. Inst.* 30, 875–882 (2005). [doi:10.1016/j.proci.2004.08.176](https://doi.org/10.1016/j.proci.2004.08.176)
+- A. Scotti, C. Meneveau and D. K. Lilly, Generalized Smagorinsky model for anisotropic grids, *Phys. Fluids A* 5, 2306–2308 (1993). [doi:10.1063/1.858537](https://doi.org/10.1063/1.858537)
 - L. I. Sedov, *Similarity and Dimensional Methods in Mechanics*, Academic Press (1959).
 - J. E. Shepherd, Shock and Detonation Toolbox, Explosion Dynamics Laboratory, Caltech, [shepherd.caltech.edu/EDL/PublicResources/sdt](https://shepherd.caltech.edu/EDL/PublicResources/sdt/).
 - C.-W. Shu, Essentially non-oscillatory and weighted essentially non-oscillatory schemes for hyperbolic conservation laws, in *Advanced Numerical Approximation of Nonlinear Hyperbolic Equations*, Lecture Notes in Mathematics 1697, 325–432 (1998).
