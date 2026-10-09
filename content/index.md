@@ -6,10 +6,10 @@ hide:
   - toc
 hero_video: media/hero.mp4
 hero_poster: media/hero_poster.jpg
-hero_width: 1800
-hero_height: 1032
-hero_alt: Density fields of a double Mach reflection, a 2D Riemann problem and a viscous shock tube, vortex structures of the 3D Taylor-Green vortex, and plots of the shock tube wall density and the vortex dissipation rate against reference data
-hero_caption: "Fifth-order TENO-E: double Mach reflection (1.84 million triangles), 3D Taylor–Green vortex at Re = 1600 (full periodic box, 2.1 million hexahedra), 2D Riemann problem (1 million quadrilaterals) and viscous shock tube (500,000 quadrilaterals). The shock tube wall density lands on the reference of Zhou et al. (2018); the vortex dissipation rate follows the 512³ spectral DNS."
+hero_width: 1920
+hero_height: 1356
+hero_alt: Density of the 2D Riemann problem on 4096 by 4096 cells, vortex structures of the 3D Taylor-Green vortex at 256 cubed with its dissipation rate traced over the 512 cubed spectral DNS, the leading shock and soot foils of a 3D cellular detonation, and the temperature and heat release rate of a 2D autoignition DNS
+hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilaterals (16.8 million cells), with Kelvin–Helmholtz roll-ups along the slip lines of the jet; a cellular detonation in 2H2-O2-7Ar in a 3 cm square duct, 19.2 million hexahedra in a window that follows the front, whose transverse waves sweep both directions and print their tracks on the numerical soot foils of the walls (front speed within 0.2% of the Chapman–Jouguet speed); the Taylor–Green vortex at Re = 1600 on the full periodic box at 256³ (16.8 million hexahedra), whose kinetic-energy dissipation rate, traced beside it, peaks within 0.3% of the 512³ spectral DNS of the High-Order CFD Workshop; and a DNS of the autoignition of thermally stratified lean H2/air at 41 atm (T′ = 15 K, after Chen et al.), burning by spontaneous ignition fronts and deflagrations."
 ---
 
 ## 16.8 million cells, fifth order
