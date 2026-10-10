@@ -139,5 +139,10 @@
     "image": "media/autoignition_2d_poster.jpg",
     "alt": "Temperature and heat release of four stratified autoignition runs",
     "more": "validation.md#autoignition"
+  },
+  "flame_vortex_quenching": {
+    "image": "media/flame_vortex_quenching_poster.jpg",
+    "alt": "A vortex pair against a radiating lean methane flame: the pocket quenches only in the strongest losses",
+    "more": "validation.md#flame-vortex-quenching"
   }
 }

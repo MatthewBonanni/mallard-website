@@ -34,6 +34,8 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Laminar flame speed](#flame-speed) (reacting) | H<sub>2</sub>/air, φ = 0.6–1.4, two transport models | within 0.81% | Cantera `FreeFlame` | <span class="mallard-nowrap">0.4.0</span> |
 | [Laminar flame speed, CH<sub>4</sub>/air](#flame-speed-ch4) (reacting) | GRI-3.0, φ = 0.6–1.4, two transport models, 20 cells per thermal thickness | within 1.82% | Cantera `FreeFlame` | <span class="mallard-nowrap">040fb35 (after 0.6.0)</span> |
 | [Thermal diffusion (Soret)](#soret) (reacting) | change of the H<sub>2</sub>/air flame speed, φ = 0.5 / 1.0 | −7.23 / −8.26% | Cantera: −6.98 / −8.44% | <span class="mallard-nowrap">caa9b4a (after 0.6.0)</span> |
+| [Optically thin radiation](#radiation) (reacting) | S<sub>rad</sub>/S<sub>ad</sub>, CH<sub>4</sub>/air φ = 0.6 / 0.5 (GRI-3.0), 0.44 (two-step) | 0.9735 / 0.808 / 0.8507 | Cantera: 0.9738 / 0.811 / 0.8509 | <span class="mallard-nowrap">2d7dde7 (after 0.7.0)</span> |
+| [Flame–vortex quenching](#flame-vortex-quenching) (reacting, 2D) | outcomes of 12 vortex pairs, r = 1–8 δ<sub>L</sub>, u′ = 3–100 S<sub>L</sub> | quenching boundary of the shape of the reference's | Poinsot, Veynante & Candel (1991) (qualitative) | <span class="mallard-nowrap">2d7dde7 (after 0.7.0)</span> |
 | [SIMPLER splitting](#simpler) (reacting) | detonation induction length vs ZND at CFL 1.0, 10 cells; Strang / SIMPLER | −25.5 / −0.9% | ZND 1.525 mm | <span class="mallard-nowrap">beb3c3f (after 0.6.0)</span> |
 | [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
 | [Cellular detonation in 3D](#cellular-detonation-3d) (reacting) | front speed over 17 cm | 1620.6 m/s | D<sub>CJ</sub> 1617 m/s | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
@@ -639,6 +641,67 @@ At 20 cells per thermal thickness every flame speed is within 2% of Cantera's: m
 
 Mallard reproduces Cantera's reduction of the flame speed by thermal diffusion to within 0.3 percentage points from φ = 0.5 to 1.0, and to 1 point at φ = 0.4. The coefficients themselves match Cantera's to 6 × 10<sup>−13</sup> of the largest. Runs without the option are byte-identical to those before the change.
 
+### Optically thin radiation {#radiation}
+
+[`2d7dde7`](https://github.com/MatthewBonanni/mallard/commit/2d7dde7) (merge of [#226](https://github.com/MatthewBonanni/mallard/pull/226), after Mallard 0.7.0)
+{ .mallard-provenance }
+
+`[radiation]` adds an optically thin radiative loss, q = 4σ Σ p<sub>i</sub> a<sub>P,i</sub>(T) (T⁴ − T<sub>ambient</sub>⁴), with the TNF workshop's Planck-mean coefficients for H<sub>2</sub>O, CO<sub>2</sub>, CO and CH<sub>4</sub> ([#226](https://github.com/MatthewBonanni/mallard/pull/226)). The loss matches Cantera 3.2's `radiative_heat_loss` to 10<sup>−9</sup>. The flames below are freely propagating CH<sub>4</sub>/air flames against Cantera's `FreeFlame` with the same radiation model (H<sub>2</sub>O and CO<sub>2</sub>), at 12 cells per flame thickness.
+
+| Mixture | S<sub>rad</sub>/S<sub>ad</sub>, Cantera | Mallard |
+|---|---:|---:|
+| CH<sub>4</sub>/air, φ = 0.6, GRI-3.0 | 0.9738 | 0.9735 |
+| CH<sub>4</sub>/air, φ = 0.5, GRI-3.0 | 0.811 | 0.808 |
+| CH<sub>4</sub>/air, φ = 0.44, two-step (2S-CH4-BFER) | 0.8509 | 0.8507 |
+
+**Radiative flammability limit** (two-step mechanism): Cantera finds a radiating flame at φ = 0.41 and none at 0.405. Mallard's flame at φ = 0.41 burns at 2.152 cm/s (Cantera 2.181). At φ = 0.40, started from the adiabatic profile, it slows from 2.0 to 0.2 cm/s within 17 flame times and goes out.
+
+### Flame–vortex quenching {#flame-vortex-quenching}
+
+[`2d7dde7`](https://github.com/MatthewBonanni/mallard/commit/2d7dde7) (merge of [#226](https://github.com/MatthewBonanni/mallard/pull/226), after Mallard 0.7.0)
+{ .mallard-provenance }
+
+The flame–vortex interactions on the spectral diagram of Poinsot, Veynante & Candel (1991), with the heat losses their quenching needs, in the `flame_vortex_quenching` example ([#226](https://github.com/MatthewBonanni/mallard/pull/226)).
+
+- **Flame:** lean CH<sub>4</sub>/air at φ = 0.42, 3% above its radiative limit, with the two-step 2S-CH4-BFER mechanism (Franzelli et al. 2012) and the TNF radiation model. S<sub>L</sub> = 2.69 cm/s and δ<sub>L</sub> = 3.0 mm.
+- **Vortex pairs:** sizes r of 1 to 8 δ<sub>L</sub> and velocities u′ of 3 to 100 S<sub>L</sub>.
+- **Resolution:** 12 cells per δ<sub>L</sub>, or 24 for r = 1.
+- **Classification:** the analysis puts each run in one of Poinsot et al.'s four classes:
+    - no effect: the heat release changes by less than 5%
+    - wrinkled
+    - pocket: fresh gas cut off and burnt out
+    - quenched: the front goes out and fresh gas reaches the outlet
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/flame_vortex_quenching_sweep_poster.jpg" aria-label="Temperature of twelve flame-vortex interactions in lean radiating CH4/air, their outcomes on the spectral diagram and their heat release over time"><source src="../media/flame_vortex_quenching_sweep.mp4" type="video/mp4"></video>
+<figcaption>The twelve runs at φ = 0.42: temperature, with heat release in white and the vortices' vorticity in blue and pink, their places on the spectral diagram, and their heat release over time.</figcaption>
+</figure>
+
+| r/δ<sub>L</sub> \ u′/S<sub>L</sub> | 3 | 10 | 30 | 40 | 100 |
+|---|---|---|---|---|---|
+| 1 | | | no effect | | wrinkled |
+| 2 | | no effect | wrinkled | | **quenched** |
+| 4 | no effect | wrinkled | **quenched** | | **quenched** |
+| 8 | | pocket | | **quenched** | **quenched** |
+
+<figure class="mallard-figure" markdown>
+![Outcomes of the flame-vortex runs on the spectral diagram, their heat release and the weakest burning along the front over time](validation/flame_vortex_quenching_diagram.png){ loading=lazy width=2080 height=624 }
+<figcaption>Left: outcomes on the spectral diagram, with the range of Poinsot et al.'s runs and their quenching example. Middle: heat release over the planar flame's. Right: the weakest burning along the front.</figcaption>
+</figure>
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/flame_vortex_quenching_poster.jpg" aria-label="The same vortex pair against a radiating flame at phi 0.42 and 0.44 and an adiabatic one: the pocket quenches only in the strongest losses"><source src="../media/flame_vortex_quenching.mp4" type="video/mp4"></video>
+<figcaption>The pair r = 4 δ<sub>L</sub>, u′ = 30 S<sub>L</sub> against the radiating flame at φ = 0.42 (quenched), at φ = 0.44 (weaker losses: the pocket burns out) and without radiation at φ = 0.42 (burns out), with r = 8 δ<sub>L</sub>, u′ = 40 S<sub>L</sub> for comparison.</figcaption>
+</figure>
+
+- **How quenching happens:** each pair that quenches cuts off a pocket of fresh gas and pushes it into burnt gas that radiation has cooled by 100–300 K. The pocket's downstream side goes out, and 30–100% of the inlet CH<sub>4</sub> reaches the outlet unburnt. This is Poinsot et al.'s quenching example (r/l<sub>F</sub> = 4.8, u′/S<sub>L</sub> = 28).
+- **Radiation decides it:** the same pair (r = 4, u′ = 30) leaves a pocket that burns out at φ = 0.44 with radiation, and at φ = 0.42 without radiation.
+- **Boundary:** quenching sets in at Ka(r) between 1.25 and 5 for r = 8, 2.5–7.5 for r = 4 and 15–50 for r = 2, and never up to Ka = 100 for r = 1. The boundary climbs steeply toward small pairs and approaches Ka = O(1) for large ones, the shape of Poinsot et al.'s curve. Their 5% cut-off for small or slow pairs is also reproduced.
+- **Resolution check:** at 24 cells per δ<sub>L</sub>, r = 4, u′ = 30 also quenches.
+- **What does not match:**
+    - Poinsot et al.'s loss was linear in the temperature and applied to all the gas, with one-step chemistry and a Lewis number of 1.2. Here the loss is radiation, the chemistry has two steps, and CH<sub>4</sub>'s Lewis number is about 1. Only the shape and the order of magnitude of the boundary compare, since its position moves with the loss level.
+    - Quenched pockets reach the outlet before they are gone.
+
 ### SIMPLER splitting {#simpler}
 
 [`beb3c3f`](https://github.com/MatthewBonanni/mallard/commit/beb3c3f) with local changes, and [`3500760`](https://github.com/MatthewBonanni/mallard/commit/3500760) (0.6.0 + 85 and 87 commits), merged in [#235](https://github.com/MatthewBonanni/mallard/pull/235) after Mallard 0.7.0
@@ -922,6 +985,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - V. Daru and C. Tenaud, Numerical simulation of the viscous shock tube problem by using a high resolution monotonicity-preserving scheme, *Computers & Fluids* 38, 664–676 (2009).
 - R. Deiterding, High-resolution numerical simulation and analysis of Mach reflection structures in detonation waves in low-pressure H<sub>2</sub>–O<sub>2</sub>–Ar mixtures: a summary of results obtained with the adaptive mesh refinement framework AMROC, *J. Combust.* 2011, 738969 (2011). [doi:10.1155/2011/738969](https://doi.org/10.1155/2011/738969)
 - R. P. Fedkiw, B. Merriman and S. Osher, High accuracy numerical methods for thermally perfect gas flows with chemistry, *J. Comput. Phys.* 132, 175–190 (1997). [doi:10.1006/jcph.1996.5622](https://doi.org/10.1006/jcph.1996.5622)
+- B. Franzelli, E. Riber, L. Y. M. Gicquel and T. Poinsot, Large Eddy Simulation of combustion instabilities in a lean partially premixed swirled flame, *Combust. Flame* 159, 621–637 (2012). [doi:10.1016/j.combustflame.2011.08.004](https://doi.org/10.1016/j.combustflame.2011.08.004)
 - D. G. Goodwin, R. L. Speth, H. K. Moffat and B. W. Weber, Cantera: an object-oriented software toolkit for chemical kinetics, thermodynamics, and transport processes, version 3.2.0, [cantera.org](https://www.cantera.org).
 - J.-F. Haas and B. Sturtevant, Interaction of weak shock waves with cylindrical and spherical gas inhomogeneities, *J. Fluid Mech.* 181, 41–76 (1987). [doi:10.1017/S0022112087002003](https://doi.org/10.1017/S0022112087002003)
 - E. R. Hawkes, R. Sankaran, P. P. Pébay and J. H. Chen, Direct numerical simulation of ignition front propagation in a constant volume with temperature inhomogeneities: II. Parametric study, *Combust. Flame* 145, 145–159 (2006). [doi:10.1016/j.combustflame.2005.09.018](https://doi.org/10.1016/j.combustflame.2005.09.018)
@@ -935,6 +999,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - F. Nicoud, H. Baya Toda, O. Cabrit, S. Bose and J. Lee, Using singular values to build a subgrid-scale model for large eddy simulations, *Phys. Fluids* 23, 085106 (2011). [doi:10.1063/1.3623274](https://doi.org/10.1063/1.3623274)
 - E. S. Oran, J. W. Weber, E. I. Stefaniw, M. H. Lefebvre and J. D. Anderson, A numerical study of a two-dimensional H<sub>2</sub>-O<sub>2</sub>-Ar detonation using a detailed chemical reaction model, *Combust. Flame* 113, 147–163 (1998). [doi:10.1016/S0010-2180(97)00218-6](https://doi.org/10.1016/S0010-2180(97)00218-6)
 - J. Park, K. Kwon and H. Choi, Numerical solutions of flow past a circular cylinder at Reynolds numbers up to 160, *KSME Int. J.* 12, 1200–1205 (1998).
+- T. Poinsot, D. Veynante and S. Candel, Quenching processes and premixed turbulent combustion diagrams, *J. Fluid Mech.* 228, 561–606 (1991). [doi:10.1017/S0022112091002823](https://doi.org/10.1017/S0022112091002823)
 - J. J. Quirk, A contribution to the great Riemann solver debate, *Int. J. Numer. Methods Fluids* 18, 555–574 (1994).
 - R. Sankaran, H. G. Im, E. R. Hawkes and J. H. Chen, The effects of non-uniform temperature distribution on the ignition of a lean homogeneous hydrogen–air mixture, *Proc. Combust. Inst.* 30, 875–882 (2005). [doi:10.1016/j.proci.2004.08.176](https://doi.org/10.1016/j.proci.2004.08.176)
 - A. Scotti, C. Meneveau and D. K. Lilly, Generalized Smagorinsky model for anisotropic grids, *Phys. Fluids A* 5, 2306–2308 (1993). [doi:10.1063/1.858537](https://doi.org/10.1063/1.858537)
