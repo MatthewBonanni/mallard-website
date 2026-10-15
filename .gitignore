@@ -3,10 +3,12 @@ out/
 .cache/
 # Pulled from the Mallard repository at build time
 content/docs/input.md
-content/docs/index.md
+content/docs/installation.md
 content/docs/examples.md
+content/docs/tools.md
 content/docs/numerics/
 content/docs/design/
+content/docs/guide/
 content/docs/images/
 content/docs/references.md
 content/images/

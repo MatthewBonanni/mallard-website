@@ -56,8 +56,18 @@ extra_javascript:
 hooks:
   - hooks/performance.py
 
+plugins:
+  - search
+  - redirects:
+      redirect_maps:
+        docs/tutorial.md: docs/guide/first_simulation.md
+        docs/parallel.md: docs/guide/parallel.md
+        docs/performance.md: docs/guide/performance.md
+
 extra:
   mallard_version: !ENV [MALLARD_VERSION, "dev"]
+  # Set when the documentation pages come from a branch rather than the release (build.sh)
+  docs_branch: !ENV [MALLARD_DOCS_BRANCH, ""]
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MatthewBonanni/mallard
@@ -87,18 +97,36 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Gallery: gallery.md
-  - Validation: validation.md
-  - Documentation:
+  - Getting started:
       - docs/index.md
-      - First simulation: docs/tutorial.md
-      - Input reference: docs/input.md
-      - Examples: docs/examples.md
-      - Running in parallel: docs/parallel.md
-      - Performance: docs/performance.md
+      - Installation: docs/installation.md
+      - First simulation: docs/guide/first_simulation.md
+      - Input files: docs/guide/input_files.md
+  - User guide:
+      - Meshes: docs/guide/meshes.md
+      - Physics: docs/guide/physics.md
+      - Thermochemistry: docs/guide/thermochemistry.md
+      - Large-eddy simulation: docs/guide/les.md
+      - Numerics: docs/guide/numerics.md
+      - Boundary conditions: docs/guide/boundary_conditions.md
+      - Sources and sponges: docs/guide/sources.md
+      - Initialization and restarts: docs/guide/initialization.md
+      - Output and diagnostics: docs/guide/output.md
+      - Running in parallel: docs/guide/parallel.md
+      - Performance: docs/guide/performance.md
       - Performance dashboard: docs/dashboard.md
+      # New pages of docs/guide/ (pages.py)
+      - GUIDE_EXTRA
+  - Reference:
+      - Input reference: docs/input.md
       - Numerical methods: docs/numerics/overview.md
       - TENO-E details: docs/numerics/teno_e.md
-      - "Design: MPI": docs/design/mpi.md
+      - Tools: docs/tools.md
       - References: docs/references.md
       - API reference: docs/api/index.html
+      - Developer notes:
+          # The design notes of docs/design/ (pages.py)
+          - DESIGN_NOTES
+  - Examples: docs/examples.md
+  - Validation: validation.md
+  - Gallery: gallery.md
