@@ -13,6 +13,7 @@ Each result on this page comes from a run of Mallard (double precision, default 
 |---|---|---|---|---|
 | [Isentropic vortex](#design-order-convergence) | order of accuracy, TENO-E orders 3–6 | 2.99, 4.02, 4.98, 6.03 (quads); 3.00, 4.01, 4.99, 5.99 (triangles) | 3, 4, 5, 6 | <span class="mallard-nowrap">0.3.0</span> |
 | [Vortex across a periodic seam](#periodic-seams) | order of accuracy, TENO-E orders 3–6 | 2.91, 4.08, 4.87, 6.15 (quads); 2.98, 4.03, 4.94, 6.05 (triangles) | 3, 4, 5, 6 | <span class="mallard-nowrap">0.3.0</span> |
+| [Curved boundaries](#curved-boundaries) | steady vortex between circular walls, L<sub>1</sub> rate, TENO-E orders 3–6, curved walls (straight walls do not converge) | 3.03, 4.89, 4.90, 4.92 | 3, 4, 5, 6 | <span class="mallard-nowrap">0.8.0</span> |
 | [Sod shock tube](#sod-shock-tube) | L<sub>1</sub> density error, 200 cells | 2.4 × 10<sup>−3</sup> | exact solution | <span class="mallard-nowrap">0.5.0</span> |
 | [Shu–Osher problem](#shu-osher-problem) | L<sub>1</sub> density difference, 400 / 800 cells | 0.20 / 0.090 | WENO5 at 12,800 cells; WENO5 at the same resolution: 0.29 / 0.10 | <span class="mallard-nowrap">0.5.0</span> |
 | [Spherical explosion](#spherical-explosion) (3D) | mean density difference, 64³ hexahedra | 0.004 | 1D radial solution, 4000 cells | <span class="mallard-nowrap">0.3.0</span> |
@@ -20,10 +21,10 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Shock–helium bubble](#shock-bubble) (3D) | refracted and transmitted shock, vortex ring, downstream interface velocities | 961, 359, 178, 166 m/s | Haas & Sturtevant (1987): 960, 365, 165, 165 m/s | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
 | [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.83°, 1.4985 (TENO-E) | 42.82°, 1.4984 (theory) | <span class="mallard-nowrap">0.4.0</span> |
 | [Mach 3 sphere](#mach-3-sphere) (3D) | bow-shock standoff Δ/R; stagnation pressure | 0.226; 12.0 | 0.205 (Billig); 12.06 (pitot) | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
-| [RHLL on the Mach 3 sphere](#mach-3-sphere-rhll) (3D) | shock on the axis / stagnation pressure, MUSCL, 796k tetrahedra | −0.6151 / 11.93 (before the fix: bulge to −0.624 / 10.6) | HLL: −0.6149 / 11.86 | <span class="mallard-nowrap">20239fc (after 0.7.0)</span> |
+| [RHLL on the Mach 3 sphere](#mach-3-sphere-rhll) (3D) | shock on the axis / stagnation pressure, MUSCL, 796k tetrahedra | −0.6151 / 11.93 (before the fix: bulge to −0.624 / 10.6) | HLL: −0.6149 / 11.86 | <span class="mallard-nowrap">20239fc (in 0.8.0)</span> |
 | [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.0099% of U (quads); order 1.9–2.0, 0.0093% of U (triangles) | exact solution | <span class="mallard-nowrap">0.3.0</span> |
 | [Viscous shock tube](#viscous-shock-tube) | wall density RMS difference; lambda-shock triple point | 0.56 (range 37–118); (0.581, 0.138) | Zhou et al. (2018), 1500 × 750 grid: (0.58, 0.137) | <span class="mallard-nowrap">0.4.0</span> |
-| [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude | 0.165, 1.368, 0.331 | 0.164–0.165, 1.33–1.35, 0.33–0.34 | <span class="mallard-nowrap">not recorded</span> |
+| [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude; with curved walls (384 × 128, TENO3) | 0.165, 1.368, 0.331; 0.1648, 1.3629, 0.335 | 0.164–0.165, 1.33–1.35, 0.33–0.34 | <span class="mallard-nowrap">not recorded</span> |
 | [Sphere, Re = 300](#sphere-re300) (3D) | St, mean C<sub>D</sub>, mean C<sub>L</sub> (2.06M cells) | 0.133, 0.666, 0.070 | 0.134–0.137, 0.655–0.671, 0.065–0.069 | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
 | [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D) | peak dissipation rate, at t; largest ε error over t = 0.5–20, of the peak | 256³: 0.01289 at 8.83, 3.4%; 128³: 0.01161 at 8.39, 14.1% | 512³ spectral DNS: 0.01286 at 8.97 | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [Channel flow, Re<sub>τ</sub> = 180](#channel-retau180) (3D) | Re<sub>τ</sub>; C<sub>f</sub>; peaks of u<sub>rms</sub>, v<sub>rms</sub>, w<sub>rms</sub>, −u′v′ | 180.8; +2.0%; −0.5, +1.8, +1.4, +1.5% | DNS of Moser, Kim & Mansour (1999): 178.1 | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
@@ -32,16 +33,17 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Reactive shock tube](#reactive-shock-tube) (reacting) | reaction front at 230 µs, 50 / 25 / 12.5 µm cells | 99.63 / 99.66 / 99.66 mm | converged within one 50 µm cell | <span class="mallard-nowrap">0.4.0</span> |
 | [CJ detonation](#detonation) (reacting) | front speed; induction length; peak pressure, at 10 / 20 / 40 cells per induction length | +0.11 / +0.01 / 0.00%; −4.5 / −1.8 / +2.7%; 174.8 / 175.2 / 174.7 kPa | D<sub>CJ</sub> 1616.9 m/s; ZND 1.525 mm; von Neumann 174.7 kPa | <span class="mallard-nowrap">0.4.0</span> |
 | [Laminar flame speed](#flame-speed) (reacting) | H<sub>2</sub>/air, φ = 0.6–1.4, two transport models | within 0.81% | Cantera `FreeFlame` | <span class="mallard-nowrap">0.4.0</span> |
-| [Laminar flame speed, CH<sub>4</sub>/air](#flame-speed-ch4) (reacting) | GRI-3.0, φ = 0.6–1.4, two transport models, 20 cells per thermal thickness | within 1.82% | Cantera `FreeFlame` | <span class="mallard-nowrap">040fb35 (after 0.6.0)</span> |
-| [Thermal diffusion (Soret)](#soret) (reacting) | change of the H<sub>2</sub>/air flame speed, φ = 0.5 / 1.0 | −7.23 / −8.26% | Cantera: −6.98 / −8.44% | <span class="mallard-nowrap">caa9b4a (after 0.6.0)</span> |
-| [Optically thin radiation](#radiation) (reacting) | S<sub>rad</sub>/S<sub>ad</sub>, CH<sub>4</sub>/air φ = 0.6 / 0.5 (GRI-3.0), 0.44 (two-step) | 0.9735 / 0.808 / 0.8507 | Cantera: 0.9738 / 0.811 / 0.8509 | <span class="mallard-nowrap">2d7dde7 (after 0.7.0)</span> |
-| [Flame–vortex quenching](#flame-vortex-quenching) (reacting, 2D) | outcomes of 12 vortex pairs, r = 1–8 δ<sub>L</sub>, u′ = 3–100 S<sub>L</sub> | quenching boundary of the shape of the reference's | Poinsot, Veynante & Candel (1991) (qualitative) | <span class="mallard-nowrap">2d7dde7 (after 0.7.0)</span> |
-| [SIMPLER splitting](#simpler) (reacting) | detonation induction length vs ZND at CFL 1.0, 10 cells; Strang / SIMPLER | −25.5 / −0.9% | ZND 1.525 mm | <span class="mallard-nowrap">beb3c3f (after 0.6.0)</span> |
+| [Laminar flame speed, CH<sub>4</sub>/air](#flame-speed-ch4) (reacting) | GRI-3.0, φ = 0.6–1.4, two transport models, 20 cells per thermal thickness | within 1.82% | Cantera `FreeFlame` | <span class="mallard-nowrap">040fb35 (in 0.8.0)</span> |
+| [Thermal diffusion (Soret)](#soret) (reacting) | change of the H<sub>2</sub>/air flame speed, φ = 0.5 / 1.0 | −7.23 / −8.26% | Cantera: −6.98 / −8.44% | <span class="mallard-nowrap">caa9b4a (in 0.8.0)</span> |
+| [Optically thin radiation](#radiation) (reacting) | S<sub>rad</sub>/S<sub>ad</sub>, CH<sub>4</sub>/air φ = 0.6 / 0.5 (GRI-3.0), 0.44 (two-step) | 0.9735 / 0.808 / 0.8507 | Cantera: 0.9738 / 0.811 / 0.8509 | <span class="mallard-nowrap">2d7dde7 (in 0.8.0)</span> |
+| [Flame–vortex quenching](#flame-vortex-quenching) (reacting, 2D) | outcomes of 12 vortex pairs, r = 1–8 δ<sub>L</sub>, u′ = 3–100 S<sub>L</sub> | quenching boundary of the shape of the reference's | Poinsot, Veynante & Candel (1991) (qualitative) | <span class="mallard-nowrap">2d7dde7 (in 0.8.0)</span> |
+| [SIMPLER splitting](#simpler) (reacting) | detonation induction length vs ZND at CFL 1.0, 10 cells; Strang / SIMPLER | −25.5 / −0.9% | ZND 1.525 mm | <span class="mallard-nowrap">beb3c3f (in 0.8.0)</span> |
 | [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
 | [Cellular detonation in 3D](#cellular-detonation-3d) (reacting) | front speed over 17 cm | 1620.6 m/s | D<sub>CJ</sub> 1617 m/s | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
 | [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
 | [LES, decaying isotropic turbulence](#les-cbc) (3D) | log<sub>10</sub> RMS spectral error at two stations, 128³, Sigma | 0.063 / 0.085 | Comte-Bellot & Corrsin (1971) | <span class="mallard-nowrap">dev. after 0.5.0</span> |
 | [LES, channel flow, Re<sub>τ</sub> = 395 / 590](#les-channel) (3D) | Re<sub>τ</sub>, Sigma with Scotti's width (64³ / 96³) | +0.7% / +1.6% | 392.2 / 587.2 (Moser, Kim & Mansour 1999) | <span class="mallard-nowrap">dev. ~0.6.0–0.7.0</span> |
+| [LES, bluff-body combustor](#les-volvo) (3D) | recirculation length L<sub>r</sub>/D; ε<sub>num</sub>/ε<sub>SGS</sub> | 1.34; −0.38 | 1.35 (Sjunnesson et al.) | <span class="mallard-nowrap">dev. after 0.6.0 (in 0.8.0)</span> |
 | [LES, thickened flame](#les-tfles) (reacting) | consumption speed at F = 7.9 / 31.6 | −0.2% / −0.2% | Cantera s<sub>L</sub> = 2.3324 m/s | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [LES, flame in turbulence](#les-flame) (reacting, 3D) | S<sub>T</sub>/S<sub>L</sub>, TFLES at Δ = 0.4 / 0.8 / 1.6 δ<sub>L</sub> | 1.056 / 1.053 / 2.240 | DNS 1.132 | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [LES, non-premixed flame, PaSR](#les-pasr) (reacting, 3D, experimental) | heat release, Δ = 0.27 / 0.53 mm | −10.7% / −50% (quasi-laminar +16.6% / +41%) | DNS | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
@@ -110,6 +112,33 @@ Between the two finest grids the observed orders are 2.91, 4.08, 4.87 and 6.15 o
 | 1/4 | 1.59 × 10<sup>−4</sup> | 2.53 | 2.01 × 10<sup>−5</sup> | 3.87 | 4.65 × 10<sup>−5</sup> | 3.53 | 5.17 × 10<sup>−6</sup> | 5.05 |
 | 1/8 | 2.19 × 10<sup>−5</sup> | 2.86 | 1.16 × 10<sup>−6</sup> | 4.11 | 1.85 × 10<sup>−6</sup> | 4.65 | 8.41 × 10<sup>−8</sup> | 5.94 |
 | 1/16 | 2.77 × 10<sup>−6</sup> | 2.98 | 7.14 × 10<sup>−8</sup> | 4.03 | 6.06 × 10<sup>−8</sup> | 4.94 | 1.27 × 10<sup>−9</sup> | 6.05 |
+
+### Curved boundaries {#curved-boundaries}
+
+Mallard 0.8.0 ([`177818c`](https://github.com/MatthewBonanni/mallard/commit/177818c), merge of [#263](https://github.com/MatthewBonanni/mallard/pull/263))
+{ .mallard-provenance }
+
+Since 0.8.0, faces on curved walls follow the true geometry to the order of the scheme ([design](docs/design/curved_boundaries.md)). The geometry comes from high-order Gmsh boundary elements, or from an analytic projection onto circles and spheres. Straight-sided cells next to a curved wall misplace it by O(h²/R): that error enters the face quadrature points, the normals, and every moment TENO-E fits. At slip walls the polygonal wall also turns the flow at every node.
+
+The test case is the irrotational vortex u<sub>θ</sub> = M/r in the annulus 1 ≤ r ≤ 1.384, an exact steady Euler solution with slip walls on both circles. It runs on quadrilateral O-grids of n<sub>r</sub> × 16 n<sub>r</sub> cells (triangles: each split in two), HLLC, SSPRK3 at CFL 0.4, from the exact cell averages to t = 12. The error is the L<sub>1</sub> density error against the exact averages.
+
+<figure class="mallard-figure" markdown>
+![L1 density error of the steady vortex between circular walls against resolution, for TENO-E orders 3 to 6 with curved and straight walls](validation/curved_convergence.png){ loading=lazy width=1280 height=800 }
+<figcaption>Subsonic vortex (M = 0.5) on quadrilaterals: with curved walls every order converges; with straight walls none does.</figcaption>
+</figure>
+
+| TENO-E order | 3 | 4 | 5 | 6 |
+|---|---:|---:|---:|---:|
+| L<sub>1</sub> rate, subsonic, quadrilaterals, curved | 3.03 | 4.89 | 4.90 | 4.92 |
+| L<sub>1</sub> at n<sub>r</sub> = 64, curved / straight | 4.2 × 10<sup>−8</sup> / 2.5 × 10<sup>−5</sup> | 3.5 × 10<sup>−10</sup> / 7.8 × 10<sup>−2</sup> | 3.2 × 10<sup>−10</sup> / 4.8 × 10<sup>−2</sup> | 3.8 × 10<sup>−10</sup> / 2.0 × 10<sup>−2</sup> |
+| L<sub>∞</sub> rate, subsonic, quadrilaterals, curved | 2.86 | 3.99 | 3.95 | 3.65 |
+| L<sub>1</sub> rate, subsonic, triangles, curved | 3.45 | 4.38 | 4.91 | 4.91 |
+| L<sub>1</sub> rate, supersonic (M = 2.25), quadrilaterals, curved | 3.64 | 4.86 | 5.00 | 5.57 |
+
+- **Straight walls:** no order converges. The subsonic L<sub>1</sub> errors at n<sub>r</sub> = 64 are 2 × 10<sup>−2</sup> to 8 × 10<sup>−2</sup> for orders 4–6. The supersonic vortex sheds waves at every node, with errors of 0.05 to 0.26.
+- **Order at the wall:** orders 5 and 6 converge at fourth order. The central fits of cells reaching a curved wall are capped at degree 3, because one-sided degree-4 and -5 fits grow exponentially there; design order needs a boundary-constrained reconstruction.
+- **Gmsh geometry:** P3 walls from a Gmsh file (`line4`) match the analytically projected walls to three digits.
+- **Applications:** the [cylinder](#cylinder-at-re-100) and the [Mach 3 sphere](#mach-3-sphere) with curved walls are in their own sections.
 
 ## Shock tubes and blast waves {#shocks}
 
@@ -284,9 +313,19 @@ Inviscid Mach 3 flow past a sphere of diameter D, started impulsively, the `sphe
 
 The standoff is steady from t u<sub>∞</sub>/D ≈ 1.2. It is 10% above Billig's empirical correlation, a difference of 0.01 D, under half the 0.025 D edge of the tetrahedra in the shock layer.
 
+**With curved walls** (Mallard 0.8.0, [`177818c`](https://github.com/MatthewBonanni/mallard/commit/177818c)): the same flow on 810,000 tetrahedra in a quarter box (the faceted quarter-cylinder far field above exceeds the 3D setup's 32 mirror planes with curved walls), at t u<sub>∞</sub>/D = 3.
+
+| Scheme | Walls | Δ/R (Billig 0.205) | pressure C<sub>D</sub> |
+|---|---|---:|---:|
+| MUSCL | straight | 0.2211 | 0.9716 |
+| MUSCL | curved | 0.2212 | 0.9720 |
+| TENO5, bound-preserving | curved | 0.2213 | 0.9790 |
+
+With 0.02 D cells on the wall the facets sit 10<sup>−4</sup> D inside the sphere, so the standoff does not move. TENO5 with straight walls cannot run on this mesh: the sphere's facets are mirror planes of their own, beyond the setup's limit.
+
 #### RHLL on the Mach 3 sphere {#mach-3-sphere-rhll}
 
-[`20239fc`](https://github.com/MatthewBonanni/mallard/commit/20239fc) (merge of [#248](https://github.com/MatthewBonanni/mallard/pull/248), after Mallard 0.7.0)
+[`20239fc`](https://github.com/MatthewBonanni/mallard/commit/20239fc) (merge of [#248](https://github.com/MatthewBonanni/mallard/pull/248)); first released in Mallard 0.8.0
 { .mallard-provenance }
 
 With MUSCL on tetrahedra, the rotated-hybrid RHLL flux grew a carbuncle on the bow shock. On faces that cross the shock at an angle, its rotation turned the HLL part onto the shock normal instead of the face normal. Since [#248](https://github.com/MatthewBonanni/mallard/pull/248), RHLL blends the rotated flux toward HLL along the face normal by the pressure jump across the face, w = min(p<sub>l</sub>/p<sub>r</sub>, p<sub>r</sub>/p<sub>l</sub>)<sup>3</sup>. Contacts and shear layers have no pressure jump, so they keep the rotated flux. Inviscid Mach 3 flow over the sphere with MUSCL, at t = 2, gives the shock position on the axis and the stagnation pressure:
@@ -378,6 +417,21 @@ Drag and lift on both meshes, with the averaging window shaded and the means of 
 | Williamson (1996), experiment | 0.164 | | | |
 
 The references are incompressible computations (Liu et al., Park et al.) and experiments (Williamson); Mallard's run is compressible at Mach 0.2. On a mesh refined by a factor of two in each direction (768 × 256 cells, first cell 0.005 D, run to t U / D = 60: seven lift cycles) the Strouhal number does not change (to 0.01%), and the mean drag and lift amplitude change by 0.2% and 0.4%.
+
+**With curved walls** (Mallard 0.8.0, [`177818c`](https://github.com/MatthewBonanni/mallard/commit/177818c)): `examples/cylinder` with the wall and the far field curved, statistics over t U/D = 60–160.
+
+| Mesh | Order | Walls | St | mean C<sub>D</sub> | C<sub>L</sub> amplitude |
+|---|---:|---|---:|---:|---:|
+| 128 × 64 | 3 | straight | 0.1633 | 1.3671 | 0.335 |
+| 128 × 64 | 3 | curved | 0.1633 | 1.3643 | 0.337 |
+| 128 × 64 | 5 | straight | 0.1647 | 1.3698 | 0.335 |
+| 128 × 64 | 5 | curved | 0.1647 | 1.3656 | 0.333 |
+| 384 × 128 | 3 | straight | 0.1648 | 1.3637 | 0.334 |
+| 384 × 128 | 3 | curved | 0.1648 | 1.3629 | 0.335 |
+| 384 × 128 | 5 | straight | unstable | 1.349 (fluctuations ±2.9) | 2.76 |
+| 384 × 128 | 5 | curved | 0.1648 | 1.3614 | 0.331 |
+
+At Re = 100 the boundary layer spans many cells, so curving the wall moves the drag by only 0.1–0.3%, toward the incompressible 1.33–1.35. On the fine mesh, fifth-order TENO-E with straight walls is unstable; with curved walls it runs.
 
 ### Sphere at Re = 300 (3D) {#sphere-re300}
 
@@ -607,7 +661,7 @@ All ten flame speeds are within 0.81% of Cantera's (the lean mixture-averaged ru
 
 ### Laminar flame speed, CH<sub>4</sub>/air {#flame-speed-ch4}
 
-[`040fb35`](https://github.com/MatthewBonanni/mallard/commit/040fb35) (0.6.0 + 114 commits), merged in [#241](https://github.com/MatthewBonanni/mallard/pull/241) after Mallard 0.7.0
+[`040fb35`](https://github.com/MatthewBonanni/mallard/commit/040fb35) (0.6.0 + 114 commits), merged in [#241](https://github.com/MatthewBonanni/mallard/pull/241); first released in Mallard 0.8.0
 { .mallard-provenance }
 
 Freely propagating CH<sub>4</sub>/air flames at 300 K and 1 atm with GRI-Mech 3.0 (53 species, 325 reactions), φ = 0.6 to 1.4, with mixture-averaged and unity-Lewis-number transport, against Cantera's `FreeFlame` with the same mechanism and transport ([#241](https://github.com/MatthewBonanni/mallard/pull/241)). Each flame starts from Cantera's and runs five flame times at CFL 1, at 10, 20 and 40 cells per thermal thickness, on A100 GPUs; the consumption speed is taken over the last flame time.
@@ -628,7 +682,7 @@ At 20 cells per thermal thickness every flame speed is within 2% of Cantera's: m
 
 ### Thermal diffusion (Soret effect) {#soret}
 
-[`caa9b4a`](https://github.com/MatthewBonanni/mallard/commit/caa9b4a) with local changes (0.6.0 + 125 commits), merged in [#243](https://github.com/MatthewBonanni/mallard/pull/243) after Mallard 0.7.0
+[`caa9b4a`](https://github.com/MatthewBonanni/mallard/commit/caa9b4a) with local changes (0.6.0 + 125 commits), merged in [#243](https://github.com/MatthewBonanni/mallard/pull/243); first released in Mallard 0.8.0
 { .mallard-provenance }
 
 `physics.soret = true` adds thermal diffusion to the species fluxes with mixture-averaged transport, using Cantera's mixture-averaged thermal-diffusion coefficients ([#243](https://github.com/MatthewBonanni/mallard/pull/243)). The test case is freely propagating H<sub>2</sub>/air flames at 300 K and 1 atm against Cantera's `FreeFlame` with and without thermal diffusion: the setup of the [H<sub>2</sub> flame speeds](#flame-speed), with 20 cells per thermal thickness, CFL 0.2 and two flame times.
@@ -643,7 +697,7 @@ Mallard reproduces Cantera's reduction of the flame speed by thermal diffusion t
 
 ### Optically thin radiation {#radiation}
 
-[`2d7dde7`](https://github.com/MatthewBonanni/mallard/commit/2d7dde7) (merge of [#226](https://github.com/MatthewBonanni/mallard/pull/226), after Mallard 0.7.0)
+[`2d7dde7`](https://github.com/MatthewBonanni/mallard/commit/2d7dde7) (merge of [#226](https://github.com/MatthewBonanni/mallard/pull/226)); first released in Mallard 0.8.0
 { .mallard-provenance }
 
 `[radiation]` adds an optically thin radiative loss, q = 4σ Σ p<sub>i</sub> a<sub>P,i</sub>(T) (T⁴ − T<sub>ambient</sub>⁴), with the TNF workshop's Planck-mean coefficients for H<sub>2</sub>O, CO<sub>2</sub>, CO and CH<sub>4</sub> ([#226](https://github.com/MatthewBonanni/mallard/pull/226)). The loss matches Cantera 3.2's `radiative_heat_loss` to 10<sup>−9</sup>. The flames below are freely propagating CH<sub>4</sub>/air flames against Cantera's `FreeFlame` with the same radiation model (H<sub>2</sub>O and CO<sub>2</sub>), at 12 cells per flame thickness.
@@ -658,7 +712,7 @@ Mallard reproduces Cantera's reduction of the flame speed by thermal diffusion t
 
 ### Flame–vortex quenching {#flame-vortex-quenching}
 
-[`2d7dde7`](https://github.com/MatthewBonanni/mallard/commit/2d7dde7) (merge of [#226](https://github.com/MatthewBonanni/mallard/pull/226), after Mallard 0.7.0)
+[`2d7dde7`](https://github.com/MatthewBonanni/mallard/commit/2d7dde7) (merge of [#226](https://github.com/MatthewBonanni/mallard/pull/226)); first released in Mallard 0.8.0
 { .mallard-provenance }
 
 The flame–vortex interactions on the spectral diagram of Poinsot, Veynante & Candel (1991), with the heat losses their quenching needs, in the `flame_vortex_quenching` example ([#226](https://github.com/MatthewBonanni/mallard/pull/226)).
@@ -704,7 +758,7 @@ The flame–vortex interactions on the spectral diagram of Poinsot, Veynante & C
 
 ### SIMPLER splitting {#simpler}
 
-[`beb3c3f`](https://github.com/MatthewBonanni/mallard/commit/beb3c3f) with local changes, and [`3500760`](https://github.com/MatthewBonanni/mallard/commit/3500760) (0.6.0 + 85 and 87 commits), merged in [#235](https://github.com/MatthewBonanni/mallard/pull/235) after Mallard 0.7.0
+[`beb3c3f`](https://github.com/MatthewBonanni/mallard/commit/beb3c3f) with local changes, and [`3500760`](https://github.com/MatthewBonanni/mallard/commit/3500760) (0.6.0 + 85 and 87 commits), merged in [#235](https://github.com/MatthewBonanni/mallard/pull/235); first released in Mallard 0.8.0
 { .mallard-provenance }
 
 `[chemistry] coupling = "simpler"` balances the chemistry and the flow with the SIMPLER splitting of Wu, Ma & Ihme (2019) instead of Strang's ([#235](https://github.com/MatthewBonanni/mallard/pull/235)). The reaction substep sees the transport rate at the start of the step as a constant forcing, so a steady state of the coupled equations is a steady state of the scheme. It stays second order, and Strang remains the default. The checks use H<sub>2</sub>/O<sub>2</sub> chemistry with MUSCL, HLLC and SSPRK3.
@@ -895,6 +949,37 @@ At Re<sub>τ</sub> = 590 (`input_590.toml`, MKM's Re<sub>τ</sub> 587.2), the nu
 - **Cell-volume width:** the model halves the model-off error but misses the Re<sub>τ</sub> target.
 - **v<sub>rms</sub>:** the resolved peak is 8–9% low at 590, and 8% low at 395 on a mesh with Δx<sup>+</sup> 26 and Δz<sup>+</sup> 13. It barely depends on the model, so it is the streamwise and spanwise resolution of the near-wall cycle.
 
+### Bluff-body combustor, non-reacting {#les-volvo}
+
+The branch of [#252](https://github.com/MatthewBonanni/mallard/pull/252) (version string 0.6.0; commit not recorded), merged as [`83c961c`](https://github.com/MatthewBonanni/mallard/commit/83c961c); first released in Mallard 0.8.0
+{ .mallard-provenance }
+
+The cold flow of the Volvo bluff-body combustor (Sjunnesson et al.) in the `volvo_bluff_body` example (`cold.toml`), against the experiment's LDA data.
+
+- **Numerics:** Sigma model with Scotti's width, the hybrid flux, MUSCL.
+- **Mesh and boundaries:** 2.7 million hexahedra (Δ = D/32) with a periodic span, digital-filter inflow at 5% and a characteristic outlet.
+- **Statistics:** over 0.08–0.30 s, 26 shedding periods; 626,000 steps at 14 ms on four A100 GPUs.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1600" height="912" poster="../media/volvo_cold_poster.jpg" aria-label="Vortex structures shed from the triangular bluff body of the Volvo combustor, over a mid-span plane"><source src="../media/volvo_cold.mp4" type="video/mp4"></video>
+<figcaption>Q-criterion isosurfaces behind the triangular bluff body, over the streamwise velocity on a back plane.</figcaption>
+</figure>
+
+<figure class="mallard-figure" markdown>
+![Mean and RMS streamwise velocity at five stations and along the centerline, LES against the experiment](validation/volvo_cold_profiles.png){ loading=lazy width=1650 height=924 }
+<figcaption>Mean (top) and RMS (bottom) streamwise velocity at x/D = 0.375–9.4 and along the centerline, against Sjunnesson et al.'s measurements.</figcaption>
+</figure>
+
+| Quantity | LES | Experiment |
+|---|---:|---:|
+| recirculation length L<sub>r</sub>/D | 1.34 | 1.35 |
+| centerline minimum of U/U<sub>b</sub> | −0.59 at x/D = 0.61 | −0.64 at 0.75 |
+| mean \|ΔU\|/U<sub>b</sub> at x/D = 0.375 / 0.95 / 1.53 / 3.75 / 9.4 | 0.13 / 0.14 / 0.11 / 0.07 / 0.08 | |
+| Strouhal number | 0.285 | |
+| ε<sub>num</sub>/ε<sub>SGS</sub> | −0.38 | |
+
+**Caveat:** the dissipation budget gives ε<sub>num</sub>/ε<sub>SGS</sub> = −0.38. The scheme feeds resolved energy back at 38% of the subgrid model's rate, steadily in every 40 ms window. No model-off run was made. The reacting case (`reacting.toml`) is set up but not validated: its thickening must stay at F ≤ 5, which needs 15–28 million cells.
+
 ### Thickened flame {#les-tfles}
 
 [`5741305`](https://github.com/MatthewBonanni/mallard/commit/5741305) with the uncommitted files of [#215](https://github.com/MatthewBonanni/mallard/pull/215) (0.6.0 + 6 commits)
@@ -1003,6 +1088,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - J. J. Quirk, A contribution to the great Riemann solver debate, *Int. J. Numer. Methods Fluids* 18, 555–574 (1994).
 - R. Sankaran, H. G. Im, E. R. Hawkes and J. H. Chen, The effects of non-uniform temperature distribution on the ignition of a lean homogeneous hydrogen–air mixture, *Proc. Combust. Inst.* 30, 875–882 (2005). [doi:10.1016/j.proci.2004.08.176](https://doi.org/10.1016/j.proci.2004.08.176)
 - A. Scotti, C. Meneveau and D. K. Lilly, Generalized Smagorinsky model for anisotropic grids, *Phys. Fluids A* 5, 2306–2308 (1993). [doi:10.1063/1.858537](https://doi.org/10.1063/1.858537)
+- Sjunnesson, Henrikson & Löfström, AIAA Paper 92-3650 (1992), [doi:10.2514/6.1992-3650](https://doi.org/10.2514/6.1992-3650); the LDA data as digitized from Wu et al. (2017), [arXiv:1707.05805](https://arxiv.org/abs/1707.05805).
 - L. I. Sedov, *Similarity and Dimensional Methods in Mechanics*, Academic Press (1959).
 - J. E. Shepherd, Shock and Detonation Toolbox, Explosion Dynamics Laboratory, Caltech, [shepherd.caltech.edu/EDL/PublicResources/sdt](https://shepherd.caltech.edu/EDL/PublicResources/sdt/).
 - C.-W. Shu, Essentially non-oscillatory and weighted essentially non-oscillatory schemes for hyperbolic conservation laws, in *Advanced Numerical Approximation of Nonlinear Hyperbolic Equations*, Lecture Notes in Mathematics 1697, 325–432 (1998).
