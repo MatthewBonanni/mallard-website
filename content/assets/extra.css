@@ -300,6 +300,13 @@
 .md-typeset .perf td code { white-space: nowrap; }
 .md-typeset .perf-card figcaption .perf-latest { color: var(--perf-ink); font-variant-numeric: tabular-nums; }
 .perf-svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--md-text-font-family, Inter), sans-serif; }
+.md-typeset .perf-card--scaling { container-type: inline-size; width: auto; }
+.md-typeset .perf-svg--compact { max-width: 360px; margin: 0 auto; }
+.md-typeset .perf-svg--wide { display: none; max-width: 630px; }
+@container (min-width: 560px) {
+  .md-typeset .perf-svg--compact { display: none; }
+  .md-typeset .perf-svg--wide { display: block; }
+}
 .perf-grid { stroke: var(--perf-grid); stroke-width: 1; }
 .perf-axis { stroke: var(--perf-muted); stroke-width: 1; }
 .perf-tick { fill: var(--perf-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
