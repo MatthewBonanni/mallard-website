@@ -83,4 +83,4 @@ The opt-in `C_reg = 1e-10` cheapens trace fuel burning out in hot gas. After 100
 | `detonation_3d` | 19.2M | 4 | 1.27 s (8.2%) | 1.22 s (1.1%) | 1.04 |
 | | | 8 | 631 ms (7.1%) | 596 ms (0.4%) | 1.06 |
 
-For runs on several GPUs, see [multi-GPU scaling](parallel.md#multi-gpu-scaling).
+For runs on several GPUs, see [multi-GPU scaling](parallel.md#multi-gpu-scaling). The [performance dashboard](dashboard.md) follows the GPU benchmarks from merge to merge, with their baselines.

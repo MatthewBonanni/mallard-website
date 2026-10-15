@@ -49,6 +49,12 @@ extra_css:
 extra_javascript:
   - path: assets/media.js
     defer: true
+  - path: assets/perf.js
+    defer: true
+
+# Draws docs/dashboard.md from data/performance.json
+hooks:
+  - hooks/performance.py
 
 extra:
   mallard_version: !ENV [MALLARD_VERSION, "dev"]
@@ -90,6 +96,7 @@ nav:
       - Examples: docs/examples.md
       - Running in parallel: docs/parallel.md
       - Performance: docs/performance.md
+      - Performance dashboard: docs/dashboard.md
       - Numerical methods: docs/numerics/overview.md
       - TENO-E details: docs/numerics/teno_e.md
       - "Design: MPI": docs/design/mpi.md
