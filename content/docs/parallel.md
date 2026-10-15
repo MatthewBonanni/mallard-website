@@ -75,6 +75,8 @@ Restart files have the same layout whatever the number of ranks, cells in global
 
 ## Multi-GPU scaling
 
+The [performance dashboard](dashboard.md#scaling) plots the efficiencies below.
+
 ### 3D, Mallard 0.8.0 {#scaling-3d}
 
 The Taylor–Green vortex (viscous) on hexahedra with fifth-order TENO-E and HLLC, on NVIDIA A100-80GB GPUs: 4 per node, NVLink within a node, HDR InfiniBand with GPUDirect RDMA between nodes, GPU-aware MPI. Times are steady times per step, setup excluded; efficiency is T<sub>1</sub>/(n T<sub>n</sub>) for strong and T<sub>1</sub>/T<sub>n</sub> for weak scaling. Measured with the development code of [#261](https://github.com/MatthewBonanni/mallard/pull/261), which made multi-jagged partitions the default; `docs/design/performance.md` in the repository has the details.
