@@ -15,6 +15,11 @@ This repository holds what is specific to the site: `mkdocs.yml`; the home page,
 *First simulation* tutorial and media in `content/`; theme overrides in `overrides/`; `build.sh`; and
 `check_links.py`, which `build.sh` runs on the built site.
 
+The *Performance dashboard* (`content/docs/dashboard.md`) is drawn at build time by `hooks/performance.py` from
+`data/performance.json`: the A100 benchmark results of the GPU CI for each merge into Mallard's `main`, and the
+multi-GPU scaling runs. The maintainer regenerates that file from the GPU CI logs with an export script outside
+this repository and commits it; it holds only commit and pull request references and the measurements.
+
 `validation/` holds the scripts that ran the validation cases and drew the figures in `content/validation/`
 (see the docstring of `validation/common.py`).
 

@@ -1,0 +1,1513 @@
+{
+ "hardware": "NVIDIA A100-SXM4-80GB",
+ "benchmarks": [
+  {
+   "name": "teno5_2d",
+   "description": "2D Riemann problem, TENO-E 5, 1M quadrilaterals",
+   "unit": "cells/s"
+  },
+  {
+   "name": "muscl_2d",
+   "description": "2D Riemann problem, MUSCL, 1M quadrilaterals",
+   "unit": "cells/s"
+  },
+  {
+   "name": "teno5_3d",
+   "description": "3D Taylor–Green vortex, viscous, TENO-E 5",
+   "unit": "cells/s"
+  },
+  {
+   "name": "air_3d",
+   "description": "3D flow of air as a multicomponent mixture",
+   "unit": "cells/s"
+  },
+  {
+   "name": "flame_3d",
+   "description": "3D propane–air flame, two-step chemistry, TFLES",
+   "unit": "cells/s"
+  },
+  {
+   "name": "h2o2@dt=1e-08",
+   "description": "H2/O2 chemistry alone, dt = 1e-8 s",
+   "unit": "cells/s"
+  },
+  {
+   "name": "h2o2@dt=1e-06",
+   "description": "H2/O2 chemistry alone, dt = 1e-6 s",
+   "unit": "cells/s"
+  },
+  {
+   "name": "gri30@dt=1e-08",
+   "description": "GRI-Mech 3.0 chemistry alone, dt = 1e-8 s",
+   "unit": "cells/s"
+  },
+  {
+   "name": "gri30@dt=1e-06",
+   "description": "GRI-Mech 3.0 chemistry alone, dt = 1e-6 s",
+   "unit": "cells/s"
+  }
+ ],
+ "baselines": {
+  "teno5_2d": 54200000.0,
+  "muscl_2d": 265000000.0,
+  "teno5_3d": 5850000.0,
+  "air_3d": 52900000.0,
+  "flame_3d": 6770000.0,
+  "h2o2@dt=1e-08": 9713000.0,
+  "h2o2@dt=1e-06": 5444000.0,
+  "gri30@dt=1e-08": 523800.0,
+  "gri30@dt=1e-06": 529400.0
+ },
+ "releases": [
+  {
+   "tag": "v0.1.0",
+   "sha": "d8e9d8ab75583479a863b721c566fc567d2c418d",
+   "date": "2026-02-12T21:41:48-05:00",
+   "commits_before": 0
+  },
+  {
+   "tag": "v0.2.0",
+   "sha": "7fbf6de1bfffbf02622f599ac9ab711c0d52099c",
+   "date": "2026-10-02T10:52:41-04:00",
+   "commits_before": 0
+  },
+  {
+   "tag": "v0.3.0",
+   "sha": "5f6f1f85a490359b440769fabad4dd60d53694e7",
+   "date": "2026-10-02T20:00:46-04:00",
+   "commits_before": 0
+  },
+  {
+   "tag": "v0.4.0",
+   "sha": "97bd076b271441d739f9c5de6f8aac399e33e6c5",
+   "date": "2026-10-03T13:25:18-04:00",
+   "commits_before": 0
+  },
+  {
+   "tag": "v0.5.0",
+   "sha": "409f681659027663999f81f2ca6d3cbf82560e20",
+   "date": "2026-10-03T16:10:11-04:00",
+   "commits_before": 0
+  },
+  {
+   "tag": "v0.6.0",
+   "sha": "9f51110560186e3e67088ab6c9443559dc270618",
+   "date": "2026-10-05T01:03:01-04:00",
+   "commits_before": 2
+  },
+  {
+   "tag": "v0.7.0",
+   "sha": "9b564dcfb4fdac597116f5bf784e7443fe7cb627",
+   "date": "2026-10-09T12:53:31-04:00",
+   "commits_before": 4
+  },
+  {
+   "tag": "v0.8.0",
+   "sha": "ce8701840916821510abbebcfb7b5d8182bfa983",
+   "date": "2026-10-15T15:54:47-04:00",
+   "commits_before": 11
+  }
+ ],
+ "commits": [
+  {
+   "sha": "3bec90f9fc4c9b2dad5df13207e632b99763c4b0",
+   "tested": "3bec90f9fc4c9b2dad5df13207e632b99763c4b0",
+   "pr": 169,
+   "date": "2026-10-04T17:55:23-04:00",
+   "subject": "In-situ statistics and probes",
+   "results": {
+    "teno5_2d": {
+     "best": 54200000.0,
+     "runs": [
+      54100000.0,
+      54100000.0,
+      54200000.0
+     ],
+     "spread": 0.0018,
+     "baseline": null,
+     "change": null,
+     "status": "new"
+    },
+    "muscl_2d": {
+     "best": 265000000.0,
+     "runs": [
+      264000000.0,
+      263000000.0,
+      265000000.0
+     ],
+     "spread": 0.0075,
+     "baseline": null,
+     "change": null,
+     "status": "new"
+    },
+    "teno5_3d": {
+     "best": 2640000.0,
+     "runs": [
+      2640000.0,
+      2640000.0,
+      2640000.0
+     ],
+     "spread": 0.0,
+     "baseline": null,
+     "change": null,
+     "status": "new"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 6524370.0,
+     "runs": [
+      6518200.0,
+      6524370.0,
+      5651730.0
+     ],
+     "spread": 0.1338,
+     "baseline": null,
+     "change": null,
+     "status": "new"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 2643650.0,
+     "runs": [
+      2640630.0,
+      2643650.0,
+      2639000.0
+     ],
+     "spread": 0.0018,
+     "baseline": null,
+     "change": null,
+     "status": "new"
+    },
+    "gri30@dt=1e-08": {
+     "best": 523802.0,
+     "runs": [
+      523802.0,
+      523737.0,
+      523406.0
+     ],
+     "spread": 0.0008,
+     "baseline": null,
+     "change": null,
+     "status": "new"
+    },
+    "gri30@dt=1e-06": {
+     "best": 529432.0,
+     "runs": [
+      529170.0,
+      528575.0,
+      529432.0
+     ],
+     "spread": 0.0016,
+     "baseline": null,
+     "change": null,
+     "status": "new"
+    }
+   }
+  },
+  {
+   "sha": "46d1f74f53584cd65187ef30596b1a29017b5cad",
+   "tested": "46d1f74f53584cd65187ef30596b1a29017b5cad",
+   "pr": 177,
+   "date": "2026-10-04T19:07:50-04:00",
+   "subject": "Regularize fractional reaction orders below 1 at vanishing concentration",
+   "results": {
+    "teno5_2d": {
+     "best": 54100000.0,
+     "runs": [
+      54100000.0,
+      54000000.0,
+      54100000.0
+     ],
+     "spread": 0.0018,
+     "baseline": 54200000.0,
+     "change": -0.0018,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 266000000.0,
+     "runs": [
+      264000000.0,
+      266000000.0,
+      264000000.0
+     ],
+     "spread": 0.0075,
+     "baseline": 265000000.0,
+     "change": 0.0038,
+     "status": "ok"
+    },
+    "teno5_3d": {
+     "best": 2650000.0,
+     "runs": [
+      2650000.0,
+      2650000.0,
+      2650000.0
+     ],
+     "spread": 0.0,
+     "baseline": 2640000.0,
+     "change": 0.0038,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 6491470.0,
+     "runs": [
+      6491470.0,
+      6460400.0,
+      6487170.0
+     ],
+     "spread": 0.0048,
+     "baseline": 6524000.0,
+     "change": -0.005,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 2613160.0,
+     "runs": [
+      2613160.0,
+      2591080.0,
+      2597520.0
+     ],
+     "spread": 0.0084,
+     "baseline": 2644000.0,
+     "change": -0.0117,
+     "status": "ok"
+    },
+    "gri30@dt=1e-08": {
+     "best": 508871.0,
+     "runs": [
+      507802.0,
+      507548.0,
+      508871.0
+     ],
+     "spread": 0.0026,
+     "baseline": 523800.0,
+     "change": -0.0285,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 512716.0,
+     "runs": [
+      511892.0,
+      512458.0,
+      512716.0
+     ],
+     "spread": 0.0016,
+     "baseline": 529400.0,
+     "change": -0.0315,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "37228d7b1ab64bf6ec84a9a8b9060420e452d3a7",
+   "tested": "2a5a51eeed7eb8e170ff87df6260db3e3425ca10",
+   "pr": 245,
+   "date": "2026-10-09T09:37:45-04:00",
+   "subject": "Carbuncle test: a drifting shock, not one at rest on cell faces",
+   "results": {
+    "teno5_2d": {
+     "best": 53200000.0,
+     "runs": [
+      53100000.0,
+      53100000.0,
+      53200000.0
+     ],
+     "spread": 0.0019,
+     "baseline": 54200000.0,
+     "change": -0.0185,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 253000000.0,
+     "runs": [
+      251000000.0,
+      253000000.0,
+      251000000.0
+     ],
+     "spread": 0.0079,
+     "baseline": 265000000.0,
+     "change": -0.0453,
+     "status": "ok"
+    },
+    "teno5_3d": {
+     "best": 5730000.0,
+     "runs": [
+      5730000.0,
+      5730000.0,
+      5730000.0
+     ],
+     "spread": 0.0,
+     "baseline": 5850000.0,
+     "change": -0.0205,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 6459250.0,
+     "runs": [
+      6453890.0,
+      6459250.0,
+      6453830.0
+     ],
+     "spread": 0.0008,
+     "baseline": 6524000.0,
+     "change": -0.0099,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 2603400.0,
+     "runs": [
+      2603400.0,
+      2593230.0,
+      2595630.0
+     ],
+     "spread": 0.0039,
+     "baseline": 2644000.0,
+     "change": -0.0154,
+     "status": "ok"
+    },
+    "gri30@dt=1e-08": {
+     "best": 506143.0,
+     "runs": [
+      505594.0,
+      506095.0,
+      506143.0
+     ],
+     "spread": 0.0011,
+     "baseline": 523800.0,
+     "change": -0.0337,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 509495.0,
+     "runs": [
+      509267.0,
+      509495.0,
+      508045.0
+     ],
+     "spread": 0.0028,
+     "baseline": 529400.0,
+     "change": -0.0376,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "9b564dcfb4fdac597116f5bf784e7443fe7cb627",
+   "tested": "9b564dcfb4fdac597116f5bf784e7443fe7cb627",
+   "pr": 249,
+   "date": "2026-10-09T12:53:31-04:00",
+   "subject": "Release 0.7.0: version in CMake and CITATION.cff",
+   "results": {
+    "teno5_2d": {
+     "best": 53600000.0,
+     "runs": [
+      53500000.0,
+      53600000.0,
+      53200000.0
+     ],
+     "spread": 0.0075,
+     "baseline": 54200000.0,
+     "change": -0.0111,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 254000000.0,
+     "runs": [
+      252000000.0,
+      251000000.0,
+      254000000.0
+     ],
+     "spread": 0.0118,
+     "baseline": 265000000.0,
+     "change": -0.0415,
+     "status": "ok"
+    },
+    "teno5_3d": {
+     "best": 5740000.0,
+     "runs": [
+      5740000.0,
+      5740000.0,
+      5740000.0
+     ],
+     "spread": 0.0,
+     "baseline": 5850000.0,
+     "change": -0.0188,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 6495170.0,
+     "runs": [
+      6467790.0,
+      6489550.0,
+      6495170.0
+     ],
+     "spread": 0.0042,
+     "baseline": 6524000.0,
+     "change": -0.0044,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 2605310.0,
+     "runs": [
+      2587530.0,
+      2574020.0,
+      2605310.0
+     ],
+     "spread": 0.012,
+     "baseline": 2644000.0,
+     "change": -0.0146,
+     "status": "ok"
+    },
+    "gri30@dt=1e-08": {
+     "best": 507715.0,
+     "runs": [
+      507614.0,
+      507715.0,
+      507643.0
+     ],
+     "spread": 0.0002,
+     "baseline": 523800.0,
+     "change": -0.0307,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 511499.0,
+     "runs": [
+      511499.0,
+      511061.0,
+      510749.0
+     ],
+     "spread": 0.0015,
+     "baseline": 529400.0,
+     "change": -0.0338,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "8daa594492c8756ae213a8245886e517135e5422",
+   "tested": "9f732da46a28aa06194d6105235096fcdbce033e",
+   "pr": 262,
+   "date": "2026-10-09T22:08:17-04:00",
+   "subject": "Chemistry load balancing with SIMPLER coupling",
+   "results": {
+    "teno5_2d": {
+     "best": 53700000.0,
+     "runs": [
+      53500000.0,
+      53400000.0,
+      53700000.0
+     ],
+     "spread": 0.0056,
+     "baseline": 54200000.0,
+     "change": -0.0092,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 291000000.0,
+     "runs": [
+      288000000.0,
+      289000000.0,
+      291000000.0
+     ],
+     "spread": 0.0103,
+     "baseline": 265000000.0,
+     "change": 0.0981,
+     "status": "faster"
+    },
+    "teno5_3d": {
+     "best": 5760000.0,
+     "runs": [
+      5750000.0,
+      5760000.0,
+      5750000.0
+     ],
+     "spread": 0.0017,
+     "baseline": 5850000.0,
+     "change": -0.0154,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 6540690.0,
+     "runs": [
+      6540690.0,
+      6539070.0,
+      6531790.0
+     ],
+     "spread": 0.0014,
+     "baseline": 6524000.0,
+     "change": 0.0026,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 3055230.0,
+     "runs": [
+      3055230.0,
+      3047670.0,
+      3049340.0
+     ],
+     "spread": 0.0025,
+     "baseline": 2644000.0,
+     "change": 0.1555,
+     "status": "faster"
+    },
+    "gri30@dt=1e-08": {
+     "best": 532528.0,
+     "runs": [
+      531871.0,
+      532029.0,
+      532528.0
+     ],
+     "spread": 0.0012,
+     "baseline": 523800.0,
+     "change": 0.0167,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 531075.0,
+     "runs": [
+      531075.0,
+      527968.0,
+      521339.0
+     ],
+     "spread": 0.0183,
+     "baseline": 529400.0,
+     "change": 0.0032,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "5a028d866f960783818e1807d2be97da346b5f80",
+   "tested": "4374ab53df2ffc9e1796f06d89e94b4dd76b8ad5",
+   "pr": 267,
+   "date": "2026-10-09T22:55:41-04:00",
+   "subject": "Conversion warnings (1/n): common, physics, chemistry, io",
+   "results": {
+    "teno5_2d": {
+     "best": 53800000.0,
+     "runs": [
+      53800000.0,
+      53800000.0,
+      53800000.0
+     ],
+     "spread": 0.0,
+     "baseline": 54200000.0,
+     "change": -0.0074,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 291000000.0,
+     "runs": [
+      291000000.0,
+      291000000.0,
+      289000000.0
+     ],
+     "spread": 0.0069,
+     "baseline": 265000000.0,
+     "change": 0.0981,
+     "status": "faster"
+    },
+    "teno5_3d": {
+     "best": 5750000.0,
+     "runs": [
+      5750000.0,
+      5750000.0,
+      5750000.0
+     ],
+     "spread": 0.0,
+     "baseline": 5850000.0,
+     "change": -0.0171,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 6560300.0,
+     "runs": [
+      6560300.0,
+      6545710.0,
+      6555320.0
+     ],
+     "spread": 0.0022,
+     "baseline": 6524000.0,
+     "change": 0.0056,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 3052900.0,
+     "runs": [
+      3052150.0,
+      3051220.0,
+      3052900.0
+     ],
+     "spread": 0.0006,
+     "baseline": 2644000.0,
+     "change": 0.1547,
+     "status": "faster"
+    },
+    "gri30@dt=1e-08": {
+     "best": 530486.0,
+     "runs": [
+      530480.0,
+      530468.0,
+      530486.0
+     ],
+     "spread": 0.0,
+     "baseline": 523800.0,
+     "change": 0.0128,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 520354.0,
+     "runs": [
+      520354.0,
+      520342.0,
+      520115.0
+     ],
+     "spread": 0.0005,
+     "baseline": 529400.0,
+     "change": -0.0171,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "17a9bfe469e063389cd7f7239d0f78f279124c86",
+   "tested": "8e7597b6093245587cb30e8d66809ad530ab90c9",
+   "pr": 269,
+   "date": "2026-10-09T23:44:29-04:00",
+   "subject": "Conversion warnings (2/n): mesh, boundary",
+   "results": {
+    "teno5_2d": {
+     "best": 53700000.0,
+     "runs": [
+      53700000.0,
+      53400000.0,
+      53700000.0
+     ],
+     "spread": 0.0056,
+     "baseline": 54200000.0,
+     "change": -0.0092,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 290000000.0,
+     "runs": [
+      289000000.0,
+      288000000.0,
+      290000000.0
+     ],
+     "spread": 0.0069,
+     "baseline": 265000000.0,
+     "change": 0.0943,
+     "status": "faster"
+    },
+    "teno5_3d": {
+     "best": 5750000.0,
+     "runs": [
+      5750000.0,
+      5750000.0,
+      5750000.0
+     ],
+     "spread": 0.0,
+     "baseline": 5850000.0,
+     "change": -0.0171,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 6549030.0,
+     "runs": [
+      6520910.0,
+      6549030.0,
+      6542730.0
+     ],
+     "spread": 0.0043,
+     "baseline": 6524000.0,
+     "change": 0.0038,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 3052550.0,
+     "runs": [
+      3051310.0,
+      3050850.0,
+      3052550.0
+     ],
+     "spread": 0.0006,
+     "baseline": 2644000.0,
+     "change": 0.1545,
+     "status": "faster"
+    },
+    "gri30@dt=1e-08": {
+     "best": 532531.0,
+     "runs": [
+      532531.0,
+      532338.0,
+      532019.0
+     ],
+     "spread": 0.001,
+     "baseline": 523800.0,
+     "change": 0.0167,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 524558.0,
+     "runs": [
+      524558.0,
+      521776.0,
+      521279.0
+     ],
+     "spread": 0.0063,
+     "baseline": 529400.0,
+     "change": -0.0091,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "79106a2d25cc936d3cd3aac0ef78d90bd971766a",
+   "tested": "4ffe87b997a30d0543c76f099bde99cce60361ca",
+   "pr": 271,
+   "date": "2026-10-10T01:05:06-04:00",
+   "subject": "Conversion warnings (4/n): solver",
+   "results": {
+    "teno5_2d": {
+     "best": 53600000.0,
+     "runs": [
+      53400000.0,
+      53600000.0,
+      53500000.0
+     ],
+     "spread": 0.0037,
+     "baseline": 54200000.0,
+     "change": -0.0111,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 291000000.0,
+     "runs": [
+      291000000.0,
+      291000000.0,
+      291000000.0
+     ],
+     "spread": 0.0,
+     "baseline": 265000000.0,
+     "change": 0.0981,
+     "status": "faster"
+    },
+    "teno5_3d": {
+     "best": 5740000.0,
+     "runs": [
+      5740000.0,
+      5730000.0,
+      5740000.0
+     ],
+     "spread": 0.0017,
+     "baseline": 5850000.0,
+     "change": -0.0188,
+     "status": "ok"
+    },
+    "air_3d": {
+     "best": 53900000.0,
+     "runs": [
+      53900000.0,
+      52000000.0,
+      52300000.0
+     ],
+     "spread": 0.0353,
+     "baseline": 52900000.0,
+     "change": 0.0189,
+     "status": "ok"
+    },
+    "flame_3d": {
+     "best": 6650000.0,
+     "runs": [
+      6630000.0,
+      6650000.0,
+      6640000.0
+     ],
+     "spread": 0.003,
+     "baseline": 6770000.0,
+     "change": -0.0177,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 11207000.0,
+     "runs": [
+      11206100.0,
+      11179200.0,
+      11207000.0
+     ],
+     "spread": 0.0025,
+     "baseline": 9713000.0,
+     "change": 0.1538,
+     "status": "faster"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 5416270.0,
+     "runs": [
+      5396990.0,
+      5412160.0,
+      5416270.0
+     ],
+     "spread": 0.0036,
+     "baseline": 5444000.0,
+     "change": -0.0051,
+     "status": "ok"
+    },
+    "gri30@dt=1e-08": {
+     "best": 526704.0,
+     "runs": [
+      526704.0,
+      526562.0,
+      526689.0
+     ],
+     "spread": 0.0003,
+     "baseline": 523800.0,
+     "change": 0.0055,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 515797.0,
+     "runs": [
+      515423.0,
+      515653.0,
+      515797.0
+     ],
+     "spread": 0.0007,
+     "baseline": 529400.0,
+     "change": -0.0257,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "177818c5874daae1d3b5ec9b84cffef92d29bf00",
+   "tested": "7701c37de0564442676fa9dae2467b91f7bd046b",
+   "pr": 263,
+   "date": "2026-10-15T14:30:23-04:00",
+   "subject": "Curved high-order boundaries (#162)",
+   "results": {
+    "teno5_2d": {
+     "best": 53100000.0,
+     "runs": [
+      53100000.0,
+      52700000.0,
+      53000000.0
+     ],
+     "spread": 0.0075,
+     "baseline": 54200000.0,
+     "change": -0.0203,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 292000000.0,
+     "runs": [
+      292000000.0,
+      291000000.0,
+      290000000.0
+     ],
+     "spread": 0.0068,
+     "baseline": 265000000.0,
+     "change": 0.1019,
+     "status": "faster"
+    },
+    "teno5_3d": {
+     "best": 5770000.0,
+     "runs": [
+      5770000.0,
+      5770000.0,
+      5770000.0
+     ],
+     "spread": 0.0,
+     "baseline": 5850000.0,
+     "change": -0.0137,
+     "status": "ok"
+    },
+    "air_3d": {
+     "best": 54300000.0,
+     "runs": [
+      52300000.0,
+      54300000.0,
+      52900000.0
+     ],
+     "spread": 0.0368,
+     "baseline": 52900000.0,
+     "change": 0.0265,
+     "status": "ok"
+    },
+    "flame_3d": {
+     "best": 6690000.0,
+     "runs": [
+      6690000.0,
+      6660000.0,
+      6650000.0
+     ],
+     "spread": 0.006,
+     "baseline": 6770000.0,
+     "change": -0.0118,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 11248300.0,
+     "runs": [
+      11209000.0,
+      11208000.0,
+      11248300.0
+     ],
+     "spread": 0.0036,
+     "baseline": 9713000.0,
+     "change": 0.1581,
+     "status": "faster"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 5421520.0,
+     "runs": [
+      5421520.0,
+      5390640.0,
+      5414530.0
+     ],
+     "spread": 0.0057,
+     "baseline": 5444000.0,
+     "change": -0.0041,
+     "status": "ok"
+    },
+    "gri30@dt=1e-08": {
+     "best": 527127.0,
+     "runs": [
+      526901.0,
+      527127.0,
+      526573.0
+     ],
+     "spread": 0.0011,
+     "baseline": 523800.0,
+     "change": 0.0064,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 515950.0,
+     "runs": [
+      515950.0,
+      515659.0,
+      515623.0
+     ],
+     "spread": 0.0006,
+     "baseline": 529400.0,
+     "change": -0.0254,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "dba0b9eb6cac3157189f2f0074c5e75905d40ad8",
+   "tested": "a15aacff88dfcd003f40b87269d61e54d0c4fe49",
+   "pr": 265,
+   "date": "2026-10-15T15:01:08-04:00",
+   "subject": "TENO 3D: less device memory per cell, setup peak no higher than steady state (#58)",
+   "results": {
+    "teno5_2d": {
+     "best": 53500000.0,
+     "runs": [
+      53500000.0,
+      53500000.0,
+      53500000.0
+     ],
+     "spread": 0.0,
+     "baseline": 54200000.0,
+     "change": -0.0129,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 293000000.0,
+     "runs": [
+      289000000.0,
+      290000000.0,
+      293000000.0
+     ],
+     "spread": 0.0137,
+     "baseline": 265000000.0,
+     "change": 0.1057,
+     "status": "faster"
+    },
+    "teno5_3d": {
+     "best": 5880000.0,
+     "runs": [
+      5870000.0,
+      5880000.0,
+      5870000.0
+     ],
+     "spread": 0.0017,
+     "baseline": 5850000.0,
+     "change": 0.0051,
+     "status": "ok"
+    },
+    "air_3d": {
+     "best": 54100000.0,
+     "runs": [
+      54100000.0,
+      17400000.0,
+      51700000.0
+     ],
+     "spread": 0.6784,
+     "baseline": 52900000.0,
+     "change": 0.0227,
+     "status": "ok"
+    },
+    "flame_3d": {
+     "best": 6690000.0,
+     "runs": [
+      6690000.0,
+      6670000.0,
+      6650000.0
+     ],
+     "spread": 0.006,
+     "baseline": 6770000.0,
+     "change": -0.0118,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 11252900.0,
+     "runs": [
+      11232100.0,
+      11252900.0,
+      11184700.0
+     ],
+     "spread": 0.0061,
+     "baseline": 9713000.0,
+     "change": 0.1585,
+     "status": "faster"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 5425740.0,
+     "runs": [
+      5425740.0,
+      5418170.0,
+      5411160.0
+     ],
+     "spread": 0.0027,
+     "baseline": 5444000.0,
+     "change": -0.0034,
+     "status": "ok"
+    },
+    "gri30@dt=1e-08": {
+     "best": 527671.0,
+     "runs": [
+      527671.0,
+      527197.0,
+      527282.0
+     ],
+     "spread": 0.0009,
+     "baseline": 523800.0,
+     "change": 0.0074,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 515934.0,
+     "runs": [
+      515787.0,
+      515770.0,
+      515934.0
+     ],
+     "spread": 0.0003,
+     "baseline": 529400.0,
+     "change": -0.0254,
+     "status": "ok"
+    }
+   }
+  },
+  {
+   "sha": "6d18c85b81822c7bb32e129cd1145753f95f231a",
+   "tested": "b487a361cfe4f694fa6f191baf6266b103e4d20e",
+   "pr": 276,
+   "date": "2026-10-15T15:26:44-04:00",
+   "subject": "Enable -Wconversion -Wsign-conversion",
+   "results": {
+    "teno5_2d": {
+     "best": 53600000.0,
+     "runs": [
+      53600000.0,
+      53500000.0,
+      53600000.0
+     ],
+     "spread": 0.0019,
+     "baseline": 54200000.0,
+     "change": -0.0111,
+     "status": "ok"
+    },
+    "muscl_2d": {
+     "best": 291000000.0,
+     "runs": [
+      289000000.0,
+      291000000.0,
+      291000000.0
+     ],
+     "spread": 0.0069,
+     "baseline": 265000000.0,
+     "change": 0.0981,
+     "status": "faster"
+    },
+    "teno5_3d": {
+     "best": 5870000.0,
+     "runs": [
+      5870000.0,
+      5870000.0,
+      5870000.0
+     ],
+     "spread": 0.0,
+     "baseline": 5850000.0,
+     "change": 0.0034,
+     "status": "ok"
+    },
+    "air_3d": {
+     "best": 54300000.0,
+     "runs": [
+      54300000.0,
+      54000000.0,
+      52500000.0
+     ],
+     "spread": 0.0331,
+     "baseline": 52900000.0,
+     "change": 0.0265,
+     "status": "ok"
+    },
+    "flame_3d": {
+     "best": 6690000.0,
+     "runs": [
+      6650000.0,
+      6630000.0,
+      6690000.0
+     ],
+     "spread": 0.009,
+     "baseline": 6770000.0,
+     "change": -0.0118,
+     "status": "ok"
+    },
+    "h2o2@dt=1e-08": {
+     "best": 11248400.0,
+     "runs": [
+      11205400.0,
+      11235700.0,
+      11248400.0
+     ],
+     "spread": 0.0038,
+     "baseline": 9713000.0,
+     "change": 0.1581,
+     "status": "faster"
+    },
+    "h2o2@dt=1e-06": {
+     "best": 5425060.0,
+     "runs": [
+      5408800.0,
+      5425060.0,
+      5407230.0
+     ],
+     "spread": 0.0033,
+     "baseline": 5444000.0,
+     "change": -0.0035,
+     "status": "ok"
+    },
+    "gri30@dt=1e-08": {
+     "best": 526016.0,
+     "runs": [
+      526016.0,
+      525323.0,
+      525958.0
+     ],
+     "spread": 0.0013,
+     "baseline": 523800.0,
+     "change": 0.0042,
+     "status": "ok"
+    },
+    "gri30@dt=1e-06": {
+     "best": 514952.0,
+     "runs": [
+      514952.0,
+      514935.0,
+      514644.0
+     ],
+     "spread": 0.0006,
+     "baseline": 529400.0,
+     "change": -0.0273,
+     "status": "ok"
+    }
+   }
+  }
+ ],
+ "scaling": {
+  "hardware": "NVIDIA A100-80GB, 4 per node, NVLink within a node, HDR InfiniBand with GPUDirect RDMA between nodes, GPU-aware MPI, one rank per GPU",
+  "plots": [
+   {
+    "id": "strong-3d",
+    "title": "3D strong scaling",
+    "description": "Taylor–Green vortex (viscous), 96³ hexahedra, TENO-E 5. Efficiency T₁ / (n Tₙ).",
+    "prs": [
+     261
+    ],
+    "series": [
+     {
+      "label": "multi-jagged (default)",
+      "points": [
+       {
+        "gpus": 1,
+        "ms": 154.0,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 4,
+        "ms": 41.2,
+        "efficiency": 0.9345
+       },
+       {
+        "gpus": 8,
+        "ms": 23.1,
+        "efficiency": 0.8333
+       },
+       {
+        "gpus": 12,
+        "ms": 16.6,
+        "efficiency": 0.7731
+       },
+       {
+        "gpus": 16,
+        "ms": 13.1,
+        "efficiency": 0.7347
+       }
+      ]
+     },
+     {
+      "label": "Hilbert",
+      "points": [
+       {
+        "gpus": 1,
+        "ms": 154.0,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 4,
+        "ms": 41.3,
+        "efficiency": 0.9322
+       },
+       {
+        "gpus": 8,
+        "ms": 23.1,
+        "efficiency": 0.8333
+       },
+       {
+        "gpus": 12,
+        "ms": 17.8,
+        "efficiency": 0.721
+       },
+       {
+        "gpus": 16,
+        "ms": 13.2,
+        "efficiency": 0.7292
+       }
+      ]
+     },
+     {
+      "label": "graph (dKaMinPar)",
+      "points": [
+       {
+        "gpus": 1,
+        "ms": 154.0,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 8,
+        "ms": 23.5,
+        "efficiency": 0.8191
+       },
+       {
+        "gpus": 12,
+        "ms": 17.2,
+        "efficiency": 0.7461
+       },
+       {
+        "gpus": 16,
+        "ms": 13.3,
+        "efficiency": 0.7237
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "weak-3d",
+    "title": "3D weak scaling",
+    "description": "Taylor–Green vortex (viscous), 64³ hexahedra per GPU, TENO-E 5. Efficiency T₁ / Tₙ.",
+    "prs": [
+     261
+    ],
+    "series": [
+     {
+      "label": "multi-jagged (default)",
+      "points": [
+       {
+        "gpus": 1,
+        "ms": 48.1,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 4,
+        "ms": 49.8,
+        "efficiency": 0.9659
+       },
+       {
+        "gpus": 8,
+        "ms": 50.5,
+        "efficiency": 0.9525
+       },
+       {
+        "gpus": 12,
+        "ms": 51.7,
+        "efficiency": 0.9304
+       },
+       {
+        "gpus": 16,
+        "ms": 52.7,
+        "efficiency": 0.9127
+       }
+      ]
+     },
+     {
+      "label": "Hilbert",
+      "points": [
+       {
+        "gpus": 1,
+        "ms": 48.1,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 4,
+        "ms": 49.8,
+        "efficiency": 0.9659
+       },
+       {
+        "gpus": 8,
+        "ms": 50.8,
+        "efficiency": 0.9469
+       },
+       {
+        "gpus": 12,
+        "ms": 54.7,
+        "efficiency": 0.8793
+       },
+       {
+        "gpus": 16,
+        "ms": 55.8,
+        "efficiency": 0.862
+       }
+      ]
+     },
+     {
+      "label": "graph (dKaMinPar)",
+      "points": [
+       {
+        "gpus": 1,
+        "ms": 48.1,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 8,
+        "ms": 51.4,
+        "efficiency": 0.9358
+       },
+       {
+        "gpus": 12,
+        "ms": 52.7,
+        "efficiency": 0.9127
+       },
+       {
+        "gpus": 16,
+        "ms": 53.9,
+        "efficiency": 0.8924
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "strong-2d",
+    "title": "2D strong scaling across nodes",
+    "description": "2D Riemann problem, Hilbert partitions. Efficiency relative to one node of 4 GPUs.",
+    "prs": [
+     228,
+     261
+    ],
+    "series": [
+     {
+      "label": "TENO-E 5, 4M cells",
+      "points": [
+       {
+        "gpus": 4,
+        "ms": 20.3,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 8,
+        "ms": 10.9,
+        "efficiency": 0.9312
+       },
+       {
+        "gpus": 12,
+        "ms": 7.79,
+        "efficiency": 0.8686
+       },
+       {
+        "gpus": 16,
+        "ms": 6.14,
+        "efficiency": 0.8265
+       }
+      ]
+     },
+     {
+      "label": "TENO-E 5, 16M cells",
+      "points": [
+       {
+        "gpus": 4,
+        "ms": 76.6,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 8,
+        "ms": 39.5,
+        "efficiency": 0.9696
+       },
+       {
+        "gpus": 12,
+        "ms": 27.2,
+        "efficiency": 0.9387
+       },
+       {
+        "gpus": 16,
+        "ms": 20.7,
+        "efficiency": 0.9251
+       }
+      ]
+     },
+     {
+      "label": "MUSCL, 16M cells",
+      "points": [
+       {
+        "gpus": 4,
+        "ms": 14.6,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 8,
+        "ms": 7.67,
+        "efficiency": 0.9518
+       },
+       {
+        "gpus": 12,
+        "ms": 5.49,
+        "efficiency": 0.8865
+       },
+       {
+        "gpus": 16,
+        "ms": 4.12,
+        "efficiency": 0.8859
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}
