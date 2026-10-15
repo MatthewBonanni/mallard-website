@@ -31,8 +31,9 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Gmsh 2.2/4.1 or HDF5 mesh files, or generated boxes
     - Periodic boundaries, on generated meshes or paired zones of mesh files
     - Axisymmetric (r-z) flows, at design order up to the axis
+    - Curved high-order boundaries, from Gmsh high-order elements or an analytic projection
 
-    [Mesh input](docs/input.md#mesh) · [Periodic](docs/design/periodic.md) · [Axisymmetric](docs/design/axisymmetric.md)
+    [Mesh input](docs/input.md#mesh) · [Curved boundaries](docs/design/curved_boundaries.md) · [Axisymmetric](docs/design/axisymmetric.md)
 
 -   :material-chart-bell-curve:{ .lg .middle } __Numerics__
 
@@ -60,9 +61,9 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - Finite-rate chemistry from Cantera YAML mechanisms: elementary, three-body, falloff, PLOG and Chebyshev reactions
-    - RODAS Rosenbrock integrator per cell with analytical Jacobians, Strang-split from the flow
-    - Mixture-averaged, unity-Lewis or constant-Lewis transport
-    - `MallardReactor`, a 0D constant-volume reactor
+    - RODAS Rosenbrock integrator per cell with analytical Jacobians, with Strang or SIMPLER splitting
+    - Mixture-averaged, unity-Lewis or constant-Lewis transport, optionally with thermal (Soret) diffusion; optically thin radiation
+    - Chemistry load balancing across MPI ranks; `MallardReactor`, a 0D constant-volume reactor
 
     [Chemistry design](docs/design/chemistry.md) · [Chemistry input](docs/input.md#chemistry)
 
@@ -94,7 +95,8 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - Kokkos Serial, Threads, OpenMP, CUDA (NVIDIA) and HIP (AMD) backends; double or single precision
-    - MPI with GPU-aware halo exchange overlapped with computation; no rank holds the whole mesh
+    - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged partitions; no rank holds the whole mesh
+    - CUDA graphs per step; 3D TENO-E setup on the GPU
     - Bitwise-identical results on any number of threads or ranks; restarts on a different rank count
     - Stiff chemistry on GPUs, with a sparse LU for large mechanisms
 
@@ -115,7 +117,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     ---
 
-    - 38 examples against exact solutions, theory, DNS and Cantera
+    - 40 examples against exact solutions, theory, DNS and Cantera
     - 300+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision
     - Nightly sanitizers; a performance suite with per-hardware baselines
 

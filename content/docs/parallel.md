@@ -41,12 +41,13 @@ Each rank owns a piece of the mesh, plus as many layers of halo cells as its rec
 > Distributed over 3 ranks: 160000 cells, at most 53334 per rank, 8 halo layers
 ```
 
-The pieces come from one of two partitioners, chosen with `partitioner` in a `[parallel]` table of the input:
+The pieces come from one of three partitioners, chosen with `partitioner` in a `[parallel]` table of the input. All three give the same results bit for bit:
 
-- `hilbert` (the default): cells split along a Hilbert curve through their centroids; no extra dependency.
-- `graph`: [dKaMinPar](https://github.com/KaHIP/KaMinPar) on the cell connectivity, which minimizes the number of faces between ranks; available, and the default, when Mallard is built with `-DMallard_ENABLE_KAMINPAR=ON` (needs oneTBB).
+- `multijagged` (the default since 0.8.0): equal slabs along x, each slab cut along y and, in 3D, along z, with the number of pieces per axis that leaves the least area between the blocks. A box of cuboid cells gets cuboid parts; the blocks are numbered along a Hilbert curve, so the ranks of a node hold a compact group.
+- `hilbert` (the default before 0.8.0): cells split along a Hilbert curve through their centroids.
+- `graph`: [dKaMinPar](https://github.com/KaHIP/KaMinPar) on the cell connectivity, which minimizes the number of faces between ranks; needs a build with `-DMallard_ENABLE_KAMINPAR=ON` (and oneTBB).
 
-On GPUs, build with `-DMallard_GPU_AWARE_MPI=ON` if your MPI is CUDA-aware: halo data then goes between GPUs directly instead of through host memory.
+On GPUs, build with `-DMallard_GPU_AWARE_MPI=ON` if your MPI is CUDA-aware: halo data then goes between GPUs directly instead of through host memory. On NVIDIA GPUs, `-DMallard_ENABLE_NCCL=ON` exchanges halos with NCCL on the GPU's stream, with no host synchronization per exchange (`[parallel] halo_exchange = "nccl"`, the default in such builds). CUDA builds also run each step as one CUDA graph (`[run] cuda_graphs`, on by default), except where the host takes part in the step: gas mixtures, characteristic boundaries, expressions of `t`, average-pressure outlets and MPI (not NCCL) halo exchanges. Exchanges carry only the halo cells the stencils read.
 
 Every rank builds the same stencils as a serial run and sums each cell's face fluxes in a fixed order, so the solution is bitwise identical on any number of ranks: after 100 steps of the 2D Riemann problem on 400 × 400 quadrilaterals with fifth-order TENO-E, the restart files of runs on 1 and 3 ranks are byte for byte the same. Sums over the whole domain that are written to output files, such as force monitors, are reduced across ranks and can differ in the last digits.
 
@@ -73,6 +74,35 @@ Boundary-zone output (`geometry = "<zone>"`) likewise holds each rank's own face
 Restart files have the same layout whatever the number of ranks, cells in global order, and each rank reads only its cells by global id. A run can therefore restart on a different number of ranks, or serially from a parallel run and vice versa: a run written at step 50 on 3 ranks and continued to step 100 on 2 ranks ends with a restart file identical to that of an uninterrupted serial run.
 
 ## Multi-GPU scaling
+
+### 3D, Mallard 0.8.0 {#scaling-3d}
+
+The Taylor–Green vortex (viscous) on hexahedra with fifth-order TENO-E and HLLC, on NVIDIA A100-80GB GPUs: 4 per node, NVLink within a node, HDR InfiniBand with GPUDirect RDMA between nodes, GPU-aware MPI. Times are steady times per step, setup excluded; efficiency is T<sub>1</sub>/(n T<sub>n</sub>) for strong and T<sub>1</sub>/T<sub>n</sub> for weak scaling. Measured with the development code of [#261](https://github.com/MatthewBonanni/mallard/pull/261), which made multi-jagged partitions the default; `docs/design/performance.md` in the repository has the details.
+
+**Strong scaling**, 96³ hexahedra (one GPU: 154 ms per step):
+
+| GPUs | Hilbert | graph | multi-jagged (default) | efficiency, multi-jagged |
+|---:|---:|---:|---:|---:|
+| 4 | 41.2 ms | | 41.4 ms | 93% |
+| 8 | 23.1 ms | 23.5 ms | 23.1 ms | 83% |
+| 12 | 17.8 ms | 17.2 ms | 16.6 ms | 77% (Hilbert 72%) |
+| 16 | 13.4 ms | 13.3 ms | 13.1 ms | 73% |
+
+**Weak scaling**, 64³ hexahedra per GPU (one GPU: 48.1 ms per step):
+
+| GPUs | mesh | Hilbert | graph | multi-jagged (default) | efficiency, multi-jagged |
+|---:|---|---:|---:|---:|---:|
+| 4 | 128 × 128 × 64 | 49.8 ms | | 49.8 ms | 97% |
+| 8 | 128³ | 50.8 ms | 51.4 ms | 50.5 ms | 95% |
+| 12 | 192 × 128 × 128 | 54.7 ms | 52.7 ms | 51.9 ms | 93% (Hilbert 88%) |
+| 16 | 256 × 128 × 128 | 55.8 ms | 53.9 ms | 52.7 ms | 91% (Hilbert 86%) |
+
+- **Multi-jagged partitions:** the parts of a box are cuboid blocks. These are the same as Hilbert parts at power-of-two rank counts on cubes, and have 30–45% fewer cells in the first halo layer otherwise (12 ranks, and the weak-scaling boxes). In 2D at 16 GPUs the partitioners are within 1–4% of each other.
+- **Strong-scaling loss:** most of what is left at 16 GPUs (55k cells per GPU) is the TENO kernel itself running less efficiently on fewer cells, and the redundant reconstruction of halo layer 1, which grows with the partition surface.
+- **Slimmer halo exchanges** ([#258](https://github.com/MatthewBonanni/mallard/pull/258)): 3D TENO5 at 12 GPUs went from 85% to 88% weak and from 68% to 72% strong scaling.
+- **Small meshes per GPU:** there the step is latency-bound. The CUDA graph and NCCL exchange ([#217](https://github.com/MatthewBonanni/mallard/pull/217)) take 262,000 MUSCL cells on 4 GPUs from 667 to 523 µs per step, and a 4,000-cell MUSCL step from 286 to 230 µs.
+
+### 2D, Mallard 0.3.0 {#scaling-2d}
 
 The 2D Riemann problem (configuration 3) on Cartesian quadrilaterals, fifth-order TENO-E, HLLC, SSPRK3, double precision, with Mallard 0.3.0 on NVIDIA A100-80GB GPUs, one MPI rank per GPU, the Hilbert partition and GPU-aware MPI. Builds use `-DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_OPENMP=ON -DMallard_ENABLE_MPI=ON -DMallard_GPU_AWARE_MPI=ON`. Up to 8 GPUs share one node over NVLink; 16 GPUs are 4 nodes of 4, connected by HDR InfiniBand with GPUDirect RDMA. Times are seconds of wall time for 50 time steps, excluding setup; efficiency is relative to one GPU (for 16M cells, to 8).
 

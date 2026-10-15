@@ -117,6 +117,10 @@ descriptions = {
     "design/mpi.md": "Design of Mallard's distributed-memory (MPI) parallelization: partitioning, halos and communication.",
     "design/chemistry.md": "Design of Mallard's finite-rate chemistry: multicomponent state, thermally perfect mixtures, numerics, stiff integration, coupling, validation.",
     "design/periodic.md": "Design of periodic boundaries in Mallard: generated and Gmsh meshes, stencils across the seam.",
+    "design/curved_boundaries.md": "Design of curved high-order boundaries in Mallard: geometry sources, curved faces and cells, TENO-E at curved walls, validation.",
+    "design/les.md": "Design of Mallard's large-eddy simulation: SGS models, filter width, hybrid flux, dissipation budget, thickened flames, validation.",
+    "design/performance.md": "Single-GPU performance and parallel scaling of Mallard: TENO setup and memory, reacting mixtures, partitions.",
+    "design/synthetic_inflow.md": "Design of synthetic turbulent inflow in Mallard: the digital filter, injection through characteristic inlets, validation.",
 }
 root = pathlib.Path(sys.argv[1])
 for name, text in descriptions.items():
