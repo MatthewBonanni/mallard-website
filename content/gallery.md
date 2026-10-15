@@ -36,8 +36,8 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 </figure>
 
 <figure id="curved-boundaries" markdown>
-![Straight and curved boundary faces of a coarse annulus mesh and of the cylinder mesh near its wall](validation/curved_meshes.png){ loading=lazy width=2200 height=2200 .mallard-gallery__plot style="max-width: 44rem; margin: 0 auto" }
-<figcaption markdown>**Curved boundaries.** The same meshes with straight boundary faces (left) and with the cubic faces Mallard maps from Gmsh's high-order boundary elements (right): a coarse annulus and the cylinder near its wall, with one wall face magnified in each. With the faces curved, TENO-E of orders 3 to 6 converges on the vortex between circular walls, where it does not with straight walls; new in Mallard 0.8.0. [Validation details](validation.md#curved-boundaries).</figcaption>
+![A coarse torus: flat triangles on the left, the same triangles curved by Mallard's cubic face map on the right](validation/curved_faces_torus.png){ loading=lazy width=2000 height=760 .mallard-gallery__plot }
+<figcaption markdown>**Curved boundaries.** A coarse torus meshed with cubic triangles. Left: the flat faces through their corners. Right: the faces Mallard maps from the high-order elements, which follow the surface. Mallard 0.8.0 curves walls from Gmsh's high-order boundary elements or an analytic projection. With curved faces, TENO-E of orders 3 to 6 converges on the vortex between circular walls, where it does not with straight walls. [Validation details](validation.md#curved-boundaries).</figcaption>
 </figure>
 
 <figure id="isotropic-turbulence" markdown>
