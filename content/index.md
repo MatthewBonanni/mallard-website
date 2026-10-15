@@ -40,7 +40,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - First order, MUSCL (Barth–Jespersen or Venkatakrishnan) and TENO-E of orders 3 to 6, optionally bound preserving
-    - Rusanov, HLL, HLLC, Roe and the carbuncle-free RHLL, for single gases and mixtures
+    - Rusanov, HLL, HLLC, Roe and the rotated-hybrid RHLL, carbuncle-free except at shocks at rest on cell faces; all for single gases and mixtures
     - Low-Mach correction of the upwind dissipation
     - Forward Euler, SSPRK3 and RK4 at a CFL number or a fixed step
 
@@ -61,7 +61,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - Finite-rate chemistry from Cantera YAML mechanisms: elementary, three-body, falloff, PLOG and Chebyshev reactions
-    - RODAS Rosenbrock integrator per cell with analytical Jacobians, with Strang or SIMPLER splitting
+    - RODAS Rosenbrock integrator per cell with analytical Jacobians, with Strang or SIMPLER splitting; ignition delays match Cantera up to 1268 species
     - Mixture-averaged, unity-Lewis or constant-Lewis transport, optionally with thermal (Soret) diffusion; optically thin radiation
     - Chemistry load balancing across MPI ranks; `MallardReactor`, a 0D constant-volume reactor
 
@@ -74,7 +74,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Explicit LES: Sigma (default), WALE, Vreman or Smagorinsky eddy viscosity, with Scotti's filter width on anisotropic cells and an opt-in dynamic constant
     - Kinetic-energy-preserving hybrid flux, with the Riemann solver only at compressions, and a dissipation budget that separates the model's, the scheme's and molecular dissipation
     - Thickened flame (TFLES) with dynamic thickening and Charlette efficiency; PaSR closure (experimental)
-    - Synthetic turbulent inflow (digital filter) through characteristic inlets
+    - Synthetic turbulent inflow through characteristic inlets: a digital filter or a precursor run's statistics, bitwise the same on any number of ranks
     - Channel flow: Re<sub>τ</sub> within 0.7% and 1.6% of DNS at 395 and 590
 
     [LES validation](validation.md#les) · [Design: LES](docs/design/les.md) · [Synthetic inflow](docs/design/synthetic_inflow.md)
@@ -84,8 +84,8 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - Slip, adiabatic, isothermal and heat-flux walls, optionally moving
-    - Inflow, characteristic far field, pressure outlets, transmissive, time-dependent expressions
-    - Non-reflecting characteristic (NSCBC) inlets and outlets with transverse terms; sponge layers
+    - Inflow, characteristic far field, pressure outlets (local or area-averaged), transmissive, time-dependent expressions
+    - Partially non-reflecting characteristic (NSCBC) inlets and outlets with transverse terms (1% of an acoustic pulse reflected, against 97–99% at a fixed-pressure outlet); sponge layers
     - Zones split between conditions by expressions
 
     [Boundary input](docs/input.md#boundaries) · [NSCBC design](docs/design/nscbc.md)
@@ -95,7 +95,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - Kokkos Serial, Threads, OpenMP, CUDA (NVIDIA) and HIP (AMD) backends; double or single precision
-    - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged partitions; no rank holds the whole mesh
+    - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged partitions: 93% (2D) and 91% (3D) weak-scaling efficiency on 16 A100 GPUs; no rank holds the whole mesh
     - CUDA graphs per step; 3D TENO-E setup on the GPU
     - Bitwise-identical results on any number of threads or ranks; restarts on a different rank count
     - Stiff chemistry on GPUs, with a sparse LU for large mechanisms
@@ -118,7 +118,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - 40 examples against exact solutions, theory, DNS and Cantera
-    - 300+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision
+    - 400+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision
     - Nightly sanitizers; a performance suite with per-hardware baselines
 
     [Validation](validation.md) · [Examples](docs/examples.md)
@@ -157,7 +157,7 @@ Every number below comes from a Mallard run compared with an exact solution, the
 
 </div>
 
-The test suite (more than 300 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
+The test suite (more than 400 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
 
 ## Quick start
 
