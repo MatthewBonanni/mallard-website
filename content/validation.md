@@ -27,6 +27,7 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Cylinder, Re = 100](#cylinder-at-re-100) | St, mean C<sub>D</sub>, C<sub>L</sub> amplitude; with curved walls (384 × 128, TENO3) | 0.165, 1.368, 0.331; 0.1648, 1.3629, 0.335 | 0.164–0.165, 1.33–1.35, 0.33–0.34 | <span class="mallard-nowrap">not recorded</span> |
 | [Sphere, Re = 300](#sphere-re300) (3D) | St, mean C<sub>D</sub>, mean C<sub>L</sub> (2.06M cells) | 0.133, 0.666, 0.070 | 0.134–0.137, 0.655–0.671, 0.065–0.069 | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
 | [Taylor–Green vortex, Re = 1600](#taylor-green-vortex) (3D) | peak dissipation rate, at t; largest ε error over t = 0.5–20, of the peak | 256³: 0.01289 at 8.83, 3.4%; 128³: 0.01161 at 8.39, 14.1% | 512³ spectral DNS: 0.01286 at 8.97 | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
+| [Compressible isotropic turbulence](#isotropic-turbulence) (3D) | enstrophy, dilatation variance, filtered to 64³, mean over t/τ = 0.2–4, 256³ | −2.4%, −0.5% | Johnsen et al. (2010), 256³ filtered | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
 | [Channel flow, Re<sub>τ</sub> = 180](#channel-retau180) (3D) | Re<sub>τ</sub>; C<sub>f</sub>; peaks of u<sub>rms</sub>, v<sub>rms</sub>, w<sub>rms</sub>, −u′v′ | 180.8; +2.0%; −0.5, +1.8, +1.4, +1.5% | DNS of Moser, Kim & Mansour (1999): 178.1 | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [Synthetic turbulent inflow](#synthetic-inflow) (3D) | distance from the inlet to within 5% of the developed channel, all statistics | about 17h | about 20h (Keating et al. 2004) | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [0D ignition](#ignition) (reacting) | ignition delay, 36 H<sub>2</sub>/air and CH<sub>4</sub>/air mixtures; final temperature | within 3 × 10<sup>−6</sup> (H<sub>2</sub>), 2 × 10<sup>−4</sup> (CH<sub>4</sub>); within 10<sup>−5</sup> K | Cantera reactor; Cantera equilibrium | <span class="mallard-nowrap">0.4.0</span> |
@@ -518,6 +519,39 @@ The reference is the workshop's 512³ pseudo-spectral DNS. The resolved dissipat
 |---|---:|---:|---:|---:|
 | E<sub>k</sub>, Mallard 128³ | 0.1177 | 0.0847 | 0.0550 | 0.0213 |
 | E<sub>k</sub>, spectral DNS 512³ | 0.1184 | 0.0864 | 0.0544 | 0.0216 |
+
+### Decaying compressible isotropic turbulence {#isotropic-turbulence}
+
+Development code between 0.5.0 and 0.6.0: the branch of [#170](https://github.com/MatthewBonanni/mallard/pull/170) (version string 0.5.0), merged before 0.6.0
+{ .mallard-provenance }
+
+The code-comparison case of Johnsen et al. (2010), computed as a direct numerical simulation with no turbulence model (the [`isotropic_turbulence`](docs/examples.md#isotropic-turbulence) example): a random solenoidal velocity field with spectrum E(k) ∼ k<sup>4</sup> exp(−2 (k/k<sub>0</sub>)<sup>2</sup>), k<sub>0</sub> = 4, in the periodic box [0, 2π]³, with uniform density and pressure, turbulent Mach number M<sub>t,0</sub> = 0.6 and Re<sub>λ,0</sub> = 100, μ ∼ T<sup>3/4</sup> and Pr = 0.7, run to t/τ = 4. The thermodynamic state is out of equilibrium with the velocity, so acoustic waves and entropy modes appear at once, and eddy shocklets form in compressive regions, at local Mach numbers up to 1.9. Fifth-order TENO-E, HLLC and SSPRK3 at CFL 0.4, with the low-Mach correction, on 64³, 128³ and 256³ hexahedra from the same band-limited initial field. Both references filter their solutions to 64³: Johnsen et al. a 256³ solution differentiated with sixth-order differences, Subramaniam et al. (2019) a 512³ DNS with spectral derivatives. Mallard's snapshots are filtered the same two ways. At 256³ (16.8 million cells, 4,307 steps) the run took about an hour on 12 A100 GPUs. The figures are drawn by `tools/plot_isotropic_turbulence.py` in the Mallard repository.
+
+<figure class="mallard-figure" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/isotropic_turbulence_poster.jpg" aria-label="Q-criterion isosurfaces of decaying compressible isotropic turbulence colored by dilatation, a dilatation slice, and enstrophy and dilatation variance against Johnsen et al."><source src="../media/isotropic_turbulence.mp4" type="video/mp4"></video>
+<figcaption>256³: Q-criterion isosurfaces colored by dilatation (red: compression), dilatation on a plane, and the enstrophy and dilatation variance against Johnsen et al.</figcaption>
+</figure>
+
+<figure class="mallard-figure" markdown>
+![Kinetic energy, enstrophy, dilatation variance and temperature or density variance of decaying isotropic turbulence at 64, 128 and 256 cubed, filtered to 64 cubed, against Johnsen et al. and Subramaniam et al.](validation/isotropic_turbulence.png){ loading=lazy width=2210 height=975 }
+<figcaption>Statistics filtered to 64³: kinetic energy, enstrophy, dilatation variance and temperature variance against Johnsen et al. (top, sixth-order differences), and the same with the density variance against Subramaniam et al. (bottom, spectral derivatives).</figcaption>
+</figure>
+
+| 256³, t/τ = 0.2–4, mean / largest difference | kinetic energy | enstrophy | dilatation variance | temperature variance |
+|---|---:|---:|---:|---:|
+| vs Johnsen et al., 256³ filtered to 64³ | +2.1% / +3.2% | −2.4% / −4.8% | −0.5% / −14% (t/τ = 0.4) | −4.9% / −12% |
+| vs Subramaniam et al., 512³ filtered to 64³ | +2.3% / +4.0% | −0.3% / +6.5% | −0.6% / −4.9% | |
+
+<figure class="mallard-figure" markdown>
+![Shell spectra of velocity, vorticity, dilatation and density at t over tau of 2 and 4, at three resolutions, against Subramaniam et al.](validation/isotropic_turbulence_spectra.png){ loading=lazy width=2210 height=975 }
+<figcaption>Shell spectra of velocity, vorticity, dilatation and density at t/τ = 2 and 4 against Subramaniam et al.; each reference spectrum is scaled by one fitted factor, since its normalization is not stated.</figcaption>
+</figure>
+
+- **Resolution:** k<sub>max</sub>η stays above 2.71 at 256³ (1.36 at 128³, 0.71 at 64³). At 256³ the velocity spectrum falls 8 decades by the grid cutoff, and TENO flags at most 3.4% of the cells (64³: 76%), so the scheme mostly runs on its linear fifth-order stencils.
+- **Grid convergence**, 128³ against 256³, unfiltered: kinetic energy, temperature and density variances within 0.3%; enstrophy 2.5% mean; dilatation variance 6% mean and 13% at its peak, carried by the steepest shocklets, only a few cells thick. Filtered to 64³, the two grids differ by under 2% in enstrophy and 5% in dilatation. 64³ misses 18% of the enstrophy.
+- **Remaining offsets** (kinetic energy +2%, temperature variance −5%) are larger than the grid error and about as large as the spread between random initial fields: three seeds at 64³ differ by ±1% in kinetic energy and ±3% in temperature variance at t/τ = 4. The references' realizations are not published.
+- **Spectra** at t/τ = 2 and 4 have the shape of Subramaniam et al.'s within 0.02–0.09 decades RMS.
+- **Low-Mach correction:** most faces are subsonic, so it is active; turning it off lowers the filtered enstrophy by 10% at 64³ and 2% at 128³.
 
 ### Turbulent channel flow, Re<sub>τ</sub> = 180 {#channel-retau180}
 
@@ -1086,6 +1120,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - D. G. Goodwin, R. L. Speth, H. K. Moffat and B. W. Weber, Cantera: an object-oriented software toolkit for chemical kinetics, thermodynamics, and transport processes, version 3.2.0, [cantera.org](https://www.cantera.org).
 - J.-F. Haas and B. Sturtevant, Interaction of weak shock waves with cylindrical and spherical gas inhomogeneities, *J. Fluid Mech.* 181, 41–76 (1987). [doi:10.1017/S0022112087002003](https://doi.org/10.1017/S0022112087002003)
 - E. R. Hawkes, R. Sankaran, P. P. Pébay and J. H. Chen, Direct numerical simulation of ignition front propagation in a constant volume with temperature inhomogeneities: II. Parametric study, *Combust. Flame* 145, 145–159 (2006). [doi:10.1016/j.combustflame.2005.09.018](https://doi.org/10.1016/j.combustflame.2005.09.018)
+- E. Johnsen, J. Larsson, A. V. Bhagatwala, W. H. Cabot, P. Moin, B. J. Olson, P. S. Rawat, S. K. Shankar, B. Sjögreen, H. C. Yee, X. Zhong and S. K. Lele, Assessment of high-resolution methods for numerical simulations of compressible turbulence with shock waves, *J. Comput. Phys.* 229, 1213–1237 (2010). [doi:10.1016/j.jcp.2009.10.028](https://doi.org/10.1016/j.jcp.2009.10.028)
 - T. A. Johnson and V. C. Patel, Flow past a sphere up to a Reynolds number of 300, *J. Fluid Mech.* 378, 19–70 (1999). [doi:10.1017/S0022112098003206](https://doi.org/10.1017/S0022112098003206)
 - A. Keating, U. Piomelli, E. Balaras and H.-J. Kaltenbach, A priori and a posteriori tests of inflow conditions for large-eddy simulation, *Phys. Fluids* 16, 4696–4712 (2004). [doi:10.1063/1.1811672](https://doi.org/10.1063/1.1811672)
 - J. Kim, D. Kim and H. Choi, An immersed-boundary finite-volume method for simulations of flow in complex geometries, *J. Comput. Phys.* 171, 132–150 (2001). [doi:10.1006/jcph.2001.6778](https://doi.org/10.1006/jcph.2001.6778)
@@ -1107,6 +1142,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - C.-W. Shu and S. Osher, Efficient implementation of essentially non-oscillatory shock-capturing schemes, II, *J. Comput. Phys.* 83, 32–78 (1989).
 - G. P. Smith, D. M. Golden, M. Frenklach, N. W. Moriarty, B. Eiteneer, M. Goldenberg, C. T. Bowman, R. K. Hanson, S. Song, W. C. Gardiner, V. V. Lissianski and Z. Qin, GRI-Mech 3.0, [combustion.berkeley.edu/gri-mech](http://combustion.berkeley.edu/gri-mech/version30/text30.html).
 - G. A. Sod, A survey of several finite difference methods for systems of nonlinear hyperbolic conservation laws, *J. Comput. Phys.* 27, 1–31 (1978).
+- A. Subramaniam, M. L. Wong and S. K. Lele, A high-order weighted compact high resolution scheme with boundary closures for compressible turbulent flows with shocks, *J. Comput. Phys.* 397, 108822 (2019). [doi:10.1016/j.jcp.2019.07.021](https://doi.org/10.1016/j.jcp.2019.07.021)
 - G. I. Taylor, The formation of a blast wave by a very intense explosion. I. Theoretical discussion, *Proc. R. Soc. Lond. A* 201, 159–174 (1950). [doi:10.1098/rspa.1950.0049](https://doi.org/10.1098/rspa.1950.0049)
 - A. G. Tomboulides, S. A. Orszag and G. E. Karniadakis, Direct and large-eddy simulation of the flow past a sphere, in *Engineering Turbulence Modelling and Experiments 2*, Elsevier, 273–282 (1993). [doi:10.1016/B978-0-444-89802-9.50030-7](https://doi.org/10.1016/B978-0-444-89802-9.50030-7)
 - E. F. Toro, *Riemann Solvers and Numerical Methods for Fluid Dynamics*, 3rd ed., Springer (2009).
