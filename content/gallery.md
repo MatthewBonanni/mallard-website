@@ -35,6 +35,11 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figcaption markdown>**Taylor–Green vortex at Re = 1600 on the full periodic box**, 256³ (16.8 million hexahedra), fifth-order TENO-E: Q-criterion isosurfaces colored by vorticity magnitude, and the dissipation rate tracing the 512³ spectral DNS (peak within 0.3%) beside the 128³ run. 14 A100 GPUs; the `taylor_green_3d` example (`input_periodic.toml`). [Validation details](validation.md#taylor-green-vortex).</figcaption>
 </figure>
 
+<figure id="curved-boundaries" markdown>
+![Straight and curved boundary faces of a coarse annulus mesh and of the cylinder mesh near its wall](validation/curved_meshes.png){ loading=lazy width=2200 height=2200 .mallard-gallery__plot style="max-width: 44rem; margin: 0 auto" }
+<figcaption markdown>**Curved boundaries.** The same meshes with straight boundary faces (left) and with the cubic faces Mallard maps from Gmsh's high-order boundary elements (right): a coarse annulus and the cylinder near its wall, with one wall face magnified in each. With the faces curved, TENO-E of orders 3 to 6 converges on the vortex between circular walls, where it does not with straight walls; new in Mallard 0.8.0. [Validation details](validation.md#curved-boundaries).</figcaption>
+</figure>
+
 <figure id="isotropic-turbulence" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/isotropic_turbulence_poster.jpg" aria-label="Q-criterion isosurfaces of decaying compressible isotropic turbulence colored by dilatation, a dilatation slice, and enstrophy and dilatation variance against Johnsen et al."><source src="../media/isotropic_turbulence.mp4" type="video/mp4"></video>
 <figcaption markdown>**Decaying compressible isotropic turbulence, in 3D.** The case of Johnsen et al. (2010), turbulent Mach number 0.6 and Re<sub>λ</sub> = 100, with eddy shocklets: Q-criterion isosurfaces colored by dilatation (red: compression), dilatation on a plane, and the enstrophy and dilatation variance against Johnsen et al. DNS on 256³ = 16.8 million hexahedra, fifth-order TENO-E, about an hour on 12 A100 GPUs; filtered to 64³ as the references, the enstrophy is within 2.4% of Johnsen et al. and the dilatation variance within 0.6%. The `isotropic_turbulence` example.</figcaption>
