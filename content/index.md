@@ -33,7 +33,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Axisymmetric (r-z) flows, at design order up to the axis
     - Curved high-order boundaries, from Gmsh high-order elements or an analytic projection
 
-    [Mesh input](docs/input.md#mesh) · [Curved boundaries](docs/design/curved_boundaries.md) · [Axisymmetric](docs/design/axisymmetric.md)
+    [Meshes](docs/guide/meshes.md) · [Curved boundaries](docs/guide/meshes.md#curved-boundaries) · [Axisymmetric flows](docs/guide/physics.md#axisymmetric-flows)
 
 -   :material-chart-bell-curve:{ .lg .middle } __Numerics__
 
@@ -44,7 +44,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Low-Mach correction of the upwind dissipation
     - Forward Euler, SSPRK3 and RK4 at a CFL number or a fixed step
 
-    [Numerical methods](docs/numerics/overview.md) · [TENO-E details](docs/numerics/teno_e.md)
+    [Numerics guide](docs/guide/numerics.md) · [Numerical methods](docs/numerics/overview.md)
 
 -   :material-water:{ .lg .middle } __Physics__
 
@@ -54,7 +54,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Thermally perfect multicomponent mixtures, with an optional double-flux scheme for interfaces
     - Gravity and arbitrary source terms
 
-    [Physics input](docs/input.md#physics)
+    [Physics](docs/guide/physics.md) · [Sources](docs/guide/sources.md)
 
 -   :material-fire:{ .lg .middle } __Reacting flow__
 
@@ -65,7 +65,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Mixture-averaged, unity-Lewis or constant-Lewis transport, optionally with thermal (Soret) diffusion; optically thin radiation
     - Chemistry load balancing across MPI ranks; `MallardReactor`, a 0D constant-volume reactor
 
-    [Chemistry design](docs/design/chemistry.md) · [Chemistry input](docs/input.md#chemistry)
+    [Thermochemistry](docs/guide/thermochemistry.md) · [Validation](validation.md#reacting-flow)
 
 -   :material-weather-windy:{ .lg .middle } __Large-eddy simulation__
 
@@ -77,7 +77,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Synthetic turbulent inflow through characteristic inlets: a digital filter or a precursor run's statistics, bitwise the same on any number of ranks
     - Channel flow: Re<sub>τ</sub> within 0.7% and 1.6% of DNS at 395 and 590
 
-    [LES validation](validation.md#les) · [Design: LES](docs/design/les.md) · [Synthetic inflow](docs/design/synthetic_inflow.md)
+    [Large-eddy simulation](docs/guide/les.md) · [Synthetic inflow](docs/guide/boundary_conditions.md#synthetic-turbulence) · [Validation](validation.md#les)
 
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
@@ -88,7 +88,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Partially non-reflecting characteristic (NSCBC) inlets and outlets with transverse terms (1% of an acoustic pulse reflected, against 97–99% at a fixed-pressure outlet); sponge layers
     - Zones split between conditions by expressions
 
-    [Boundary input](docs/input.md#boundaries) · [NSCBC design](docs/design/nscbc.md)
+    [Boundary conditions](docs/guide/boundary_conditions.md) · [Sponges](docs/guide/sources.md#sponge-layers)
 
 -   :material-chip:{ .lg .middle } __Performance and parallelism__
 
@@ -100,7 +100,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Bitwise-identical results on any number of threads or ranks; restarts on a different rank count
     - Stiff chemistry on GPUs, with a sparse LU for large mechanisms
 
-    [Running in parallel](docs/parallel.md) · [Performance](docs/performance.md) · [Design: MPI](docs/design/mpi.md)
+    [Running in parallel](docs/guide/parallel.md) · [Performance](docs/guide/performance.md) · [Dashboard](docs/dashboard.md)
 
 -   :material-file-chart:{ .lg .middle } __Input, output and diagnostics__
 
@@ -111,7 +111,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Running means and covariances, point and line probes, domain integrals, wall forces
     - Heat release, production rates and detonation soot foils
 
-    [Input reference](docs/input.md) · [Examples](docs/examples.md)
+    [Output and diagnostics](docs/guide/output.md) · [Input reference](docs/input.md)
 
 -   :material-check-decagram:{ .lg .middle } __Validated and tested__
 
@@ -172,7 +172,7 @@ cmake --build build -j
 cd examples/sod && ../../build/src/Mallard -i input.toml
 ```
 
-This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorial.md) walks through the input, the output and the comparison with the exact solution; [Getting started](docs/index.md) covers OpenMP and GPU builds.
+This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/guide/first_simulation.md) walks through the input, the output and the comparison with the exact solution; [Installation](docs/installation.md) covers OpenMP, GPU and MPI builds.
 
 ## Citing Mallard
 

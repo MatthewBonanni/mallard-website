@@ -36,3 +36,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
 {% endblock %}
+
+{% block content %}
+  {% if config.extra.docs_branch and page and page.file.src_uri.startswith("docs/") and page.file.src_uri != "docs/dashboard.md" %}
+    <div class="admonition note mallard-branch-note">
+      <p class="admonition-title">Documentation of the <code>{{ config.extra.docs_branch }}</code> branch</p>
+      <p>These pages follow Mallard's <code>{{ config.extra.docs_branch }}</code> branch, which is ahead of release {{ config.extra.mallard_version }}: some features they describe come with the next release.</p>
+    </div>
+  {% endif %}
+  {{ super() }}
+{% endblock %}
