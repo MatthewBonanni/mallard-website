@@ -120,6 +120,11 @@ Mallard 0.8.0 ([`177818c`](https://github.com/MatthewBonanni/mallard/commit/1778
 
 Since 0.8.0, faces on curved walls follow the true geometry to the order of the scheme ([design](docs/design/curved_boundaries.md)). The geometry comes from high-order Gmsh boundary elements, or from an analytic projection onto circles and spheres. Straight-sided cells next to a curved wall misplace it by O(h²/R): that error enters the face quadrature points, the normals, and every moment TENO-E fits. At slip walls the polygonal wall also turns the flow at every node.
 
+<figure class="mallard-figure" markdown>
+![Straight and curved boundary faces of a coarse annulus mesh and of the cylinder mesh near its wall, with magnified insets showing the chord inside the true circle and the curved face on it](validation/curved_meshes.png){ loading=lazy width=2200 height=2200 }
+<figcaption>Meshes from `tools/make_annulus_mesh.py` (8 × 32 cells) and `tools/make_cylinder_mesh.py` (128 × 64 cells, as in the cylinder table below), written with straight (`--order 1`) and cubic (`--order 3`) boundary elements. Every cell edge is drawn. The curved boundary faces are Mallard's face map, the cubic through each Gmsh `line4` element's four nodes, sampled finely. The insets magnify one wall face: the chord lies inside the circle by r(1 − cos Δθ/2), and the curved face lies on it.</figcaption>
+</figure>
+
 The test case is the irrotational vortex u<sub>θ</sub> = M/r in the annulus 1 ≤ r ≤ 1.384, an exact steady Euler solution with slip walls on both circles. It runs on quadrilateral O-grids of n<sub>r</sub> × 16 n<sub>r</sub> cells (triangles: each split in two), HLLC, SSPRK3 at CFL 0.4, from the exact cell averages to t = 12. The error is the L<sub>1</sub> density error against the exact averages.
 
 <figure class="mallard-figure" markdown>
