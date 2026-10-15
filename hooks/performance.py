@@ -65,8 +65,8 @@ def link(commit):
     return f"{REPO}/pull/{commit['pr']}" if commit["pr"] else f"{REPO}/commit/{commit['sha']}"
 
 
-def svg_open(label):
-    return (f'<svg class="perf-svg" viewBox="0 0 {W} {H}" role="img" aria-label="{esc(label)}" '
+def svg_open(label, w=W, h=H, cls=""):
+    return (f'<svg class="perf-svg{cls}" viewBox="0 0 {w} {h}" role="img" aria-label="{esc(label)}" '
             f'preserveAspectRatio="xMidYMid meet">')
 
 
@@ -214,7 +214,10 @@ def summary(data):
 PALETTE = 3
 
 
-def scaling_chart(plot):
+SCALING_SIZES = ((W, H, " perf-svg--compact"), (840, 300, " perf-svg--wide"))
+
+
+def scaling_svg(plot, w, h, cls):
     series = plot["series"]
     gpus = sorted({p["gpus"] for s in series for p in s["points"]})
     xlo, xhi = 0, max(gpus)
@@ -226,20 +229,20 @@ def scaling_chart(plot):
     right = 150
 
     def sx(g):
-        return LEFT + (W - LEFT - right) * (g - xlo) / (xhi - xlo)
+        return LEFT + (w - LEFT - right) * (g - xlo) / (xhi - xlo)
 
     def sy(e):
-        return TOP + (H - TOP - BOTTOM) * (1 - (e - lo) / (1.0 - lo))
+        return TOP + (h - TOP - BOTTOM) * (1 - (e - lo) / (1.0 - lo))
 
-    out = [svg_open(f'{plot["title"]}: parallel efficiency against GPUs')]
+    out = [svg_open(f'{plot["title"]}: parallel efficiency against GPUs', w, h, cls)]
     for t in ticks:
         y = sy(t)
-        out.append(f'<line class="perf-grid" x1="{LEFT}" x2="{W - right}" y1="{y:.1f}" y2="{y:.1f}"/>')
+        out.append(f'<line class="perf-grid" x1="{LEFT}" x2="{w - right}" y1="{y:.1f}" y2="{y:.1f}"/>')
         out.append(f'<text class="perf-tick" x="{LEFT - 6}" y="{y + 3.5:.1f}" text-anchor="end">{t * 100:.0f}%</text>')
     for g in gpus:
-        out.append(f'<text class="perf-tick" x="{sx(g):.1f}" y="{H - BOTTOM + 14}" text-anchor="middle">{g}</text>')
-    out.append(f'<line class="perf-axis" x1="{LEFT}" x2="{W - right}" y1="{H - BOTTOM}" y2="{H - BOTTOM}"/>')
-    out.append(f'<text class="perf-tick" x="{(LEFT + W - right) / 2:.1f}" y="{H - BOTTOM + 26}" '
+        out.append(f'<text class="perf-tick" x="{sx(g):.1f}" y="{h - BOTTOM + 14}" text-anchor="middle">{g}</text>')
+    out.append(f'<line class="perf-axis" x1="{LEFT}" x2="{w - right}" y1="{h - BOTTOM}" y2="{h - BOTTOM}"/>')
+    out.append(f'<text class="perf-tick" x="{(LEFT + w - right) / 2:.1f}" y="{h - BOTTOM + 26}" '
                'text-anchor="middle">GPUs</text>')
     ends = []
     for k, s in enumerate(series):
@@ -259,9 +262,16 @@ def scaling_chart(plot):
     for j in range(1, len(ends)):
         ends[j][0] = max(ends[j][0], ends[j - 1][0] + 12)
     for y, label, e, k in ends:
-        out.append(f'<text class="perf-direct" x="{W - right + 8}" y="{y + 3.5:.1f}">'
+        out.append(f'<text class="perf-direct" x="{w - right + 8}" y="{y + 3.5:.1f}">'
                    f'<tspan class="perf-direct-value">{fmt_pct(e, False)}</tspan> {esc(label)}</text>')
     out.append("</svg>")
+    return "".join(out)
+
+
+def scaling_chart(plot):
+    series = plot["series"]
+    gpus = sorted({p["gpus"] for s in series for p in s["points"]})
+    svgs = "".join(scaling_svg(plot, w, h, cls) for w, h, cls in SCALING_SIZES)
 
     legend = "".join(f'<li><span class="perf-key perf-key--series perf-c{k % PALETTE}"></span>{esc(s["label"])}</li>'
                      for k, s in enumerate(series))
@@ -277,7 +287,7 @@ def scaling_chart(plot):
              f'<tbody>{body}</tbody></table></div></div></details>')
     return (f'<figure class="perf-card perf-card--scaling" id="{esc(plot["id"])}"><figcaption>'
             f'<strong>{esc(plot["title"])}</strong><span>{esc(plot["description"])} Measured in {prs}.</span>'
-            f'</figcaption><ul class="perf-legend">{legend}</ul>' + "".join(out) + table + "</figure>")
+            f'</figcaption><ul class="perf-legend">{legend}</ul>' + svgs + table + "</figure>")
 
 
 def scaling(data):
