@@ -117,7 +117,10 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     ---
 
-    - 40 examples against exact solutions, theory, DNS and Cantera
+    - 40 examples against exact solutions, theory, DNS and Cantera, e.g.:
+        - [Sphere wake](validation.md#sphere-re300) at Re = 300: Strouhal number and drag within 3% and 2% of Johnson & Patel
+        - [Compressible isotropic turbulence](validation.md#isotropic-turbulence): enstrophy within 2.4% of the filtered DNS of Johnsen et al.
+        - [CJ detonation](validation.md#detonation) speed within 0.01%; H<sub>2</sub>/air [flame speeds](validation.md#flame-speed) within 0.81% of Cantera from φ = 0.6 to 1.4
     - 400+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision
     - Nightly sanitizers; a performance suite with per-hardware baselines
 
