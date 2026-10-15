@@ -1,5 +1,5 @@
 {
-  "_comment": "Still image for each example on the Examples page (paths relative to content/); build.sh reads this. Examples without an entry are listed without a picture.",
+  "_comment": "Still image and/or setup diagram (from docs/images/guide of the Mallard repository) for each example on the Examples page (image paths relative to content/); pages.py reads this. Examples without an entry are listed without a picture.",
   "sod": {
     "image": "validation/sod.png",
     "alt": "Density, velocity and pressure of the Sod shock tube against the exact solution",
@@ -18,22 +18,38 @@
   "double_mach": {
     "image": "media/double_mach_poster.jpg",
     "alt": "Density and numerical schlieren of the double Mach reflection at t = 0.2",
-    "more": "gallery.md"
+    "more": "gallery.md",
+    "diagram": {
+      "name": "domain_double_mach",
+      "alt": "Zones of the double Mach reflection: inflow and moving-shock boundaries, a bottom zone split at x = 1/6"
+    }
   },
   "wedge": {
     "image": "validation/wedge.png",
     "alt": "Pressure over the 8 degree ramp with the theoretical oblique shock",
-    "more": "validation.md#oblique-shock"
+    "more": "validation.md#oblique-shock",
+    "diagram": {
+      "name": "domain_wedge",
+      "alt": "Zones of the wedge: inflow, pressure outlet and symmetry planes over the 8 degree ramp"
+    }
   },
   "cylinder": {
     "image": "validation/cylinder_wake.png",
     "alt": "Vorticity in the wake of the cylinder at Re = 100",
-    "more": "validation.md#cylinder-at-re-100"
+    "more": "validation.md#cylinder-at-re-100",
+    "diagram": {
+      "name": "domain_cylinder",
+      "alt": "The O-grid of the cylinder example with its wall and far-field zones"
+    }
   },
   "viscous_shock_tube": {
     "image": "validation/vst.png",
     "alt": "Density near the floor of the viscous shock tube at t = 1 and wall density against the reference",
-    "more": "validation.md#viscous-shock-tube"
+    "more": "validation.md#viscous-shock-tube",
+    "diagram": {
+      "name": "domain_viscous_shock_tube",
+      "alt": "Zones of the viscous shock tube: adiabatic walls and a symmetry plane"
+    }
   },
   "explosion_3d": {
     "image": "validation/explosion.png",
@@ -93,7 +109,11 @@
   "flame_2d": {
     "image": "media/flame_2d_poster.jpg",
     "alt": "Temperature of the lean hydrogen flame with mixture-averaged and unity Lewis number transport",
-    "more": "validation.md#lean-flame"
+    "more": "validation.md#lean-flame",
+    "diagram": {
+      "name": "domain_flame_2d",
+      "alt": "The periodic channel of the 2D flame with its inflow and outlet"
+    }
   },
   "premixed_flame": {
     "image": "validation/flames.png",
@@ -144,5 +164,17 @@
     "image": "media/flame_vortex_quenching_poster.jpg",
     "alt": "A vortex pair against a radiating lean methane flame: the pocket quenches only in the strongest losses",
     "more": "validation.md#flame-vortex-quenching"
+  },
+  "sphere_axisymmetric": {
+    "diagram": {
+      "name": "domain_sphere_axisymmetric",
+      "alt": "The meridian half-plane of the axisymmetric sphere with its wall, far field and axis"
+    }
+  },
+  "turbulent_inflow_duct": {
+    "diagram": {
+      "name": "domain_turbulent_inflow_duct",
+      "alt": "The duct with a turbulent characteristic inlet and outlet, periodic in y and z"
+    }
   }
 }

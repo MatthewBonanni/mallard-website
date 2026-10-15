@@ -3,17 +3,24 @@
 Source of [matthewbonanni.github.io/mallard](https://matthewbonanni.github.io/mallard/), the website of
 [Mallard](https://github.com/MatthewBonanni/mallard): landing page, gallery, user guide and API reference.
 
-The site is built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/). The user guide pages
-and the API reference come from a Mallard checkout at build time, so they always match a Mallard release:
+The site is built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/). The documentation pages
+and the API reference come from a Mallard checkout at build time, so they match a Mallard release:
 
-- `docs/input.md`, `docs/numerics/`, `docs/design/` and `examples/README.md` become the documentation pages;
-- the Building through Postprocessing sections of `README.md` become *Getting started*;
+- `docs/guide/` (the user guide), `docs/input.md`, `docs/numerics/`, `docs/references.md`, `docs/design/`
+  (the *Developer notes*), `examples/README.md` (*Examples*, one section per topic), `tools/README.md`
+  (*Tools*) and the Building through Postprocessing sections of `README.md` (*Installation*) become the
+  documentation pages. `pages.py` assembles them: links written for GitHub become links between the site's
+  pages (to other files of the repository, links to GitHub at the documented ref; absolute links to this site,
+  relative ones that `--strict` checks), and the light/dark figure pairs (`#gh-light-mode-only`) become
+  Material's (`#only-light`). A release without `docs/guide/` (0.8.0 and older) is documented with the pages of
+  Mallard's `main`, under a note saying so;
 - Doxygen (with [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css)) generates `docs/api/`
   from `src/` only, with `doxygen/mainpage.md` as its landing page and `doxygen/mallard.css` for the brand.
 
 This repository holds what is specific to the site: `mkdocs.yml`; the home page, gallery, validation page,
-*First simulation* tutorial and media in `content/`; theme overrides in `overrides/`; `build.sh`; and
-`check_links.py`, which `build.sh` runs on the built site.
+documentation landing page and media in `content/`; `content/examples.json` (stills and setup diagrams of the
+examples); theme overrides in `overrides/`; `build.sh`, `pages.py`; and `check_links.py`, which `build.sh`
+runs on the built site.
 
 The *Performance dashboard* (`content/docs/dashboard.md`) is drawn at build time by `hooks/performance.py` from
 `data/performance.json`: the A100 benchmark results of the GPU CI for each merge into Mallard's `main`, and the

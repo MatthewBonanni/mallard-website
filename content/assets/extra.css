@@ -368,3 +368,21 @@
   pointer-events: none;
   box-shadow: 0 6px 20px #0000004d;
 }
+
+/* User guide figures (docs/images/guide): centered, at most their natural size */
+.md-typeset img[src*="images/guide/"] {
+  display: block;
+  margin: 1.2em auto 0.6em;
+}
+.md-typeset p:has(> img[src*="images/guide/"]) + p > em:only-child {
+  display: block;
+  text-align: center;
+  font-size: 0.85em;
+  color: var(--md-default-fg-color--light);
+}
+.mallard-branch-note { margin-top: 0; }
+/* ...keeping Material's light/dark image switch, which the rule above would override */
+[data-md-color-scheme="default"] .md-typeset img[src*="images/guide/"][src$="#only-dark"],
+[data-md-color-scheme="slate"] .md-typeset img[src*="images/guide/"][src$="#only-light"] {
+  display: none;
+}
