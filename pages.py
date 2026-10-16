@@ -159,6 +159,24 @@ def main():
         out.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(docsrc / img, out)
     write_nav(site, docs, pages)
+    check_front_matter(content)
+
+
+def check_front_matter(content):
+    """MkDocs shows invalid front matter as text and ignores its title: fail instead."""
+    import yaml
+    bad = []
+    for f in sorted(content.rglob("*.md")):
+        text = f.read_text()
+        if text.startswith("---\n"):
+            try:
+                meta = yaml.safe_load(text[4:text.index("\n---", 4)])
+                if not isinstance(meta, dict):
+                    raise ValueError("not a mapping")
+            except Exception as e:  # noqa: BLE001
+                bad.append(f"{f.relative_to(content)}: {str(e).splitlines()[0]}")
+    if bad:
+        sys.exit("invalid front matter:\n  " + "\n  ".join(bad))
 
 
 def examples_page(readme_path, images_path, gh_ref):
