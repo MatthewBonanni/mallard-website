@@ -239,6 +239,18 @@ def write_nav(site, docs, pages):
         title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
         extra.append(f'      - "{title}": docs/{rel}')
     config = re.sub(r'^ *- GUIDE_EXTRA$', "\n".join(extra), config, flags=re.M)
+    tutorials = sorted((p for p in pages if p.startswith("tutorials/")), key=lambda p: (not p.endswith("/index.md"), p))
+    lines = []
+    for rel in tutorials:
+        if rel.endswith("/index.md"):
+            lines.append(f'      - docs/{rel}')
+        else:
+            title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
+            lines.append(f'      - "{title}": docs/{rel}')
+    if lines:
+        config = re.sub(r'^ *- TUTORIALS$', "\n".join(lines), config, flags=re.M)
+    else:
+        config = re.sub(r'^ *- Tutorials:\n(?: *#[^\n]*\n)? *- TUTORIALS\n', "", config, flags=re.M)
     for rel in re.findall(r"docs/(guide/[\w.-]+\.md)", config):
         if rel not in pages:
             config = re.sub(rf'^ *- [^\n]*docs/{re.escape(rel)}\n', "", config, flags=re.M)
