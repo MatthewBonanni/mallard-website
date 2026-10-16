@@ -41,6 +41,7 @@ the reference.
     ---
 
     - [Input reference](input.md): every key and its default
+    - [Theory manual](theory/index.md): the equations and methods, as implemented
     - [Numerical methods](numerics/overview.md) and [TENO-E details](numerics/teno_e.md)
     - [Tools](tools.md), [references](references.md), <a href="api/">API reference</a>
 

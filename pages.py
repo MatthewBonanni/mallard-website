@@ -47,6 +47,15 @@ DESCRIPTIONS = {
     "guide/performance.md": "Measured throughput of Mallard on CPUs and A100 GPUs: the flow solver, 3D TENO-E setup and memory, reacting mixtures and chemistry.",
     "numerics/overview.md": "Mallard's numerical methods: finite volume discretization, time step, reconstruction, Riemann solvers, boundary conditions and viscous fluxes.",
     "numerics/teno_e.md": "How Mallard implements TENO-E reconstruction of orders 3 to 6 on unstructured 2D and 3D meshes.",
+    "theory/index.md": "Mallard's theory manual: the equations it solves and the methods it solves them with, as implemented.",
+    "theory/governing_equations.md": "The compressible Navier-Stokes equations Mallard solves: conservation laws, single-gas constitutive laws, axisymmetric form.",
+    "theory/thermodynamics_transport.md": "Thermally perfect gas mixtures in Mallard: NASA polynomials, mixture-averaged transport, Soret diffusion and double flux.",
+    "theory/chemistry_radiation.md": "Finite-rate kinetics, the RODAS stiff integrator, Strang and SIMPLER splitting, and optically thin radiation in Mallard.",
+    "theory/les.md": "Large-eddy simulation in Mallard: filtered equations, SGS models, dynamic procedure, TFLES, PaSR and synthetic inflow.",
+    "theory/finite_volume.md": "Mallard's finite-volume discretization: face quadrature, curved boundaries, MUSCL, TENO-E and viscous gradients.",
+    "theory/fluxes.md": "Mallard's numerical fluxes: Rusanov, HLL, HLLC, Roe and RHLL, the hybrid KEEP flux, species and viscous fluxes.",
+    "theory/time_integration.md": "Time integration in Mallard: SSPRK3, RK4 and forward Euler, the time step and the order of operations.",
+    "theory/boundaries_sources.md": "Mallard's boundary conditions as exterior states, characteristic (NSCBC) boundaries, and source terms.",
     "design/mpi.md": "Design notes on Mallard's distributed-memory (MPI) parallelization: partitioning, halos and communication.",
     "design/chemistry.md": "Design notes on Mallard's finite-rate chemistry: multicomponent state, thermally perfect mixtures, numerics, stiff integration, coupling.",
     "design/periodic.md": "Design notes on periodic boundaries in Mallard: generated and Gmsh meshes, stencils across the seam.",
@@ -59,7 +68,7 @@ DESCRIPTIONS = {
 }
 
 GENERATED = ["input.md", "examples.md", "installation.md", "tools.md", "references.md", "numerics", "design", "guide",
-             "images"]
+             "theory", "images"]
 
 REPO_FILES = set()
 
@@ -274,6 +283,22 @@ def write_nav(site, docs, pages):
         config = re.sub(r'^ *- TUTORIALS$', "\n".join(lines), config, flags=re.M)
     else:
         config = re.sub(r'^ *- Tutorials:\n(?: *#[^\n]*\n)? *- TUTORIALS\n', "", config, flags=re.M)
+    theory = [p for p in pages if p.startswith("theory/")]
+    if theory:
+        index = pages.get("theory/index.md", ("", ""))[1]
+        linked = [posixpath.normpath(posixpath.join("theory", t)) for t in re.findall(r"\]\(([\w.-]+\.md)\)", index)]
+        order = {rel: k for k, rel in enumerate(linked)}
+        theory.sort(key=lambda p: (p != "theory/index.md", order.get(p, len(order)), p))
+        lines = []
+        for rel in theory:
+            if rel == "theory/index.md":
+                lines.append(f'          - "Overview and notation": docs/{rel}')
+            else:
+                title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
+                lines.append(f'          - "{title}": docs/{rel}')
+        config = re.sub(r'^ *- THEORY$', "\n".join(lines), config, flags=re.M)
+    else:
+        config = re.sub(r'^ *- Theory manual:\n(?: *#[^\n]*\n)? *- THEORY\n', "", config, flags=re.M)
     for rel in re.findall(r"docs/(guide/[\w.-]+\.md)", config):
         if rel not in pages:
             config = re.sub(rf'^ *- [^\n]*docs/{re.escape(rel)}\n', "", config, flags=re.M)
