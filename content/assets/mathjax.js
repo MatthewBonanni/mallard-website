@@ -4,7 +4,9 @@
 // within a page. Each page, including those loaded by Material's instant navigation,
 // is typeset afresh, with numbering and labels reset.
 window.MathJax = {
+  loader: { load: ["[tex]/boldsymbol"] },
   tex: {
+    packages: { "[+]": ["boldsymbol"] },
     inlineMath: [["\\(", "\\)"]],
     displayMath: [["\\[", "\\]"]],
     processEscapes: true,
