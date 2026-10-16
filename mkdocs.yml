@@ -117,6 +117,9 @@ nav:
       - Performance dashboard: docs/dashboard.md
       # New pages of docs/guide/ (pages.py)
       - GUIDE_EXTRA
+  - Tutorials:
+      # The pages of docs/tutorials/, index first (pages.py)
+      - TUTORIALS
   - Reference:
       - Input reference: docs/input.md
       - Numerical methods: docs/numerics/overview.md
