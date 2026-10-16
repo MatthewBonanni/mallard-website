@@ -6,7 +6,7 @@ Source of [matthewbonanni.github.io/mallard](https://matthewbonanni.github.io/ma
 The site is built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/). The documentation pages
 and the API reference come from a Mallard checkout at build time, so they match a Mallard release:
 
-- `docs/guide/` (the user guide), `docs/input.md`, `docs/numerics/`, `docs/references.md`, `docs/design/`
+- `docs/guide/` (the user guide), `docs/input.md`, `docs/theory/` (the *Theory manual*, in the order of its index), `docs/numerics/`, `docs/references.md`, `docs/design/`
   (the *Developer notes*), `examples/README.md` (*Examples*, one section per topic), `tools/README.md`
   (*Tools*) and the Building through Postprocessing sections of `README.md` (*Installation*) become the
   documentation pages. `pages.py` assembles them: links written for GitHub become links between the site's
