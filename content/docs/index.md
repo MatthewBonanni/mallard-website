@@ -1,6 +1,6 @@
 ---
 title: Documentation
-description: Mallard's documentation: installation, a first simulation, the user guide by topic, the input reference, examples and validation.
+description: "Mallard's documentation: installation, a first simulation, the user guide by topic, the input reference, examples and validation."
 ---
 
 # Documentation
