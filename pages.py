@@ -292,10 +292,10 @@ def write_nav(site, docs, pages):
         lines = []
         for rel in theory:
             if rel == "theory/index.md":
-                lines.append(f'          - "Overview and notation": docs/{rel}')
+                lines.append(f'      - "Overview and notation": docs/{rel}')
             else:
                 title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
-                lines.append(f'          - "{title}": docs/{rel}')
+                lines.append(f'      - "{title}": docs/{rel}')
         config = re.sub(r'^ *- THEORY$', "\n".join(lines), config, flags=re.M)
     else:
         config = re.sub(r'^ *- Theory manual:\n(?: *#[^\n]*\n)? *- THEORY\n', "", config, flags=re.M)

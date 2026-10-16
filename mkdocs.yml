@@ -125,11 +125,11 @@ nav:
   - Tutorials:
       # The pages of docs/tutorials/, index first (pages.py)
       - TUTORIALS
+  - Theory manual:
+      # The chapters of docs/theory/, in the order of its index (pages.py)
+      - THEORY
   - Reference:
       - Input reference: docs/input.md
-      - Theory manual:
-          # The chapters of docs/theory/, in the order of its index (pages.py)
-          - THEORY
       - Numerical methods: docs/numerics/overview.md
       - TENO-E details: docs/numerics/teno_e.md
       - Tools: docs/tools.md
