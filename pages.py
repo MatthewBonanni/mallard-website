@@ -145,7 +145,7 @@ def main():
                 print(f"warning: {page}: {target} is not in the repository")
             return f"{label}({GITHUB}{kind}/{gh_ref}/{repo_target}{frag})"
 
-        return LINK.sub(fix, text)
+        return outside_code(text, lambda t: LINK.sub(fix, t))
 
     for page, (repo_path, text) in pages.items():
         text = rewrite(page, repo_path, text)
@@ -177,6 +177,29 @@ def check_front_matter(content):
                 bad.append(f"{f.relative_to(content)}: {str(e).splitlines()[0]}")
     if bad:
         sys.exit("invalid front matter:\n  " + "\n  ".join(bad))
+
+
+FENCE = re.compile(r"^( *)(```|~~~).*?^\1\2[ \t]*$", re.M | re.S)
+CODE_SPAN = re.compile(r"(`+)(?!`).+?(?<!`)\1(?!`)", re.S)
+
+
+def outside_code(text, f):
+    """Apply f to the text outside fenced code blocks and inline code (code spans
+    inside link text stay where they are)."""
+    def prose(t):
+        spans = []
+
+        def hide(m):
+            spans.append(m.group(0))
+            return f"\x00{len(spans) - 1}\x00"
+
+        t = f(CODE_SPAN.sub(hide, t))
+        return re.sub(r"\x00(\d+)\x00", lambda m: spans[int(m.group(1))], t)
+    out, last = [], 0
+    for m in FENCE.finditer(text):
+        out += [prose(text[last:m.start()]), m.group(0)]
+        last = m.end()
+    return "".join(out + [prose(text[last:])])
 
 
 def examples_page(readme_path, images_path, gh_ref):

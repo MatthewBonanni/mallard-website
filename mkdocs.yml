@@ -51,6 +51,9 @@ extra_javascript:
     defer: true
   - path: assets/perf.js
     defer: true
+  # Math (pymdownx.arithmatex): the configuration first, then MathJax itself
+  - assets/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js
 
 # Draws docs/dashboard.md from data/performance.json
 hooks:
@@ -91,6 +94,8 @@ markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
