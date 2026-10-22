@@ -34,7 +34,11 @@ fi
 docs_branch=""
 [ "$docs_ref" != "$ref" ] && docs_branch="${docs_ref##*/}" && echo "User guide from $docs_ref"
 mkdir -p "$work/docsrc"
-git -C "$src" archive "$docs_ref" docs README.md examples/README.md tools/README.md | tar -x -C "$work/docsrc"
+extra=()
+git -C "$src" cat-file -e "$docs_ref:templates/manifest.toml" 2>/dev/null && extra+=(templates/manifest.toml)
+# examples/: the README, and each example's card.toml and input files (for the cards' settings)
+git -C "$src" archive "$docs_ref" docs README.md tools/README.md ${extra[@]+"${extra[@]}"} examples/README.md \
+    $(git -C "$src" ls-tree -r --name-only "$docs_ref" examples | grep '\.toml$') | tar -x -C "$work/docsrc"
 python3 "$here/pages.py" "$work/docsrc" "$here" "$ref" "$docs_ref" "$src"
 
 # Site

@@ -15,6 +15,7 @@ become links between the site's pages:
 - the image fragments #gh-light-mode-only / #gh-dark-mode-only become
   Material's #only-light / #only-dark.
 """
+import html
 import json
 import os
 import posixpath
@@ -22,6 +23,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 SITE = "https://matthewbonanni.github.io/mallard/"
@@ -115,7 +117,8 @@ def main():
     pages["installation.md"] = ("README.md", "# Installation\n\n" + body.rstrip() + "\n")
     pages["tools.md"] = ("tools/README.md", (docsrc / "tools" / "README.md").read_text())
     pages["examples.md"] = ("examples/README.md", examples_page(docsrc / "examples" / "README.md",
-                                                                 content / "examples.json", gh_ref))
+                                                                 content / "examples.json", gh_ref,
+                                                                 docsrc / "examples", docsrc / "templates" / "manifest.toml"))
     if "references.md" in pages:
         for rel in [r for r in pages if r.startswith("numerics/")]:
             src, text = pages[rel]
@@ -159,8 +162,10 @@ def main():
     for page, (repo_path, text) in pages.items():
         text = rewrite(page, repo_path, text)
         if page in DESCRIPTIONS and not text.startswith("---"):
-            boost = "search:\n  boost: 3\n" if page == "input.md" else ""
-            text = f"---\ndescription: {json.dumps(DESCRIPTIONS[page])}\n{boost}---\n\n" + text
+            front = "search:\n  boost: 3\n" if page == "input.md" else ""
+            if page == "examples.md":
+                front = "hide:\n  - navigation\n"
+            text = f"---\ndescription: {json.dumps(DESCRIPTIONS[page])}\n{front}---\n\n" + text
         out = docs / page
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(text)
@@ -212,42 +217,161 @@ def outside_code(text, f):
     return "".join(out + [prose(text[last:])])
 
 
-def examples_page(readme_path, images_path, gh_ref):
-    """The examples README, each row of its tables a section, with a still image or setup diagram."""
+def input_settings(path):
+    """Key settings of an example's input file, as short labels."""
+    try:
+        inp = tomllib.loads(path.read_text())
+    except (OSError, tomllib.TOMLDecodeError):
+        return [], set()
+    out, tags = [], set()
+    mesh, ph = inp.get("mesh", {}), inp.get("physics", {})
+    num = inp.get("numerics", {})
+    kind = mesh.get("type")
+    if kind == "file":
+        out.append(f"mesh file {posixpath.basename(str(mesh.get('filename', '')))}")
+    elif kind:
+        out.append({"cartesian": "generated box", "cartesian_tri": "generated triangles",
+                    "wedge": "generated wedge"}.get(kind, f"generated {kind}"))
+    if ph.get("type") == "navier_stokes":
+        out.append("Navier-Stokes")
+        tags.add("viscous")
+    elif ph.get("type") == "euler":
+        out.append("Euler")
+    if ph.get("axisymmetric"):
+        out.append("axisymmetric")
+        tags.add("axisymmetric")
+    if ph.get("gas") == "mixture":
+        mech = posixpath.basename(str(ph.get("mechanism", "")))
+        out.append(f"mixture ({mech})" if mech else "mixture")
+        tags.add("mixtures")
+    if "reactor" in inp:
+        tags.add("reactor")
+    if "chemistry" in inp or "reactor" in inp:
+        out.append("finite-rate chemistry")
+        tags.add("reacting")
+    if "les" in inp:
+        out.append(f"LES ({inp['les'].get('model', 'sigma')})")
+        tags.add("les")
+    rec = num.get("face_reconstruction", {})
+    if rec.get("type") == "TENO":
+        out.append(f"TENO{rec.get('order', 5)}")
+    elif rec.get("type"):
+        out.append(rec["type"])
+    if num.get("riemann_solver"):
+        out.append(num["riemann_solver"])
+    if num.get("convective_flux") == "hybrid":
+        out.append("hybrid KEEP flux")
+    return out, tags
+
+
+def examples_page(readme_path, images_path, gh_ref, examples_dir=None, manifest=None):
+    """The examples README as a gallery of cards, one per row of its tables: a still image or
+    setup diagram, what the case shows, its build, hardware, size and run time, what it
+    demonstrates (examples/<case>/card.toml), its key settings (from the input file), how to run
+    it and links to its input, results and tutorial; with filters (assets/examples.js)."""
     readme = readme_path.read_text()
     images = json.loads(images_path.read_text())
+    templates = {}
+    if manifest and manifest.is_file():
+        for t in tomllib.loads(manifest.read_text()).get("templates", []):
+            templates.setdefault(t.get("source", "").removeprefix("examples/").rstrip("/"), t["name"])
     if not re.search(r"^## .*\n+\| Case \|", readme, re.M):
         readme = readme.replace("\n| Case |", "\n## Cases\n\n| Case |", 1)
     head, _, rest = readme.partition("\n## ")
-    body = [head.rstrip()]
-    row = re.compile(r"^\| `([a-z0-9_/]+)`(?: \(`([a-z0-9_.]+)`\))? \| (.*?) \| (.*?) \|$", re.M)
-    for section in ("## " + rest).split("\n## ")[0:]:
+    row = re.compile(r"^\| `([a-z0-9_/]+)`(?: \(`([a-z0-9_.]+)`(?:, `[a-z0-9_.]+`)*\))? \| (.*?) \|((?: [^|]*? \|)+)$", re.M)
+    cards, sections = [], []
+    for section in ("## " + rest).split("\n## "):
         title, _, text = section.removeprefix("## ").partition("\n")
         rows = row.findall(text)
         if not rows:
+            # a section without a table (e.g. a results figure) stays as it is
+            if title.strip():
+                sections.append((title, None, text))
             continue
-        cols = re.search(r"^\| Case \| [^|]* \| ([^|]*) \|$", text, re.M).group(1).strip()
-        body += ["", f"## {title}"]
-        for name, file, what, size in rows:
+        group = re.sub(r"[^a-z]+", "-", title.lower()).strip("-")
+        body = []
+        for name, file, what, rest_cols in rows:
+            cols = [c.strip() for c in rest_cols.strip(" |").split(" | ")]
+            cells, time = (cols + [""])[:2] if len(cols) >= 2 else ("", cols[0])
             key = name + ("/" + file if file else "")
             anchor = re.sub(r"[_/]", "-", name) + ("-" + re.sub(r"^input_|\.toml$", "", file) if file else "")
-            body += ["", f"### `{name}`" + (f" (`{file}`)" if file else "") + f" {{#{anchor}}}", ""]
-            im = images.get(key) or (images.get(name) if not file else None)
-            if im and "image" in im:
-                body += [f"![{im['alt']}]({SITE}{im['image']}){{ loading=lazy .mallard-still }}", ""]
-            if im and "diagram" in im:
-                d = im["diagram"]
-                body += [f"![{d['alt']}](../docs/images/guide/{d['name']}-light.svg#gh-light-mode-only){{ loading=lazy }}",
-                         f"![{d['alt']}](../docs/images/guide/{d['name']}-dark.svg#gh-dark-mode-only){{ loading=lazy }}",
-                         ""]
             path = f"{name}/{file}" if file else (name + "/input.toml")
             if "examples/" + path not in REPO_FILES:
                 path = name
-            link = f"[Input file]({path})" if path.endswith(".toml") else f"[Input files]({path})"
-            if im and "more" in im:
-                link += f" · [results](https://matthewbonanni.github.io/mallard/{site_url(im['more'])})"
-            body += [what, "", f"*{cols}:* {size}. {link}"]
-    return "\n".join(body) + "\n"
+            card = {}
+            if examples_dir:
+                for d in (name, name.split("/")[0]):
+                    f = examples_dir / d / "card.toml"
+                    if f.is_file():
+                        card = tomllib.loads(f.read_text())
+                        break
+            settings, tags = input_settings(examples_dir / path) if examples_dir and path.endswith(".toml") \
+                else ([], set())
+            build = card.get("build", "")
+            gpu = bool(re.search(r"A100|GPU|MI\d", time))
+            tags |= {group, build, "gpu" if gpu else "cpu"} - {""}
+            im = images.get(key) or (images.get(name) if not file else None) or {}
+            body += ["", f'<div class="mallard-card" data-tags="{" ".join(sorted(tags))}" markdown>', ""]
+            if "image" in im:
+                body += [f"![{im['alt']}]({SITE}{im['image']}){{ loading=lazy .mallard-card__img }}", ""]
+            elif "diagram" in im:
+                d = im["diagram"]
+                body += [f"![{d['alt']}](../docs/images/guide/{d['name']}-light.svg#gh-light-mode-only)"
+                         "{ loading=lazy .mallard-card__img }",
+                         f"![{d['alt']}](../docs/images/guide/{d['name']}-dark.svg#gh-dark-mode-only)"
+                         "{ loading=lazy .mallard-card__img }", ""]
+            else:
+                body += [f'<div class="mallard-card__noimg" aria-hidden="true">{html.escape(title)}</div>', ""]
+            body += [f"### `{name}`" + (f" (`{file}`)" if file else "") + f" {{#{anchor}}}", "", what, ""]
+            chips = [{"2d": "2D build", "3d": "3D build"}.get(build, "")] + \
+                [("GPU: " if gpu else "CPU: ") + time if time else "",
+                 cells + " cells" if re.fullmatch(r"[\d,.]+M?", cells) else cells]
+            body += ['<p class="mallard-card__meta">' + "".join(
+                f"<span>{html.escape(c)}</span>" for c in chips if c) + "</p>", ""]
+            if card.get("demonstrates"):
+                body += ["**Demonstrates:** " + ", ".join(card["demonstrates"]), ""]
+            if settings:
+                body += ["**Settings:** " + " · ".join(settings), ""]
+            exe = "build-3d" if build == "3d" else "build"
+            run = "MallardReactor" if "reactor" in tags else "Mallard"
+            depth = "../" * (name.count("/") + 2)
+            cmd = [f"cd examples/{name}", f"{depth}{exe}/src/{run} -i {posixpath.basename(path) if path.endswith('.toml') else 'input.toml'}"]
+            tmpl = templates.get(name)
+            body += ['<details class="mallard-card__run" markdown>', "<summary>Run it</summary>", "", "```sh",
+                     *cmd, "```", ""]
+            if tmpl:
+                body += [f"Or `Mallard new {tmpl}` for a ready-to-run copy with mesh, run and post-processing scripts.",
+                         ""]
+            body += ["</details>", ""]
+            links = [f"[Input file]({path})" if path.endswith(".toml") else f"[Input files]({path})"]
+            if "more" in im:
+                label = "Validation" if im["more"].startswith("validation") else "Gallery"
+                links.append(f"[{label}](https://matthewbonanni.github.io/mallard/{site_url(im['more'])})")
+            if card.get("tutorial"):
+                links.append(f"[Tutorial](../docs/tutorials/{card['tutorial']}.md)")
+            body += [" · ".join(links), "", "</div>"]
+        sections.append((title, body, None))
+    out = [head.rstrip(), "", FILTERS]
+    for title, body, text in sections:
+        if body is None:
+            out += ["", f"## {title}", text.rstrip()]
+        else:
+            out += ["", f"## {title}", "", '<div class="mallard-cards" markdown>', *body, "", "</div>"]
+    return "\n".join(out) + "\n"
+
+
+FILTERS = """<div class="mallard-filters" role="group" aria-label="Filter the examples">
+<button type="button" data-filter="" aria-pressed="true">All</button>
+<button type="button" data-filter="cpu" aria-pressed="false">Runs on a CPU</button>
+<button type="button" data-filter="gpu" aria-pressed="false">Needs a GPU</button>
+<button type="button" data-filter="2d" aria-pressed="false">2D</button>
+<button type="button" data-filter="3d" aria-pressed="false">3D</button>
+<button type="button" data-filter="viscous" aria-pressed="false">Viscous</button>
+<button type="button" data-filter="axisymmetric" aria-pressed="false">Axisymmetric</button>
+<button type="button" data-filter="les" aria-pressed="false">LES</button>
+<button type="button" data-filter="mixtures" aria-pressed="false">Mixtures</button>
+<button type="button" data-filter="reacting" aria-pressed="false">Reacting</button>
+</div>"""
 
 
 def site_url(path):
