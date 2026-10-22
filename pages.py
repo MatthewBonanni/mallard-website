@@ -73,7 +73,7 @@ DESCRIPTIONS = {
 }
 
 GENERATED = ["input.md", "examples.md", "installation.md", "tools.md", "references.md", "numerics", "design", "guide",
-             "theory", "images"]
+             "theory", "tutorials", "images"]
 
 REPO_FILES = set()
 
@@ -431,9 +431,15 @@ def write_nav(site, docs, pages):
         config = re.sub(r'^ *- THEORY$', "\n".join(lines), config, flags=re.M)
     else:
         config = re.sub(r'^ *- Theory manual:\n(?: *#[^\n]*\n)? *- THEORY\n', "", config, flags=re.M)
-    for rel in re.findall(r"docs/(guide/[\w.-]+\.md)", config):
-        if rel not in pages:
+    # Nav entries for pages this ref does not have (e.g. a release that predates them)
+    for rel in re.findall(r"docs/([\w/.-]+\.md)", config):
+        if rel not in pages and not (docs / rel).exists():
             config = re.sub(rf'^ *- [^\n]*docs/{re.escape(rel)}\n', "", config, flags=re.M)
+    # Redirects to pages this ref does not have (e.g. the development build of a branch
+    # that predates them)
+    for rel in re.findall(r"^ {8}[\w/.-]+\.md: docs/([\w/.-]+\.md)$", config, flags=re.M):
+        if rel not in pages and not (docs / rel).exists():
+            config = re.sub(rf"^ {{8}}[\w/.-]+\.md: docs/{re.escape(rel)}\n", "", config, flags=re.M)
     (site / "mkdocs.build.yml").write_text(config)
 
 
