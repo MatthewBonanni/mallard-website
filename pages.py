@@ -34,7 +34,10 @@ DESCRIPTIONS = {
     "input.md": "Every key of Mallard's TOML input file: run control, meshes, physics, initial and boundary conditions, numerics and output.",
     "examples.md": "Mallard's example cases by topic, from the Sod shock tube to turbulent flames, with their cost, setup and results.",
     "tools.md": "The Python scripts that come with Mallard: readers, plots, mesh generators, initial states, references and analyses.",
-    "guide/first_simulation.md": "Build Mallard, run the Sod shock tube, compare with the exact solution, then move to 2D and 3D cases.",
+    "guide/quick_start.md": "Build Mallard and run a first case in three commands, then where to go next.",
+    "tutorials/first_simulation.md": "Build Mallard, run the Sod shock tube, compare with the exact solution, then move to 2D and 3D cases.",
+    "tutorials/wedge.md": "An oblique shock on an 8 degree ramp: a generated mesh, boundary conditions, a line probe, ParaView, against theory.",
+    "tutorials/cylinder.md": "Vortex shedding behind a cylinder at Re = 100: a Gmsh mesh, viscous flow, wall forces, Strouhal number.",
     "guide/input_files.md": "How a Mallard input file is organized: its tables, numbers, vectors and expressions, units, and the other executables.",
     "guide/meshes.md": "Generated, Gmsh and HDF5 meshes in Mallard: cell types, stretching, periodic boundaries and curved high-order boundaries.",
     "guide/physics.md": "Euler and Navier-Stokes equations, the perfect-gas reference state, viscosity laws and axisymmetric flows in Mallard.",
@@ -396,7 +399,11 @@ def write_nav(site, docs, pages):
         title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
         extra.append(f'      - "{title}": docs/{rel}')
     config = re.sub(r'^ *- GUIDE_EXTRA$', "\n".join(extra), config, flags=re.M)
-    tutorials = sorted((p for p in pages if p.startswith("tutorials/")), key=lambda p: (not p.endswith("/index.md"), p))
+    index = pages.get("tutorials/index.md", ("", ""))[1]
+    path = [posixpath.normpath(posixpath.join("tutorials", t)) for t in re.findall(r"\]\(([\w.-]+\.md)\)", index)]
+    order = {rel: k for k, rel in enumerate(dict.fromkeys(path))}
+    tutorials = sorted((p for p in pages if p.startswith("tutorials/")),
+                       key=lambda p: (not p.endswith("/index.md"), order.get(p, len(order)), p))
     lines = []
     for rel in tutorials:
         if rel.endswith("/index.md"):
