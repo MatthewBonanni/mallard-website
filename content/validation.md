@@ -44,6 +44,7 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
 | [LES, decaying isotropic turbulence](#les-cbc) (3D) | log<sub>10</sub> RMS spectral error at two stations, 128³, Sigma | 0.063 / 0.085 | Comte-Bellot & Corrsin (1971) | <span class="mallard-nowrap">dev. after 0.5.0</span> |
 | [LES, channel flow, Re<sub>τ</sub> = 395 / 590](#les-channel) (3D) | Re<sub>τ</sub>, Sigma with Scotti's width (64³ / 96³) | +0.7% / +1.6% | 392.2 / 587.2 (Moser, Kim & Mansour 1999) | <span class="mallard-nowrap">dev. ~0.6.0–0.7.0</span> |
+| [Wall-modeled LES, channels](#les-wall-model) (3D) | C<sub>f</sub>, Re<sub>τ</sub> = 1995 / 5186, 12 cells per half-height, GFM; B<sub>q</sub>, T<sub>c</sub>/T<sub>w</sub>, M<sub>b</sub> = 1.7 / 3.0 | +2.1 / +1.5%; +1.3 / +0.5%, +0.2 / +0.7% | Lee & Moser (2015); Trettel & Larsson (2016) | <span class="mallard-nowrap">7646ddb (after 0.8.0)</span> |
 | [LES, bluff-body combustor](#les-volvo) (3D) | recirculation length L<sub>r</sub>/D; ε<sub>num</sub>/ε<sub>SGS</sub> | 1.34; −0.38 | 1.35 (Sjunnesson et al.) | <span class="mallard-nowrap">dev. after 0.6.0 (in 0.8.0)</span> |
 | [LES, thickened flame](#les-tfles) (reacting) | consumption speed at F = 7.9 / 31.6 | −0.2% / −0.2% | Cantera s<sub>L</sub> = 2.3324 m/s | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
 | [LES, flame in turbulence](#les-flame) (reacting, 3D) | S<sub>T</sub>/S<sub>L</sub>, TFLES at Δ = 0.4 / 0.8 / 1.6 δ<sub>L</sub> | 1.056 / 1.053 / 2.240 | DNS 1.132 | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
@@ -995,6 +996,51 @@ At Re<sub>τ</sub> = 590 (`input_590.toml`, MKM's Re<sub>τ</sub> 587.2), the nu
 - **Cell-volume width:** the model halves the model-off error but misses the Re<sub>τ</sub> target.
 - **v<sub>rms</sub>:** the resolved peak is 8–9% low at 590, and 8% low at 395 on a mesh with Δx<sup>+</sup> 26 and Δz<sup>+</sup> 13. It barely depends on the model, so it is the streamwise and spanwise resolution of the near-wall cycle.
 
+### Wall-modeled LES of channel flow {#les-wall-model}
+
+[`7646ddb`](https://github.com/MatthewBonanni/mallard/commit/7646ddb) ([#393](https://github.com/MatthewBonanni/mallard/pull/393), after 0.8.0)
+{ .mallard-provenance }
+
+Wall-modeled LES resolves only the outer layer: each wall gets its shear stress and heat flux from a model fed by the LES state at an exchange point a distance h<sub>wm</sub> from the wall ([Wall models](docs/guide/les.md#wall-models-wall_model); design and equations in [docs/design/wall_model.md](docs/design/wall_model.md)). The [`channel_wmles`](docs/examples.md#channel-wmles) example runs channels of 2πh × 2h × πh on 72 × 24 × 36 uniform hexahedra, **12 cells per half-height**, with the exchange point at **0.3 h**. Each channel is run with both wall models: Griffin, Fu & Moin's (2023) inverse velocity transformation with the generalized Reynolds analogy (**GFM**, the default), and the **equilibrium** ODE model (Kawai & Larsson 2012). Sigma SGS model, hybrid KEEP flux, isothermal walls, mass flow held by a body force; statistics over both walls from t = 200 h/U<sub>b</sub> to the end. Each run took 5–25 minutes on one A100.
+
+- **Incompressible-like channels** (M<sub>b</sub> = 0.2) at the bulk Reynolds numbers of Lee & Moser's (2015) DNS at Re<sub>τ</sub> = 1995 and 5186, averaged over 42–46 h/u<sub>τ</sub>.
+- **Supersonic isothermal channels** of Trettel & Larsson (2016) at M<sub>b</sub> = 1.7 and 3.0 (Re<sub>τ</sub>* ≈ 590), with μ ~ T<sup>0.75</sup>, Pr = 0.7 and the body force's work as the only heat source, averaged over 19–26 h/u<sub>τ</sub>. They are compared with the DNS values tabulated by Griffin et al. (2023): Re<sub>τ</sub>, the wall heat flux B<sub>q</sub> = q<sub>w</sub> / (c<sub>p</sub> T<sub>w</sub> ρ<sub>w</sub> u<sub>τ</sub>), and the centerline temperature, T<sub>c</sub>/T<sub>w</sub> = (Re<sub>τ</sub>/Re<sub>τ</sub>*)<sup>0.8</sup> for this viscosity law.
+
+<figure class="mallard-figure" markdown>
+![Mean velocity in wall units of the wall-modeled channels at Re_tau = 1995 and 5186, GFM and equilibrium models, against Lee and Moser's DNS](validation/wmles_velocity-light.svg#only-light){ loading=lazy }
+![Mean velocity in wall units of the wall-modeled channels at Re_tau = 1995 and 5186, GFM and equilibrium models, against Lee and Moser's DNS](validation/wmles_velocity-dark.svg#only-dark){ loading=lazy }
+<figcaption>Mean velocity on 12 cells per half-height against the DNS of Lee & Moser (2015). The dotted line marks the exchange point, 0.3 h.</figcaption>
+</figure>
+
+| Re<sub>τ</sub> (DNS) | Model | Re<sub>τ</sub> | C<sub>f</sub> | U<sup>+</sup> at y/h = 0.1 / 0.3 / 0.5 (DNS) |
+|---|---|---:|---:|---:|
+| 1995 | GFM | 2021.7 (+1.4%) | +2.1% | 17.51 / 20.69 / 22.45 (18.13 / 21.12 / 22.66) |
+| | equilibrium | 2018.8 (+1.2%) | +1.8% | 17.55 / 20.72 / 22.46 |
+| 5186 | GFM | 5240.9 (+1.1%) | +1.5% | 19.91 / 23.01 / 24.78 (20.57 / 23.48 / 24.95) |
+| | equilibrium | 5233.2 (+0.9%) | +1.2% | 19.94 / 23.05 / 24.81 |
+
+<figure class="mallard-figure" markdown>
+![Temperature profiles of the supersonic wall-modeled channels and the errors in Re_tau, B_q and T_c of both wall models against Trettel and Larsson's DNS](validation/wmles_compressible-light.svg#only-light){ loading=lazy }
+![Temperature profiles of the supersonic wall-modeled channels and the errors in Re_tau, B_q and T_c of both wall models against Trettel and Larsson's DNS](validation/wmles_compressible-dark.svg#only-dark){ loading=lazy }
+<figcaption>Supersonic isothermal channels. Left: mean temperature, with the DNS's centerline temperature (stars). Right: errors against the DNS (Trettel & Larsson 2016, tabulated by Griffin et al. 2023).</figcaption>
+</figure>
+
+| M<sub>b</sub> | Model | Re<sub>τ</sub> | B<sub>q</sub> | T<sub>c</sub>/T<sub>w</sub> |
+|---|---|---:|---:|---:|
+| 1.7 | GFM | 991.5 (+2.9%) | −0.0501 (+1.3%) | 1.482 (+0.2%) |
+| | equilibrium | 977.1 (+1.4%) | −0.0509 (+3.0%) | 1.449 (−2.1%) |
+| | DNS | 963.6 | −0.0494 | 1.479 |
+| 3.0 | GFM | 1914.4 (+3.9%) | −0.1156 (+0.5%) | 2.506 (+0.7%) |
+| | equilibrium | 1880.1 (+2.1%) | −0.1197 (+4.1%) | 2.402 (−3.4%) |
+| | DNS | 1842.0 | −0.1150 | 2.487 |
+
+- **Incompressible limit:** both models give C<sub>f</sub> within 2.1% of the DNS at both Reynolds numbers, on the same 12 cells per half-height. They agree with each other to 0.3%, as they should, since they reduce to the same law there. The mean velocity is within 4% of the DNS from 0.1 h to 0.8 h, and below it near the exchange point, as is usual in coarse WMLES.
+- **Heat transfer:** GFM's wall heat flux (within 0.5–1.3%) and centerline temperature (within 0.2–0.7%) are 3–6 times closer to the DNS than the equilibrium model's (3.0–4.1% and −2.1 to −3.4%). This is the improvement Griffin et al. report.
+- **Wall shear:** here GFM is not better. Its Re<sub>τ</sub> is 2.9% and 3.9% high, against 1.4% and 2.1% for the equilibrium model. Re<sub>τ</sub> includes the wall density, which follows the temperature profile: GFM's ρ<sub>w</sub>/ρ<sub>b</sub> is 2–5% higher. The DNS's wall density is not tabulated, so τ<sub>w</sub> alone cannot be compared. Griffin et al.'s WMLES used a different solver, mesh and SGS model. A resolution study at 24 cells per half-height is the next check.
+- **Statistics:** the supersonic windows are short (19–26 h/u<sub>τ</sub>). Block averages over four sub-windows scatter by 0.2% in Re<sub>τ</sub>.
+
+`validation/wmles.py` draws the figures and prints these numbers from the runs, through Mallard's `tools/wmles_channel.py`.
+
 ### Bluff-body combustor, non-reacting {#les-volvo}
 
 The branch of [#252](https://github.com/MatthewBonanni/mallard/pull/252) (version string 0.6.0; commit not recorded), merged as [`83c961c`](https://github.com/MatthewBonanni/mallard/commit/83c961c); first released in Mallard 0.8.0
@@ -1118,13 +1164,16 @@ The sources of the reference data and test cases on this page. The sources of th
 - R. P. Fedkiw, B. Merriman and S. Osher, High accuracy numerical methods for thermally perfect gas flows with chemistry, *J. Comput. Phys.* 132, 175–190 (1997). [doi:10.1006/jcph.1996.5622](https://doi.org/10.1006/jcph.1996.5622)
 - B. Franzelli, E. Riber, L. Y. M. Gicquel and T. Poinsot, Large Eddy Simulation of combustion instabilities in a lean partially premixed swirled flame, *Combust. Flame* 159, 621–637 (2012). [doi:10.1016/j.combustflame.2011.08.004](https://doi.org/10.1016/j.combustflame.2011.08.004)
 - D. G. Goodwin, R. L. Speth, H. K. Moffat and B. W. Weber, Cantera: an object-oriented software toolkit for chemical kinetics, thermodynamics, and transport processes, version 3.2.0, [cantera.org](https://www.cantera.org).
+- K. P. Griffin, L. Fu and P. Moin, Near-wall model for compressible turbulent boundary layers based on an inverse velocity transformation, *J. Fluid Mech.* 970, A36 (2023). [doi:10.1017/jfm.2023.627](https://doi.org/10.1017/jfm.2023.627)
 - J.-F. Haas and B. Sturtevant, Interaction of weak shock waves with cylindrical and spherical gas inhomogeneities, *J. Fluid Mech.* 181, 41–76 (1987). [doi:10.1017/S0022112087002003](https://doi.org/10.1017/S0022112087002003)
 - E. R. Hawkes, R. Sankaran, P. P. Pébay and J. H. Chen, Direct numerical simulation of ignition front propagation in a constant volume with temperature inhomogeneities: II. Parametric study, *Combust. Flame* 145, 145–159 (2006). [doi:10.1016/j.combustflame.2005.09.018](https://doi.org/10.1016/j.combustflame.2005.09.018)
 - E. Johnsen, J. Larsson, A. V. Bhagatwala, W. H. Cabot, P. Moin, B. J. Olson, P. S. Rawat, S. K. Shankar, B. Sjögreen, H. C. Yee, X. Zhong and S. K. Lele, Assessment of high-resolution methods for numerical simulations of compressible turbulence with shock waves, *J. Comput. Phys.* 229, 1213–1237 (2010). [doi:10.1016/j.jcp.2009.10.028](https://doi.org/10.1016/j.jcp.2009.10.028)
 - T. A. Johnson and V. C. Patel, Flow past a sphere up to a Reynolds number of 300, *J. Fluid Mech.* 378, 19–70 (1999). [doi:10.1017/S0022112098003206](https://doi.org/10.1017/S0022112098003206)
+- S. Kawai and J. Larsson, Wall-modeling in large eddy simulation: length scales, grid resolution, and accuracy, *Phys. Fluids* 24, 015105 (2012). [doi:10.1063/1.3678331](https://doi.org/10.1063/1.3678331)
 - A. Keating, U. Piomelli, E. Balaras and H.-J. Kaltenbach, A priori and a posteriori tests of inflow conditions for large-eddy simulation, *Phys. Fluids* 16, 4696–4712 (2004). [doi:10.1063/1.1811672](https://doi.org/10.1063/1.1811672)
 - J. Kim, D. Kim and H. Choi, An immersed-boundary finite-volume method for simulations of flow in complex geometries, *J. Comput. Phys.* 171, 132–150 (2001). [doi:10.1006/jcph.2001.6778](https://doi.org/10.1006/jcph.2001.6778)
 - M. Klein, A. Sadiki and J. Janicka, A digital filter based generation of inflow data for spatially developing direct numerical or large eddy simulations, *J. Comput. Phys.* 186, 652–665 (2003). [doi:10.1016/S0021-9991(03)00090-1](https://doi.org/10.1016/S0021-9991%2803%2900090-1)
+- M. Lee and R. D. Moser, Direct numerical simulation of turbulent channel flow up to Re<sub>τ</sub> ≈ 5200, *J. Fluid Mech.* 774, 395–415 (2015). [doi:10.1017/jfm.2015.268](https://doi.org/10.1017/jfm.2015.268)
 - C. Liu, X. Zheng and C. H. Sung, Preconditioned multigrid methods for unsteady incompressible flows, *J. Comput. Phys.* 139, 35–57 (1998).
 - P. J. Martínez Ferrer, R. Buttay, G. Lehnasch and A. Mura, A detailed verification procedure for compressible reactive multicomponent Navier–Stokes solvers, *Computers & Fluids* 89, 88–110 (2014). [doi:10.1016/j.compfluid.2013.10.014](https://doi.org/10.1016/j.compfluid.2013.10.014)
 - R. D. Moser, J. Kim and N. N. Mansour, Direct numerical simulation of turbulent channel flow up to Re<sub>τ</sub> = 590, *Phys. Fluids* 11, 943–945 (1999). [doi:10.1063/1.869966](https://doi.org/10.1063/1.869966)
@@ -1146,6 +1195,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - G. I. Taylor, The formation of a blast wave by a very intense explosion. I. Theoretical discussion, *Proc. R. Soc. Lond. A* 201, 159–174 (1950). [doi:10.1098/rspa.1950.0049](https://doi.org/10.1098/rspa.1950.0049)
 - A. G. Tomboulides, S. A. Orszag and G. E. Karniadakis, Direct and large-eddy simulation of the flow past a sphere, in *Engineering Turbulence Modelling and Experiments 2*, Elsevier, 273–282 (1993). [doi:10.1016/B978-0-444-89802-9.50030-7](https://doi.org/10.1016/B978-0-444-89802-9.50030-7)
 - E. F. Toro, *Riemann Solvers and Numerical Methods for Fluid Dynamics*, 3rd ed., Springer (2009).
+- A. Trettel and J. Larsson, Mean velocity scaling for compressible wall turbulence with heat transfer, *Phys. Fluids* 28, 026102 (2016). [doi:10.1063/1.4942022](https://doi.org/10.1063/1.4942022)
 - N. Tsuboi, S. Katoh and A. K. Hayashi, Three-dimensional numerical simulation for hydrogen/air detonation: rectangular and diagonal structures, *Proc. Combust. Inst.* 29, 2783–2788 (2002). [doi:10.1016/S1540-7489(02)80339-X](https://doi.org/10.1016/S1540-7489(02)80339-X)
 - D. N. Williams, L. Bauwens and E. S. Oran, Detailed structure and propagation of three-dimensional detonations, *Proc. Combust. Inst.* 26, 2991–2998 (1996). [doi:10.1016/S0082-0784(96)80142-1](https://doi.org/10.1016/S0082-0784(96)80142-1)
 - C. H. K. Williamson, Vortex dynamics in the cylinder wake, *Annu. Rev. Fluid Mech.* 28, 477–539 (1996).
