@@ -4,9 +4,9 @@
 #   ./build.sh MALLARD_CHECKOUT [REF]
 #
 # REF defaults to the checkout's latest release tag. The documentation pages come from
-# docs/, README.md, examples/README.md and tools/README.md of REF (of main, if REF has
-# no docs/guide yet), assembled by pages.py; the API reference is generated with
-# Doxygen from REF into out/docs/api. Needs mkdocs-material, mkdocs-redirects, doxygen
+# docs/, README.md, examples/ and tools/README.md of REF, and of main under dev/ (or of
+# main alone, if REF has no docs/guide yet), assembled by pages.py; the API reference
+# is generated with Doxygen from REF into out/docs/api. Needs mkdocs-material, mkdocs-redirects, doxygen
 # and curl.
 set -euo pipefail
 
@@ -23,27 +23,65 @@ git -C "$src" -c advice.detachedHead=false checkout -q "$ref"
 version="${ref#v}"
 echo "Building the Mallard website for $ref"
 
-# User guide pages from the Mallard repository (gitignored here): those of the ref, or of
-# Mallard's main branch when the ref predates the user guide (docs/guide/), with a note
-docs_ref="$ref"
-if ! git -C "$src" cat-file -e "$ref:docs/guide" 2>/dev/null; then
-    for branch in origin/main main github/main; do
-        if git -C "$src" cat-file -e "$branch:docs/guide" 2>/dev/null; then docs_ref="$branch"; break; fi
-    done
+# User guide pages from the Mallard repository (gitignored here), assembled by pages.py.
+# Versions: when the release has the user guide (docs/guide/), the site documents the
+# release and a second build documents Mallard's main branch under dev/; when it
+# predates the user guide, the site documents main alone. A selector in the header
+# switches between them (assets/versions.js, from MALLARD_VERSIONS).
+# MALLARD_MAIN_REF overrides the ref documented as main (e.g. to preview a branch)
+main_ref="${MALLARD_MAIN_REF:-}"
+for branch in origin/main main github/main; do
+    [ -n "$main_ref" ] && break
+    if git -C "$src" cat-file -e "$branch:docs/guide" 2>/dev/null; then main_ref="$branch"; fi
+done
+base="$(sed -nE 's#^site_url: https?://[^/]*##p' "$here/mkdocs.yml")"   # /mallard/
+if git -C "$src" cat-file -e "$ref:docs/guide" 2>/dev/null; then
+    docs_ref="$ref"
+    versions="[{\"title\": \"$version\", \"note\": \"release\", \"path\": \"$base\"}"
+    [ -n "$main_ref" ] && versions="$versions, {\"title\": \"main\", \"note\": \"development\", \"path\": \"${base}dev/\"}"
+    versions="$versions]"
+    current="$version"
+else
+    docs_ref="${main_ref:?no ref with docs/guide}"
+    echo "User guide from $docs_ref ($ref predates it)"
+    versions="[{\"title\": \"main\", \"note\": \"ahead of $version\", \"path\": \"$base\"}]"
+    current="main"
+    main_ref=""
 fi
-docs_branch=""
-[ "$docs_ref" != "$ref" ] && docs_branch="${docs_ref##*/}" && echo "User guide from $docs_ref"
-mkdir -p "$work/docsrc"
-extra=()
-git -C "$src" cat-file -e "$docs_ref:templates/manifest.toml" 2>/dev/null && extra+=(templates/manifest.toml)
-# examples/: the README, and each example's card.toml and input files (for the cards' settings)
-git -C "$src" archive "$docs_ref" docs README.md tools/README.md ${extra[@]+"${extra[@]}"} examples/README.md \
-    $(git -C "$src" ls-tree -r --name-only "$docs_ref" examples | grep '\.toml$') | tar -x -C "$work/docsrc"
-python3 "$here/pages.py" "$work/docsrc" "$here" "$ref" "$docs_ref" "$src"
+
+# assemble SITE_DIR DOCS_REF: the documentation pages of DOCS_REF into SITE_DIR/content/docs
+assemble() {
+    local docsrc="$work/docsrc-$(basename "$1")"
+    mkdir -p "$docsrc"
+    local extra=()
+    git -C "$src" cat-file -e "$2:templates/manifest.toml" 2>/dev/null && extra+=(templates/manifest.toml)
+    # examples/: the README, and each example's card.toml and input files (for the cards' settings)
+    git -C "$src" archive "$2" docs README.md tools/README.md ${extra[@]+"${extra[@]}"} examples/README.md \
+        $(git -C "$src" ls-tree -r --name-only "$2" examples | grep '\.toml$') | tar -x -C "$docsrc"
+    python3 "$1/pages.py" "$docsrc" "$1" "$ref" "$2" "$src"
+}
 
 # Site
+assemble "$here" "$docs_ref"
 # Not --quiet: it hides the warnings that --strict turns into errors
-(cd "$here" && MALLARD_VERSION="$version" MALLARD_DOCS_BRANCH="$docs_branch" mkdocs build --strict -f mkdocs.build.yml)
+(cd "$here" && MALLARD_VERSION="$version" MALLARD_VERSIONS="$versions" MALLARD_CURRENT_VERSION="$current" \
+    mkdocs build --strict -f mkdocs.build.yml)
+
+# The documentation of main under dev/: the documentation pages only (home, gallery,
+# validation and the API reference stay the release's, linked from its nav)
+if [ -n "$main_ref" ]; then
+    echo "Development documentation from $main_ref"
+    dev="$work/devsite"
+    mkdir -p "$dev/content"
+    cp -R "$here/mkdocs.yml" "$here/pages.py" "$here/hooks" "$here/overrides" "$here/data" "$dev/"
+    cp -R "$here/content/assets" "$here/content/examples.json" "$dev/content/"
+    # the tracked pages of content/docs (the landing page, the dashboard), not the generated ones
+    (cd "$here" && git ls-files content/docs | tar -cf - -T -) | tar -xf - -C "$dev"
+    python3 "$here/devsite.py" "$dev" "$here/out/dev"
+    assemble "$dev" "$main_ref"
+    (cd "$dev" && MALLARD_VERSION="$version" MALLARD_VERSIONS="$versions" MALLARD_CURRENT_VERSION="main" \
+        mkdocs build --strict -f mkdocs.build.yml)
+fi
 
 # MathJax, served by the site itself (no third-party script): the npm tarball, checked
 # against its pinned hash, cached in .cache/; the TeX/MathML-to-CHTML component, its
@@ -55,11 +93,12 @@ if [ ! -f "$tarball" ] || ! echo "$mathjax_sha256  $tarball" | shasum -a 256 -c 
     echo "$mathjax_sha256  $tarball" | shasum -a 256 -c - > /dev/null || { echo "MathJax tarball: checksum mismatch"; exit 1; }
 fi
 tar -xzf "$tarball" -C "$work" package/es5
-mj="$here/out/assets/mathjax"
-rm -rf "$mj" && mkdir -p "$mj/output/chtml/fonts"
-cp "$work/package/es5/tex-mml-chtml.js" "$mj/"
-cp -R "$work/package/es5/input" "$work/package/es5/a11y" "$work/package/es5/ui" "$work/package/es5/sre" "$mj/"
-cp -R "$work/package/es5/output/chtml/fonts/woff-v2" "$mj/output/chtml/fonts/"
+for mj in "$here/out/assets/mathjax" ${main_ref:+"$here/out/dev/assets/mathjax"}; do
+    rm -rf "$mj" && mkdir -p "$mj/output/chtml/fonts"
+    cp "$work/package/es5/tex-mml-chtml.js" "$mj/"
+    cp -R "$work/package/es5/input" "$work/package/es5/a11y" "$work/package/es5/ui" "$work/package/es5/sre" "$mj/"
+    cp -R "$work/package/es5/output/chtml/fonts/woff-v2" "$mj/output/chtml/fonts/"
+done
 
 # API reference: the source tree only (the user guide lives in the MkDocs pages above),
 # with a landing page from this repository

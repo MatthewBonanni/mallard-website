@@ -33,6 +33,14 @@ this repository and commits it; it holds only commit and pull request references
 `validation/` holds the scripts that ran the validation cases and drew the figures in `content/validation/`
 (see the docstring of `validation/common.py`).
 
+## Versions
+
+When the release has the user guide (`docs/guide/`), `build.sh` builds the site for the release and a second
+build of the documentation pages of Mallard's `main` under `dev/` (`devsite.py` adapts a copy of this
+repository for it: home, gallery, validation and the API reference link to the release's); when the release
+predates the user guide, the site documents `main` alone. A selector in the header (`content/assets/versions.js`)
+switches version and keeps the page. `MALLARD_MAIN_REF=<ref>` builds another ref as `main`, for previews.
+
 ## Building locally
 
 ```sh
