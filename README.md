@@ -35,11 +35,12 @@ this repository and commits it; it holds only commit and pull request references
 
 ## Versions
 
-When the release has the user guide (`docs/guide/`), `build.sh` builds the site for the release and a second
-build of the documentation pages of Mallard's `main` under `dev/` (`devsite.py` adapts a copy of this
-repository for it: home, gallery, validation and the API reference link to the release's); when the release
-predates the user guide, the site documents `main` alone. A selector in the header (`content/assets/versions.js`)
-switches version and keeps the page. `MALLARD_MAIN_REF=<ref>` builds another ref as `main`, for previews.
+The site documents Mallard's `main` branch at its root. `build.sh` also builds the documentation pages of every
+release that has the user guide (`docs/guide/`) under its own path, e.g. `v0.9.0/` (`devsite.py` adapts a copy of
+this repository for each: home, gallery, validation and the API reference link to the root's), so every such
+release stays reachable. A selector in the header (`content/assets/versions.js`) lists `main (development)` first,
+then the releases, newest first, and switching keeps the page. `MALLARD_MAIN_REF=<ref>` builds another ref as
+`main`, for previews.
 
 ## Building locally
 

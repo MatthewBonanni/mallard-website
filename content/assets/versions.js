@@ -1,6 +1,6 @@
 // Version selector in the header (Material's markup and styles): the versions the
-// site documents (build.sh: the release at the root and main under dev/, or main
-// alone), from #mallard-versions. Switching keeps the page when the other version
+// site documents (build.sh: main at the root, then each release under v<version>/),
+// from #mallard-versions. Switching keeps the page when the other version
 // has it, else opens that version's documentation index.
 (function () {
   var data = document.getElementById("mallard-versions");

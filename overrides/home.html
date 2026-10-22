@@ -18,7 +18,7 @@
           <a href="{{ 'docs/' | url }}" class="md-button md-button--primary">Get started</a>
           <a href="{{ 'validation/' | url }}" class="md-button">Validation</a>
           <a href="{{ 'gallery/' | url }}" class="md-button">Gallery</a>
-          <div class="mallard-version">Documentation for Mallard {{ config.extra.mallard_version }}</div>
+          <div class="mallard-version">Documentation of Mallard's main branch; latest release {{ config.extra.mallard_version }}</div>
         </div>
         <div class="mallard-hero__media">
           <video data-autoplay controls loop muted playsinline preload="none" width="{{ page.meta.hero_width }}" height="{{ page.meta.hero_height }}" poster="{{ page.meta.hero_poster | url }}" aria-label="{{ page.meta.hero_alt }}">
@@ -32,5 +32,8 @@
 {% endblock %}
 
 {% block content %}
+  {% if config.extra.versions %}
+    <div id="mallard-versions" hidden data-current="{{ config.extra.current_version | e }}" data-versions="{{ config.extra.versions | e }}"></div>
+  {% endif %}
   {{ page.content }}
 {% endblock %}
