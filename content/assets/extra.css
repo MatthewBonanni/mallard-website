@@ -440,3 +440,12 @@
 
 /* Validation figures drawn per theme (NAME-light.svg / NAME-dark.svg): transparent, no frame */
 .mallard-figure img[src*="-light.svg"], .mallard-figure img[src*="-dark.svg"] { background: none; border: none; }
+
+/* Version selector: opened by a click, a tap or the keyboard (assets/versions.js) as well as on hover;
+   focus alone (Material's :focus-within) no longer holds it open, so Escape and clicking outside close it */
+.md-version--open .md-version__list { max-height: 10rem; opacity: 1; overflow: auto; }
+.mallard-version:focus-within:not(.md-version--open):not(:hover) .md-version__list { max-height: 0; opacity: 0; }
+.md-version__link[aria-current] { color: var(--md-accent-fg-color); }
+.md-version__item.mallard-version__note {
+  padding: 0.3rem 0.6rem; font-size: 0.6rem; line-height: 1.35; color: var(--md-default-fg-color--light); max-width: 12rem; white-space: normal;
+}
