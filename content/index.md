@@ -44,7 +44,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Low-Mach correction of the upwind dissipation
     - Forward Euler, SSPRK3 and RK4 at a CFL number or a fixed step
 
-    [Numerics guide](docs/guide/numerics.md) · [Numerical methods](docs/numerics/overview.md)
+    [Numerics guide](docs/guide/numerics.md) · [Numerical methods](docs/numerics/overview.md) · [What is new](docs/numerics/originality.md)
 
 -   :material-water:{ .lg .middle } __Physics__
 
@@ -127,6 +127,9 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     [Validation](validation.md) · [Examples](docs/examples.md)
 
 </div>
+
+!!! note "What's new here"
+    Mallard runs TENO-E, a published unstructured TENO scheme, on every 3D cell type at orders 3 to 6. To make that stable it adds two stencil rules we have not found published: each cell's central stencil grows until its reconstruction's Lebesgue constant is bounded, and on thin cells candidates are ranked in the metric of the local mesh spacing. The rest of the numerics are published methods, cited where they are used. [What is new in Mallard's numerics](docs/numerics/originality.md)
 
 ## Validated
 
