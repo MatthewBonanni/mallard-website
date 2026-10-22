@@ -159,7 +159,8 @@ def main():
     for page, (repo_path, text) in pages.items():
         text = rewrite(page, repo_path, text)
         if page in DESCRIPTIONS and not text.startswith("---"):
-            text = f"---\ndescription: {json.dumps(DESCRIPTIONS[page])}\n---\n\n" + text
+            boost = "search:\n  boost: 3\n" if page == "input.md" else ""
+            text = f"---\ndescription: {json.dumps(DESCRIPTIONS[page])}\n{boost}---\n\n" + text
         out = docs / page
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(text)
