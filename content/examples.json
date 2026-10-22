@@ -1,5 +1,5 @@
 {
-  "_comment": "Still image and/or setup diagram (from docs/images/guide of the Mallard repository) for each example on the Examples page (image paths relative to content/); pages.py reads this. Examples without an entry are listed without a picture.",
+  "_comment": "Still image and/or setup diagram (from docs/images/guide of the Mallard repository) for each example on the Examples page (image paths relative to content/); pages.py reads this. Examples without an entry get a plain card.",
   "sod": {
     "image": "validation/sod.png",
     "alt": "Density, velocity and pressure of the Sod shock tube against the exact solution",
@@ -176,5 +176,40 @@
       "name": "domain_turbulent_inflow_duct",
       "alt": "The duct with a turbulent characteristic inlet and outlet, periodic in y and z"
     }
+  },
+  "cbc_les": {
+    "image": "validation/les_cbc.png",
+    "alt": "Energy spectra of LES of Comte-Bellot and Corrsin grid turbulence against the measurements",
+    "more": "validation.md#les-cbc"
+  },
+  "channel_les": {
+    "image": "validation/les_channel395.png",
+    "alt": "Mean velocity and Reynolds stresses of the LES channel at Re_tau = 395 against DNS",
+    "more": "validation.md#les-channel"
+  },
+  "channel_les/input_590.toml": {
+    "image": "validation/les_channel590.png",
+    "alt": "Mean velocity and Reynolds stresses of the LES channel at Re_tau = 590 against DNS",
+    "more": "validation.md#les-channel"
+  },
+  "channel_inflow_retau180": {
+    "image": "validation/synthetic_inflow_channel.png",
+    "alt": "Wall shear and profiles of the channel with synthetic turbulent inflow",
+    "more": "validation.md#synthetic-inflow"
+  },
+  "flame_turbulence": {
+    "image": "media/flame_turbulence_poster.jpg",
+    "alt": "Flame surface and vortices of a premixed flame in decaying turbulence",
+    "more": "validation.md#les-flame"
+  },
+  "volvo_bluff_body": {
+    "image": "media/volvo_cold_poster.jpg",
+    "alt": "Vorticity behind the triangular flameholder of the Volvo bluff-body combustor",
+    "more": "validation.md#les-volvo"
+  },
+  "premixed_flame/ch4": {
+    "image": "validation/flame_speed_ch4.png",
+    "alt": "Flame speeds of CH4/air flames against Cantera",
+    "more": "validation.md#flame-speed-ch4"
   }
 }

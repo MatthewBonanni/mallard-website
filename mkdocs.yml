@@ -53,6 +53,8 @@ extra_javascript:
     defer: true
   - path: assets/keys.js
     defer: true
+  - path: assets/examples.js
+    defer: true
   # Math (pymdownx.arithmatex): the configuration first, then MathJax itself
   - assets/mathjax.js
   # Served from the site: build.sh puts MathJax 3.2.2 (npm, pinned hash) in out/assets/mathjax
