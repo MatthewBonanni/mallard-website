@@ -69,7 +69,8 @@ plugins:
   - search
   - redirects:
       redirect_maps:
-        docs/tutorial.md: docs/guide/first_simulation.md
+        docs/tutorial.md: docs/tutorials/first_simulation.md
+        docs/guide/first_simulation.md: docs/tutorials/first_simulation.md
         docs/parallel.md: docs/guide/parallel.md
         docs/performance.md: docs/guide/performance.md
 
@@ -111,7 +112,7 @@ nav:
   - Getting started:
       - docs/index.md
       - Installation: docs/installation.md
-      - First simulation: docs/guide/first_simulation.md
+      - Quick start: docs/guide/quick_start.md
       - Input files: docs/guide/input_files.md
   - User guide:
       - Meshes: docs/guide/meshes.md
@@ -129,7 +130,7 @@ nav:
       # New pages of docs/guide/ (pages.py)
       - GUIDE_EXTRA
   - Tutorials:
-      # The pages of docs/tutorials/, index first (pages.py)
+      # The pages of docs/tutorials/: the index, then the path in its table's order (pages.py)
       - TUTORIALS
   - Theory manual:
       # The chapters of docs/theory/, in the order of its index (pages.py)
