@@ -52,6 +52,7 @@ DESCRIPTIONS = {
     "guide/performance.md": "Measured throughput of Mallard on CPUs and A100 GPUs: the flow solver, 3D TENO-E setup and memory, reacting mixtures and chemistry.",
     "numerics/overview.md": "Mallard's numerical methods: finite volume discretization, time step, reconstruction, Riemann solvers, boundary conditions and viscous fluxes.",
     "numerics/teno_e.md": "How Mallard implements TENO-E reconstruction of orders 3 to 6 on unstructured 2D and 3D meshes.",
+    "numerics/originality.md": "Which parts of Mallard's numerics are its own and which are published methods, with the closest prior work and the evidence.",
     "theory/index.md": "Mallard's theory manual: the equations it solves and the methods it solves them with, as implemented.",
     "theory/governing_equations.md": "The compressible Navier-Stokes equations Mallard solves: conservation laws, single-gas constitutive laws, axisymmetric form.",
     "theory/thermodynamics_transport.md": "Thermally perfect gas mixtures in Mallard: NASA polynomials, mixture-averaged transport, Soret diffusion and double flux.",
