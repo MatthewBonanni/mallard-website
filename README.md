@@ -22,7 +22,8 @@ documentation landing page and media in `content/`; `content/examples.json` (sti
 examples); theme overrides in `overrides/`; `build.sh`, `pages.py`; and `check_links.py`, which `build.sh`
 runs on the built site: links and anchors, alt text of every image and video, and the dark twin of every
 light-theme SVG figure (and back). `hooks/content.py` lazy-loads images and anchors each key's row on the input
-reference (`<section>--<key>`), which `content/assets/keys.js` scrolls to from a search result.
+reference (`<section>--<key>`), which `content/assets/keys.js` scrolls to from a search result. MathJax is served by the site itself: `build.sh` takes it
+from the npm tarball (version and SHA-256 pinned, cached in `.cache/`) into `out/assets/mathjax/`.
 
 The *Performance dashboard* (`content/docs/dashboard.md`) is drawn at build time by `hooks/performance.py` from
 `data/performance.json`: the A100 benchmark results of the GPU CI for each merge into Mallard's `main`, and the
