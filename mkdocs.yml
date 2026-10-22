@@ -142,6 +142,7 @@ nav:
       - Input reference: docs/input.md
       - Numerical methods: docs/numerics/overview.md
       - TENO-E details: docs/numerics/teno_e.md
+      - What is new: docs/numerics/originality.md
       - Tools: docs/tools.md
       - References: docs/references.md
       - API reference: docs/api/index.html
