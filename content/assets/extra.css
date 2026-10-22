@@ -437,3 +437,6 @@
 .md-typeset .mallard-card details.mallard-card__run > summary::before { display: none; }
 .md-typeset .mallard-card details.mallard-card__run > summary::after { left: 0; right: auto; top: 0.1rem; }
 .md-typeset .mallard-card > p:last-child { margin-top: auto; padding-top: 0.4rem; }
+
+/* Validation figures drawn per theme (NAME-light.svg / NAME-dark.svg): transparent, no frame */
+.mallard-figure img[src*="-light.svg"], .mallard-figure img[src*="-dark.svg"] { background: none; border: none; }
