@@ -3,11 +3,12 @@
 #
 #   ./build.sh MALLARD_CHECKOUT [REF]
 #
-# REF defaults to the checkout's latest release tag. The documentation pages come from
-# docs/, README.md, examples/README.md and tools/README.md of REF (of main, if REF has
-# no docs/guide yet), assembled by pages.py; the API reference is generated with
-# Doxygen from REF into out/docs/api. Needs mkdocs-material, mkdocs-redirects, doxygen
-# and curl.
+# REF is the latest release (default: the checkout's latest release tag). The
+# documentation pages come from docs/, README.md, examples/ and tools/README.md of
+# Mallard's main branch at the root, and of each release up to REF that has the user
+# guide under v<version>/, assembled by pages.py; the API reference is generated with
+# Doxygen from main into out/docs/api. Needs mkdocs-material, mkdocs-redirects,
+# doxygen and curl.
 set -euo pipefail
 
 here="$(cd "$(dirname "$0")" && pwd)"
@@ -19,31 +20,68 @@ mathjax_sha256="1b9c0a1c44df864e915690558e72adb9cc5203360daefd385084ced3b6c64c09
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 
-git -C "$src" -c advice.detachedHead=false checkout -q "$ref"
 version="${ref#v}"
-echo "Building the Mallard website for $ref"
+echo "Building the Mallard website (latest release $ref)"
 
-# User guide pages from the Mallard repository (gitignored here): those of the ref, or of
-# Mallard's main branch when the ref predates the user guide (docs/guide/), with a note
-docs_ref="$ref"
-if ! git -C "$src" cat-file -e "$ref:docs/guide" 2>/dev/null; then
-    for branch in origin/main main github/main; do
-        if git -C "$src" cat-file -e "$branch:docs/guide" 2>/dev/null; then docs_ref="$branch"; break; fi
-    done
-fi
-docs_branch=""
-[ "$docs_ref" != "$ref" ] && docs_branch="${docs_ref##*/}" && echo "User guide from $docs_ref"
-mkdir -p "$work/docsrc"
-extra=()
-git -C "$src" cat-file -e "$docs_ref:templates/manifest.toml" 2>/dev/null && extra+=(templates/manifest.toml)
-# examples/: the README, and each example's card.toml and input files (for the cards' settings)
-git -C "$src" archive "$docs_ref" docs README.md tools/README.md ${extra[@]+"${extra[@]}"} examples/README.md \
-    $(git -C "$src" ls-tree -r --name-only "$docs_ref" examples | grep '\.toml$') | tar -x -C "$work/docsrc"
-python3 "$here/pages.py" "$work/docsrc" "$here" "$ref" "$docs_ref" "$src"
+# User guide pages from the Mallard repository (gitignored here), assembled by pages.py.
+# Versions: the site documents Mallard's main branch at its root, and each release that
+# has the user guide (docs/guide/) under its own path, e.g. v0.9.0/, its documentation
+# pages only (home, gallery, validation and the API reference link to the root's). A
+# selector in the header switches between them (assets/versions.js, from MALLARD_VERSIONS).
+# MALLARD_MAIN_REF overrides the ref documented as main (e.g. to preview a branch).
+main_ref="${MALLARD_MAIN_REF:-}"
+for branch in origin/main main github/main; do
+    [ -n "$main_ref" ] && break
+    if git -C "$src" cat-file -e "$branch:docs/guide" 2>/dev/null; then main_ref="$branch"; fi
+done
+: "${main_ref:?no main branch with docs/guide}"
+base="$(sed -nE 's#^site_url: https?://[^/]*##p' "$here/mkdocs.yml")"   # /mallard/
+# Releases with the user guide, newest first, up to REF
+releases=()
+for tag in $(git -C "$src" tag --list 'v*' --sort=-version:refname --merged "$ref"); do
+    git -C "$src" cat-file -e "$tag:docs/guide" 2>/dev/null && releases+=("$tag")
+done
+versions="[{\"title\": \"main\", \"note\": \"development\", \"path\": \"$base\"}"
+for tag in ${releases[@]+"${releases[@]}"}; do
+    versions="$versions, {\"title\": \"${tag#v}\", \"note\": \"release\", \"path\": \"$base$tag/\"}"
+done
+versions="$versions]"
+echo "Documentation of $main_ref at the root; releases: ${releases[*]:-none with the user guide}"
+git -C "$src" -c advice.detachedHead=false checkout -q "$main_ref"
 
-# Site
+# assemble SITE_DIR REF DOCS_REF: the documentation pages of DOCS_REF into SITE_DIR/content/docs
+assemble() {
+    local docsrc="$work/docsrc-$(basename "$1")"
+    mkdir -p "$docsrc"
+    local extra=()
+    git -C "$src" cat-file -e "$3:templates/manifest.toml" 2>/dev/null && extra+=(templates/manifest.toml)
+    # examples/: the README, and each example's card.toml and input files (for the cards' settings)
+    git -C "$src" archive "$3" docs README.md tools/README.md ${extra[@]+"${extra[@]}"} examples/README.md \
+        $(git -C "$src" ls-tree -r --name-only "$3" examples | grep '\.toml$') | tar -x -C "$docsrc"
+    python3 "$1/pages.py" "$docsrc" "$1" "$2" "$3" "$src"
+}
+
+# Site: main
+assemble "$here" "$main_ref" "$main_ref"
 # Not --quiet: it hides the warnings that --strict turns into errors
-(cd "$here" && MALLARD_VERSION="$version" MALLARD_DOCS_BRANCH="$docs_branch" mkdocs build --strict -f mkdocs.build.yml)
+(cd "$here" && MALLARD_VERSION="$version" MALLARD_VERSIONS="$versions" MALLARD_CURRENT_VERSION="main" \
+    mkdocs build --strict -f mkdocs.build.yml)
+
+# Each release's documentation pages under v<version>/
+for tag in ${releases[@]+"${releases[@]}"}; do
+    echo "Documentation of $tag under $tag/"
+    rel="$work/site-$tag"
+    mkdir -p "$rel/content"
+    cp -R "$here/mkdocs.yml" "$here/pages.py" "$here/hooks" "$here/overrides" "$here/data" "$rel/"
+    cp -R "$here/content/assets" "$here/content/examples.json" "$rel/content/"
+    # the tracked pages of content/docs (the landing page, the dashboard), not the generated ones
+    (cd "$here" && git ls-files content/docs | tar -cf - -T -) | tar -xf - -C "$rel"
+    python3 "$here/devsite.py" "$rel" "$here/out/$tag" "$tag/"
+    assemble "$rel" "$tag" "$tag"
+    python3 "$here/devsite.py" --landing "$rel"
+    (cd "$rel" && MALLARD_VERSION="${tag#v}" MALLARD_VERSIONS="$versions" MALLARD_CURRENT_VERSION="${tag#v}" \
+        mkdocs build --strict -f mkdocs.build.yml)
+done
 
 # MathJax, served by the site itself (no third-party script): the npm tarball, checked
 # against its pinned hash, cached in .cache/; the TeX/MathML-to-CHTML component, its
@@ -55,11 +93,12 @@ if [ ! -f "$tarball" ] || ! echo "$mathjax_sha256  $tarball" | shasum -a 256 -c 
     echo "$mathjax_sha256  $tarball" | shasum -a 256 -c - > /dev/null || { echo "MathJax tarball: checksum mismatch"; exit 1; }
 fi
 tar -xzf "$tarball" -C "$work" package/es5
-mj="$here/out/assets/mathjax"
-rm -rf "$mj" && mkdir -p "$mj/output/chtml/fonts"
-cp "$work/package/es5/tex-mml-chtml.js" "$mj/"
-cp -R "$work/package/es5/input" "$work/package/es5/a11y" "$work/package/es5/ui" "$work/package/es5/sre" "$mj/"
-cp -R "$work/package/es5/output/chtml/fonts/woff-v2" "$mj/output/chtml/fonts/"
+for mj in "$here/out/assets/mathjax" ${releases[@]+$(printf "$here/out/%s/assets/mathjax " "${releases[@]}")}; do
+    rm -rf "$mj" && mkdir -p "$mj/output/chtml/fonts"
+    cp "$work/package/es5/tex-mml-chtml.js" "$mj/"
+    cp -R "$work/package/es5/input" "$work/package/es5/a11y" "$work/package/es5/ui" "$work/package/es5/sre" "$mj/"
+    cp -R "$work/package/es5/output/chtml/fonts/woff-v2" "$mj/output/chtml/fonts/"
+done
 
 # API reference: the source tree only (the user guide lives in the MkDocs pages above),
 # with a landing page from this repository

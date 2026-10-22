@@ -17,7 +17,8 @@ the reference.
     ---
 
     - [Installation](installation.md): CMake builds for CPUs, NVIDIA and AMD GPUs, MPI
-    - [First simulation](guide/first_simulation.md): the Sod shock tube in ten minutes
+    - [Quick start](guide/quick_start.md): a first run in three commands
+    - [Tutorials](tutorials/index.md): a path from the Sod shock tube to multi-GPU LES
     - [Input files](guide/input_files.md): how an input is organized
 
 -   :material-book-open-variant:{ .lg .middle } __User guide__

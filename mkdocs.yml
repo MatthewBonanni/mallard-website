@@ -55,6 +55,8 @@ extra_javascript:
     defer: true
   - path: assets/examples.js
     defer: true
+  - path: assets/versions.js
+    defer: true
   # Math (pymdownx.arithmatex): the configuration first, then MathJax itself
   - assets/mathjax.js
   # Served from the site: build.sh puts MathJax 3.2.2 (npm, pinned hash) in out/assets/mathjax
@@ -69,14 +71,16 @@ plugins:
   - search
   - redirects:
       redirect_maps:
-        docs/tutorial.md: docs/guide/first_simulation.md
+        docs/tutorial.md: docs/tutorials/first_simulation.md
+        docs/guide/first_simulation.md: docs/tutorials/first_simulation.md
         docs/parallel.md: docs/guide/parallel.md
         docs/performance.md: docs/guide/performance.md
 
 extra:
   mallard_version: !ENV [MALLARD_VERSION, "dev"]
-  # Set when the documentation pages come from a branch rather than the release (build.sh)
-  docs_branch: !ENV [MALLARD_DOCS_BRANCH, ""]
+  # The documented versions, for the selector in the header (build.sh; assets/versions.js)
+  versions: !ENV [MALLARD_VERSIONS, ""]
+  current_version: !ENV [MALLARD_CURRENT_VERSION, ""]
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MatthewBonanni/mallard
@@ -111,7 +115,7 @@ nav:
   - Getting started:
       - docs/index.md
       - Installation: docs/installation.md
-      - First simulation: docs/guide/first_simulation.md
+      - Quick start: docs/guide/quick_start.md
       - Input files: docs/guide/input_files.md
   - User guide:
       - Meshes: docs/guide/meshes.md
@@ -129,7 +133,7 @@ nav:
       # New pages of docs/guide/ (pages.py)
       - GUIDE_EXTRA
   - Tutorials:
-      # The pages of docs/tutorials/, index first (pages.py)
+      # The pages of docs/tutorials/: the index, then the path in its table's order (pages.py)
       - TUTORIALS
   - Theory manual:
       # The chapters of docs/theory/, in the order of its index (pages.py)
