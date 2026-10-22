@@ -55,6 +55,8 @@ extra_javascript:
     defer: true
   - path: assets/examples.js
     defer: true
+  - path: assets/versions.js
+    defer: true
   # Math (pymdownx.arithmatex): the configuration first, then MathJax itself
   - assets/mathjax.js
   # Served from the site: build.sh puts MathJax 3.2.2 (npm, pinned hash) in out/assets/mathjax
@@ -76,8 +78,9 @@ plugins:
 
 extra:
   mallard_version: !ENV [MALLARD_VERSION, "dev"]
-  # Set when the documentation pages come from a branch rather than the release (build.sh)
-  docs_branch: !ENV [MALLARD_DOCS_BRANCH, ""]
+  # The documented versions, for the selector in the header (build.sh; assets/versions.js)
+  versions: !ENV [MALLARD_VERSIONS, ""]
+  current_version: !ENV [MALLARD_CURRENT_VERSION, ""]
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MatthewBonanni/mallard

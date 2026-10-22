@@ -38,11 +38,8 @@
 {% endblock %}
 
 {% block content %}
-  {% if config.extra.docs_branch and page and page.file.src_uri.startswith("docs/") and page.file.src_uri != "docs/dashboard.md" %}
-    <div class="admonition note mallard-branch-note">
-      <p class="admonition-title">Documentation of the <code>{{ config.extra.docs_branch }}</code> branch</p>
-      <p>These pages follow Mallard's <code>{{ config.extra.docs_branch }}</code> branch, which is ahead of release {{ config.extra.mallard_version }}: some features they describe come with the next release.</p>
-    </div>
+  {% if config.extra.versions %}
+    <div id="mallard-versions" hidden data-current="{{ config.extra.current_version | e }}" data-versions="{{ config.extra.versions | e }}"></div>
   {% endif %}
   {{ super() }}
 {% endblock %}
