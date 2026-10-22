@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Check that every local link and resource in the built site (out/) exists,
-including anchors into MkDocs pages. External links are listed with --external.
+including anchors into MkDocs pages; that every image has alt text and every
+video an aria-label; and that a page showing a light-theme figure (NAME-light.svg)
+shows its dark twin too, and the other way around. External links are listed
+with --external.
 
     python3 check_links.py [out] [--external]
 """
 import html.parser
+import re
 import sys
 import urllib.parse
 from pathlib import Path
@@ -15,7 +19,7 @@ SITE_PREFIX = "/mallard/"
 class Collector(html.parser.HTMLParser):
     def __init__(self):
         super().__init__()
-        self.links, self.ids = [], set()
+        self.links, self.ids, self.missing_alt, self.svgs = [], set(), [], set()
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -23,6 +27,12 @@ class Collector(html.parser.HTMLParser):
             self.ids.add(a["id"])
         if tag == "a" and "name" in a:
             self.ids.add(a["name"])
+        if tag == "img" and not (a.get("alt") or "").strip():
+            self.missing_alt.append(a.get("src", "?"))
+        if tag == "video" and not (a.get("aria-label") or "").strip():
+            self.missing_alt.append(a.get("poster", "video"))
+        if tag == "img" and re.search(r"-(light|dark)\.svg$", a.get("src", "")):
+            self.svgs.add(a["src"])
         for key in ("href", "src", "poster"):
             if a.get(key) and not (tag == "link" and a.get("rel") in ("preconnect", "canonical", "alternate")):
                 self.links.append(a[key])
@@ -59,6 +69,14 @@ def main():
     broken = []
     pages = sorted(root.rglob("*.html"))
     for page in pages:
+        if "docs/api" not in str(page):
+            c = parse(page)
+            for src in c.missing_alt:
+                broken.append((page.relative_to(root), src, "no alt text"))
+            for src in sorted(c.svgs):
+                twin = re.sub(r"-(light|dark)(\.svg)$", lambda m: ("-dark" if m.group(1) == "light" else "-light") + m.group(2), src)
+                if twin not in c.svgs:
+                    broken.append((page.relative_to(root), src, "no " + ("dark" if "-light." in src else "light") + " twin"))
         for url in parse(page).links:
             scheme = urllib.parse.urlsplit(url).scheme
             if scheme in ("http", "https"):
@@ -76,7 +94,7 @@ def main():
                 broken.append((page.relative_to(root), url, "no anchor"))
     for page, url, why in broken:
         print(f"{why}: {url} in {page}")
-    print(f"{len(pages)} pages, {len(broken)} broken links, {len(external)} external links")
+    print(f"{len(pages)} pages, {len(broken)} problems, {len(external)} external links")
     if "--external" in sys.argv:
         print("\n".join(sorted(external)))
     sys.exit(1 if broken else 0)

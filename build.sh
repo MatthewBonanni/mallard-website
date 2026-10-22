@@ -14,6 +14,8 @@ here="$(cd "$(dirname "$0")" && pwd)"
 src="$(cd "${1:?usage: build.sh MALLARD_CHECKOUT [REF]}" && pwd)"
 ref="${2:-$(git -C "$src" describe --tags --abbrev=0)}"
 awesome_version="v2.5.0"
+mathjax_version="3.2.2"
+mathjax_sha256="1b9c0a1c44df864e915690558e72adb9cc5203360daefd385084ced3b6c64c09"
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 
@@ -38,6 +40,22 @@ python3 "$here/pages.py" "$work/docsrc" "$here" "$ref" "$docs_ref" "$src"
 # Site
 # Not --quiet: it hides the warnings that --strict turns into errors
 (cd "$here" && MALLARD_VERSION="$version" MALLARD_DOCS_BRANCH="$docs_branch" mkdocs build --strict -f mkdocs.build.yml)
+
+# MathJax, served by the site itself (no third-party script): the npm tarball, checked
+# against its pinned hash, cached in .cache/; the TeX/MathML-to-CHTML component, its
+# extensions, fonts and the accessibility/menu modules it loads on demand
+tarball="$here/.cache/mathjax-$mathjax_version.tgz"
+if [ ! -f "$tarball" ] || ! echo "$mathjax_sha256  $tarball" | shasum -a 256 -c - > /dev/null 2>&1; then
+    mkdir -p "$here/.cache"
+    curl -sSL -o "$tarball" "https://registry.npmjs.org/mathjax/-/mathjax-$mathjax_version.tgz"
+    echo "$mathjax_sha256  $tarball" | shasum -a 256 -c - > /dev/null || { echo "MathJax tarball: checksum mismatch"; exit 1; }
+fi
+tar -xzf "$tarball" -C "$work" package/es5
+mj="$here/out/assets/mathjax"
+rm -rf "$mj" && mkdir -p "$mj/output/chtml/fonts"
+cp "$work/package/es5/tex-mml-chtml.js" "$mj/"
+cp -R "$work/package/es5/input" "$work/package/es5/a11y" "$work/package/es5/ui" "$work/package/es5/sre" "$mj/"
+cp -R "$work/package/es5/output/chtml/fonts/woff-v2" "$mj/output/chtml/fonts/"
 
 # API reference: the source tree only (the user guide lives in the MkDocs pages above),
 # with a landing page from this repository

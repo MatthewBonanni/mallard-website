@@ -386,3 +386,14 @@
 [data-md-color-scheme="slate"] .md-typeset img[src*="images/guide/"][src$="#only-light"] {
   display: none;
 }
+
+/* Tables: code names (the first column) never break mid-word; narrow screens scroll the table */
+.md-typeset table:not([class]) td:first-child code,
+.md-typeset table:not([class]) th code { white-space: nowrap; word-break: keep-all; overflow-wrap: normal; }
+.md-typeset__table { max-width: 100%; }
+.md-typeset__scrollwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Input reference: the row of a searched key */
+.md-typeset tr.mallard-key { scroll-margin-top: 4.5rem; }
+.md-typeset tr.mallard-key--found > td { background: var(--md-accent-fg-color--transparent); }
+.md-typeset tr.mallard-key--found > td:first-child { box-shadow: inset 3px 0 0 var(--md-accent-fg-color); }
