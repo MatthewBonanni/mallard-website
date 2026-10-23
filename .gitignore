@@ -16,3 +16,5 @@ content/docs/references.md
 content/images/
 .preview/
 mkdocs.build.yml
+content/docs/input-keys.json
+content/docs/templates.json

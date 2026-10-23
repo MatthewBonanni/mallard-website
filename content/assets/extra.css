@@ -449,3 +449,35 @@
 .md-version__item.mallard-version__note {
   padding: 0.3rem 0.6rem; font-size: 0.6rem; line-height: 1.35; color: var(--md-default-fg-color--light); max-width: 12rem; white-space: normal;
 }
+
+/* Input builder (docs/builder.md, assets/builder.js) */
+.mallard-builder__tabs { display: flex; gap: 0.4rem; margin: 1rem 0 0.8rem; }
+.mallard-builder__tabs button {
+  font: inherit; font-size: 0.75rem; padding: 0.3rem 0.9rem; border-radius: 1rem; cursor: pointer;
+  border: 1px solid var(--md-default-fg-color--lighter); background: none; color: var(--md-default-fg-color);
+}
+.mallard-builder__tabs button[aria-selected="true"] { background: var(--md-accent-fg-color); border-color: var(--md-accent-fg-color); color: #24130a; }
+.mallard-builder__panel[data-panel="build"]:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.2rem; align-items: start; }
+@media (max-width: 60em) { .mallard-builder__panel[data-panel="build"]:not([hidden]) { grid-template-columns: minmax(0, 1fr); } }
+.mallard-builder fieldset { border: 1px solid var(--md-default-fg-color--lightest); border-radius: 0.4rem; margin: 0 0 0.8rem; padding: 0.5rem 0.8rem 0.7rem; }
+.mallard-builder legend { font-weight: 600; font-size: 0.75rem; padding: 0 0.3rem; }
+.mallard-builder__grid { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.35rem 0.7rem; align-items: center; font-size: 0.72rem; }
+.mallard-builder__grid label { font-family: var(--md-code-font-family); font-size: 0.68rem; }
+.mallard-builder input, .mallard-builder select, .mallard-builder textarea {
+  font: inherit; font-size: 0.72rem; color: var(--md-default-fg-color); background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lighter); border-radius: 0.2rem; padding: 0.2rem 0.35rem; width: 100%; box-sizing: border-box;
+}
+.mallard-builder textarea { font-family: var(--md-code-font-family); }
+.mallard-builder__radios { display: flex; gap: 1rem; font-size: 0.72rem; }
+.mallard-builder__radios input { width: auto; }
+.mallard-builder__output { position: sticky; top: 3.6rem; }
+.mallard-builder__output pre { margin: 0.4rem 0; max-height: 70vh; overflow: auto; }
+.mallard-builder__actions button {
+  font: inherit; font-size: 0.7rem; padding: 0.25rem 0.7rem; margin-right: 0.3rem; cursor: pointer; border-radius: 0.2rem;
+  border: 1px solid var(--md-default-fg-color--lighter); background: none; color: var(--md-default-fg-color);
+}
+.mallard-builder__note { font-size: 0.68rem; color: var(--md-default-fg-color--light); }
+.mallard-builder__notes { font-size: 0.72rem; }
+.mallard-builder__notes .mallard-builder__error::marker { content: "✗ "; color: #d9534f; }
+.mallard-builder__notes .mallard-builder__warning::marker { content: "! "; color: var(--md-accent-fg-color); }
+.mallard-builder__notes .mallard-builder__ok::marker { content: "✓ "; color: var(--md-typeset-a-color); }

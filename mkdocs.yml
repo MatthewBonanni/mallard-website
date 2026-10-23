@@ -59,6 +59,8 @@ extra_javascript:
     defer: true
   - path: assets/source.js
     defer: true
+  - path: assets/builder.js
+    type: module
   # Math (pymdownx.arithmatex): the configuration first, then MathJax itself
   - assets/mathjax.js
   # Served from the site: build.sh puts MathJax 3.2.2 (npm, pinned hash) in out/assets/mathjax
@@ -142,6 +144,7 @@ nav:
       - THEORY
   - Reference:
       - Input reference: docs/input.md
+      - Input builder: docs/builder.md
       - Numerical methods: docs/numerics/overview.md
       - TENO-E details: docs/numerics/teno_e.md
       - What is new: docs/numerics/originality.md
