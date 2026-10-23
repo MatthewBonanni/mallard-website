@@ -53,6 +53,7 @@ DESCRIPTIONS = {
     "numerics/overview.md": "Mallard's numerical methods: finite volume discretization, time step, reconstruction, Riemann solvers, boundary conditions and viscous fluxes.",
     "numerics/teno_e.md": "How Mallard implements TENO-E reconstruction of orders 3 to 6 on unstructured 2D and 3D meshes.",
     "numerics/originality.md": "Which parts of Mallard's numerics are its own and which are published methods, with the closest prior work and the evidence.",
+    "verification/index.md": "Observed orders of accuracy of every Mallard scheme on every cell type, from its convergence tests: reconstruction, Euler and Navier-Stokes, time integrators, boundaries, remapping.",
     "theory/index.md": "Mallard's theory manual: the equations it solves and the methods it solves them with, as implemented.",
     "theory/governing_equations.md": "The compressible Navier-Stokes equations Mallard solves: conservation laws, single-gas constitutive laws, axisymmetric form.",
     "theory/thermodynamics_transport.md": "Thermally perfect gas mixtures in Mallard: NASA polynomials, mixture-averaged transport, Soret diffusion and double flux.",
@@ -74,7 +75,7 @@ DESCRIPTIONS = {
 }
 
 GENERATED = ["input.md", "examples.md", "installation.md", "tools.md", "references.md", "numerics", "design", "guide",
-             "theory", "tutorials", "images", "input-keys.json", "templates.json"]
+             "theory", "verification", "tutorials", "images", "input-keys.json", "templates.json"]
 
 REPO_FILES = set()
 
@@ -281,7 +282,8 @@ def examples_page(readme_path, images_path, gh_ref, examples_dir=None, manifest=
     """The examples README as a gallery of cards, one per row of its tables: a still image or
     setup diagram, what the case shows, its build, hardware, size and run time, what it
     demonstrates (examples/<case>/card.toml), its key settings (from the input file), how to run
-    it and links to its input, results and tutorial; with filters (assets/examples.js)."""
+    it and links to its input, results and tutorial; with filters (assets/examples.js). Text after
+    a section's table (prose, figures, ### subsections) follows its cards."""
     readme = readme_path.read_text()
     images = json.loads(images_path.read_text())
     templates = {}
@@ -302,6 +304,10 @@ def examples_page(readme_path, images_path, gh_ref, examples_dir=None, manifest=
                 sections.append((title, None, text))
             continue
         group = re.sub(r"[^a-z]+", "-", title.lower()).strip("-")
+        lines = text.split("\n")
+        start = next(i for i, line in enumerate(lines) if line.startswith("|"))
+        end = next((i for i in range(start, len(lines)) if not lines[i].startswith("|")), len(lines))
+        trailing = "\n".join(lines[end:]).strip() or None
         body = []
         for name, file, what, rest_cols in rows:
             cols = [c.strip() for c in rest_cols.strip(" |").split(" | ")]
@@ -363,13 +369,15 @@ def examples_page(readme_path, images_path, gh_ref, examples_dir=None, manifest=
             if card.get("tutorial"):
                 links.append(f"[Tutorial](../docs/tutorials/{card['tutorial']}.md)")
             body += [" · ".join(links), "", "</div>"]
-        sections.append((title, body, None))
+        sections.append((title, body, trailing))
     out = [head.rstrip(), "", FILTERS]
     for title, body, text in sections:
         if body is None:
             out += ["", f"## {title}", text.rstrip()]
         else:
             out += ["", f"## {title}", "", '<div class="mallard-cards" markdown>', *body, "", "</div>"]
+            if text:
+                out += ["", text]
     return "\n".join(out) + "\n"
 
 
