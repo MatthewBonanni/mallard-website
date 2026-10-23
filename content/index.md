@@ -12,11 +12,6 @@ hero_alt: Density of the 2D Riemann problem on 4096 by 4096 cells, vortex struct
 hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilaterals (16.8 million cells), with Kelvin–Helmholtz roll-ups along the slip lines of the jet; a cellular detonation in 2H2-O2-7Ar in a 3 cm square duct, 19.2 million hexahedra in a window that follows the front, whose transverse waves sweep both directions and print their tracks on the numerical soot foils of the walls (front speed within 0.2% of the Chapman–Jouguet speed); the Taylor–Green vortex at Re = 1600 on the full periodic box at 256³ (16.8 million hexahedra), whose kinetic-energy dissipation rate, traced beside it, peaks within 0.3% of the 512³ spectral DNS of the High-Order CFD Workshop; and a DNS of the autoignition of thermally stratified lean H2/air at 41 atm (T′ = 15 K, after Chen et al.), burning by spontaneous ignition fronts and deflagrations."
 ---
 
-<figure class="mallard-figure mallard-featured" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="media/riemann4k_poster.jpg" aria-label="Density and numerical schlieren of the 2D Riemann problem on 4096 by 4096 quadrilaterals, t = 0 to 0.8"><source src="media/riemann4k.mp4" type="video/mp4"></video>
-<figcaption markdown>The 2D Riemann problem (configuration 3) on 4096 × 4096 quadrilaterals with fifth-order TENO-E: the slip lines roll up into cascades of Kelvin–Helmholtz vortices. 72,570 time steps in 3 hours on two A100 GPUs, 112 million cell updates per second. [Details in the gallery](gallery.md#riemann-4k) · [full-resolution still](media/riemann4k_density.jpg)</figcaption>
-</figure>
-
 ## What's inside
 
 <div class="grid cards mallard-features" markdown>
@@ -178,11 +173,4 @@ This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a 
 ## Citing Mallard
 
 Mallard is archived on Zenodo: [doi:10.5281/zenodo.23112953](https://doi.org/10.5281/zenodo.23112953) (all versions; each release also has its own DOI there). Cite the software with the metadata in its [`CITATION.cff`](https://github.com/MatthewBonanni/mallard/blob/main/CITATION.cff) (GitHub's "Cite this repository" button), and the papers behind the methods you use, listed with where Mallard uses them on the [References](docs/references.md) page.
-
-## Mach 8 flow over a mallard
-
-<figure class="mallard-figure mallard-fun" markdown>
-<video data-autoplay controls loop muted playsinline preload="none" width="2100" height="1306" poster="media/mallard_poster.jpg" aria-label="Mach number of Mach 8 flow over a flying mallard, t = 0 to 0.75"><source src="media/mallard.mp4" type="video/mp4"></video>
-<figcaption markdown>The code's namesake at Mach 8: inviscid flow over a flying mallard from an impulsive start, on 1,067,536 triangles with fifth-order TENO-E and the RHLL flux. More in the [gallery](gallery.md).</figcaption>
-</figure>
 
