@@ -14,7 +14,7 @@ values. Each key links to its row of the [input reference](input.md). The page r
 and sends nothing anywhere.
 
 For a ready-made case with its mesh, run and post-processing scripts, start from a template instead:
-`Mallard new --list`. `Mallard --check input.toml` checks what this page cannot: mesh files, zone
+`mallard new --list`. `mallard check input.toml` checks what this page cannot: mesh files, zone
 names, the time step, memory and cost.
 
 <div id="mallard-builder" class="mallard-builder" markdown="0">

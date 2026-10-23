@@ -38,10 +38,10 @@ DESCRIPTIONS = {
     "tutorials/first_simulation.md": "Build Mallard, run the Sod shock tube, compare with the exact solution, then move to 2D and 3D cases.",
     "tutorials/wedge.md": "An oblique shock on an 8 degree ramp: a generated mesh, boundary conditions, a line probe, ParaView, against theory.",
     "tutorials/cylinder.md": "Vortex shedding behind a cylinder at Re = 100: a Gmsh mesh, viscous flow, wall forces, Strouhal number.",
-    "guide/input_files.md": "How a Mallard input file is organized: its tables, numbers, vectors and expressions, units, and the other executables.",
+    "guide/input_files.md": "How a Mallard input file is organized: its tables, numbers, vectors and expressions, units, and the other commands.",
     "guide/meshes.md": "Generated, Gmsh and HDF5 meshes in Mallard: cell types, stretching, periodic boundaries and curved high-order boundaries.",
     "guide/physics.md": "Euler and Navier-Stokes equations, the perfect-gas reference state, viscosity laws and axisymmetric flows in Mallard.",
-    "guide/thermochemistry.md": "Gas mixtures, Cantera mechanisms, transport, finite-rate chemistry with Strang or SIMPLER splitting, radiation and MallardReactor.",
+    "guide/thermochemistry.md": "Gas mixtures, Cantera mechanisms, transport, finite-rate chemistry with Strang or SIMPLER splitting, radiation and mallard reactor.",
     "guide/les.md": "Large-eddy simulation in Mallard: SGS models, filter width, the hybrid low-dissipation flux, the dissipation budget, TFLES and PaSR.",
     "guide/numerics.md": "Choosing Mallard's time step, reconstruction (first order, MUSCL, TENO-E orders 3 to 6), Riemann solver and other numerical options.",
     "guide/boundary_conditions.md": "Mallard's boundary conditions: walls, inflows, outflows, far fields, characteristic (NSCBC) boundaries and synthetic turbulence.",
@@ -179,7 +179,7 @@ def main():
         out.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(docsrc / img, out)
     # The input builder's data (docs/builder.md): the key catalog setup records, and the
-    # case templates of `Mallard new`
+    # case templates of `mallard new`
     if (docsrc / "docs" / "input-keys.json").is_file():
         shutil.copy(docsrc / "docs" / "input-keys.json", docs / "input-keys.json")
     manifest = docsrc / "templates" / "manifest.toml"
@@ -352,14 +352,14 @@ def examples_page(readme_path, images_path, gh_ref, examples_dir=None, manifest=
             if settings:
                 body += ["**Settings:** " + " · ".join(settings), ""]
             exe = "build-3d" if build == "3d" else "build"
-            run = "MallardReactor" if "reactor" in tags else "Mallard"
+            run = "mallard reactor" if "reactor" in tags else "mallard"
             depth = "../" * (name.count("/") + 2)
             cmd = [f"cd examples/{name}", f"{depth}{exe}/src/{run} -i {posixpath.basename(path) if path.endswith('.toml') else 'input.toml'}"]
             tmpl = templates.get(name)
             body += ['<details class="mallard-card__run" markdown>', "<summary>Run it</summary>", "", "```sh",
                      *cmd, "```", ""]
             if tmpl:
-                body += [f"Or `Mallard new {tmpl}` for a ready-to-run copy with mesh, run and post-processing scripts.",
+                body += [f"Or `mallard new {tmpl}` for a ready-to-run copy with mesh, run and post-processing scripts.",
                          ""]
             body += ["</details>", ""]
             links = [f"[Input file]({path})" if path.endswith(".toml") else f"[Input files]({path})"]
