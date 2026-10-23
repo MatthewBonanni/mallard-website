@@ -79,7 +79,7 @@
   background: #000;
 }
 .mallard-hero__caption { font-size: 0.7rem; color: #c9b8b1; margin-top: 0.6rem; }
-.mallard-version { font-size: 0.7rem; color: #c9b8b1; margin-top: 0.2rem; }
+.mallard-hero__release { font-size: 0.7rem; color: #c9b8b1; margin-top: 0.2rem; }
 
 @media screen and (max-width: 60em) {
   .mallard-hero__inner { grid-template-columns: 1fr; }
