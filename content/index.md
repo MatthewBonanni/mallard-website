@@ -171,7 +171,7 @@ cmake --build build -j
 cd examples/sod && ../../build/src/mallard -i input.toml
 ```
 
-This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution; [Installation](docs/installation.md) covers containers (Docker, Apptainer), Spack and OpenMP, GPU and MPI builds.
+This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution; [Installation](docs/installation.md) covers containers (Docker, Apptainer, Kubernetes), Spack and OpenMP, GPU and MPI builds.
 
 ## Citing Mallard
 

@@ -132,6 +132,7 @@ nav:
       - Initialization and restarts: docs/guide/initialization.md
       - Output and diagnostics: docs/guide/output.md
       - Running in parallel: docs/guide/parallel.md
+      - Running and controlling jobs: docs/guide/running.md
       - Performance: docs/guide/performance.md
       - Performance dashboard: docs/dashboard.md
       # New pages of docs/guide/ (pages.py)
