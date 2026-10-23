@@ -21,7 +21,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - 2D triangles and quadrilaterals; 3D tetrahedra, hexahedra, prisms, pyramids and mixed meshes
-    - Gmsh 2.2/4.1 or HDF5 mesh files, or generated boxes
+    - Gmsh 2.2/4.1, CGNS, Fluent, OpenFOAM polyMesh or HDF5 mesh files (`mallard-mesh-convert`), scaled, rotated and translated on read, or generated boxes
     - Periodic boundaries, on generated meshes or paired zones of mesh files
     - Axisymmetric (r-z) flows, at design order up to the axis
     - Curved high-order boundaries, from Gmsh high-order elements or an analytic projection
@@ -35,7 +35,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - First order, MUSCL (Barth–Jespersen or Venkatakrishnan) and TENO-E of orders 3 to 6, optionally bound preserving
     - Rusanov, HLL, HLLC, Roe and the rotated-hybrid RHLL, carbuncle-free except at shocks at rest on cell faces; all for single gases and mixtures
     - Low-Mach correction of the upwind dissipation
-    - Forward Euler, SSPRK3 and RK4 at a CFL number or a fixed step
+    - Forward Euler, SSPRK3, RK4, low-storage SSPRK(5,4) and 2N RK4(5), at a CFL number, a fixed step or embedded error-controlled steps
 
     [Numerics guide](docs/guide/numerics.md) · [Numerical methods](docs/numerics/overview.md) · [What is new](docs/numerics/originality.md)
 
@@ -66,11 +66,12 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     - Explicit LES: Sigma (default), WALE, Vreman or Smagorinsky eddy viscosity, with Scotti's filter width on anisotropic cells and an opt-in dynamic constant
     - Kinetic-energy-preserving hybrid flux, with the Riemann solver only at compressions, and a dissipation budget that separates the model's, the scheme's and molecular dissipation
-    - Thickened flame (TFLES) with dynamic thickening and Charlette efficiency; PaSR closure (experimental)
+    - Thickened flame (TFLES) with dynamic thickening and a dynamic efficiency (no model constant); PaSR closure (experimental)
     - Synthetic turbulent inflow through characteristic inlets: a digital filter or a precursor run's statistics, bitwise the same on any number of ranks
     - Channel flow: Re<sub>τ</sub> within 0.7% and 1.6% of DNS at 395 and 590
+    - Wall-modeled LES: Griffin–Fu–Moin (isothermal and adiabatic walls) or equilibrium ODE model; C<sub>f</sub> within 2.1% of Lee & Moser at Re<sub>τ</sub> = 2000 and 5200 on 12 cells per half-height, wall heat flux within 1.3% of Trettel & Larsson at M<sub>b</sub> = 1.7 and 3.0
 
-    [Large-eddy simulation](docs/guide/les.md) · [Synthetic inflow](docs/guide/boundary_conditions.md#synthetic-turbulence) · [Validation](validation.md#les)
+    [Large-eddy simulation](docs/guide/les.md) · [Wall models](docs/guide/les.md#wall-models-wall_model) · [Synthetic inflow](docs/guide/boundary_conditions.md#synthetic-turbulence) · [Validation](validation.md#les)
 
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
@@ -88,9 +89,9 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - Kokkos Serial, Threads, OpenMP, CUDA (NVIDIA) and HIP (AMD) backends; double or single precision
-    - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged partitions: 93% (2D) and 91% (3D) weak-scaling efficiency on 16 A100 GPUs; no rank holds the whole mesh
-    - CUDA graphs per step; 3D TENO-E setup on the GPU
-    - Bitwise-identical results on any number of threads or ranks; restarts on a different rank count
+    - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged, Hilbert-curve or graph (dKaMinPar) partitions: 93% (2D) and 91% (3D) weak-scaling efficiency on 16 A100 GPUs; no rank holds the whole mesh
+    - The whole time step as one CUDA graph; 3D TENO-E setup on the GPU
+    - Bitwise-identical results on any number of threads or ranks; restarts bit for bit, also on a different rank count
     - Stiff chemistry on GPUs, with a sparse LU for large mechanisms
 
     [Running in parallel](docs/guide/parallel.md) · [Performance](docs/guide/performance.md) · [Dashboard](docs/dashboard.md)
@@ -99,12 +100,14 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     ---
 
-    - TOML input; initial and boundary states, sources and sponges as expressions
+    - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions; misspelled or unused keys are errors, with suggestions
+    - `Mallard new` case templates; `Mallard --check` for mesh quality, time step, memory and cost before a run; `Mallard upgrade-input` for inputs from older releases
+    - Conservative high-order remap of a restart onto another mesh; versioned files, readable by every later release of the same major version
     - VTU (ParaView) or parallel HDF5 with XDMF; boundary-zone surfaces
     - Running means and covariances, point and line probes, domain integrals, wall forces
     - Heat release, production rates and detonation soot foils
 
-    [Output and diagnostics](docs/guide/output.md) · [Input reference](docs/input.md)
+    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
 
 -   :material-check-decagram:{ .lg .middle } __Validated and tested__
 
@@ -114,10 +117,10 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
         - [Sphere wake](validation.md#sphere-re300) at Re = 300: Strouhal number and drag within 3% and 2% of Johnson & Patel
         - [Compressible isotropic turbulence](validation.md#isotropic-turbulence): enstrophy within 2.4% of the filtered DNS of Johnsen et al.
         - [CJ detonation](validation.md#detonation) speed within 0.01%; H<sub>2</sub>/air [flame speeds](validation.md#flame-speed) within 0.81% of Cantera from φ = 0.6 to 1.4
-    - 400+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision
+    - 400+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision, GCC and Clang, warnings as errors
     - Nightly sanitizers; a performance suite with per-hardware baselines
 
-    [Validation](validation.md) · [Examples](docs/examples.md)
+    [Validation](validation.md) · [Verification manual](docs/verification/index.md) · [Examples](docs/examples.md)
 
 </div>
 
@@ -168,7 +171,7 @@ cmake --build build -j
 cd examples/sod && ../../build/src/Mallard -i input.toml
 ```
 
-This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution; [Installation](docs/installation.md) covers OpenMP, GPU and MPI builds.
+This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution; [Installation](docs/installation.md) covers containers (Docker, Apptainer), Spack and OpenMP, GPU and MPI builds.
 
 ## Citing Mallard
 
