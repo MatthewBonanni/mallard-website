@@ -635,7 +635,7 @@ Mallard 0.4.0 added thermally perfect gas mixtures and finite-rate chemistry: me
 Mallard 0.4.0
 { .mallard-provenance }
 
-`MallardReactor`, a tool built with Mallard, integrates an adiabatic constant-volume reactor with the solver's chemistry kernels (the [`h2_ignition`](docs/examples.md#h2-ignition) example). It ran H<sub>2</sub>/air and CH<sub>4</sub>/air at T<sub>0</sub> = 1000 to 1500 K, equivalence ratios φ = 0.5, 1 and 2 and 1 atm, 36 mixtures, against Cantera's `IdealGasReactor` with tolerances of 10<sup>−12</sup>, both sampled at the same 1500 times (1000 per ignition delay); the ignition delay is the time of the largest dT/dt.
+`mallard reactor`, a subcommand of Mallard, integrates an adiabatic constant-volume reactor with the solver's chemistry kernels (the [`h2_ignition`](docs/examples.md#h2-ignition) example). It ran H<sub>2</sub>/air and CH<sub>4</sub>/air at T<sub>0</sub> = 1000 to 1500 K, equivalence ratios φ = 0.5, 1 and 2 and 1 atm, 36 mixtures, against Cantera's `IdealGasReactor` with tolerances of 10<sup>−12</sup>, both sampled at the same 1500 times (1000 per ignition delay); the ignition delay is the time of the largest dT/dt.
 
 <figure class="mallard-figure" markdown>
 ![Temperature of a constant-volume H2/air reactor against Cantera, and ignition delays of H2/air and CH4/air against Cantera over 1000 to 1500 K](validation/ignition.png){ loading=lazy width=2102 height=753 }
@@ -876,7 +876,7 @@ Autoignition of a thermally stratified lean H<sub>2</sub>/air mixture at constan
 - **Mixture:** φ = 0.1, a mean 1070 K and 41 atm, in a 4.1 mm periodic square.
 - **Initial fields:** random temperature fluctuations T′ of 3.75, 7.5, 15 and 30 K, and decaying turbulence (u′ = 0.5 m/s). Both follow Passot–Pouquet spectra with most energetic lengths of 1.25 mm, from one seed.
 - **Mesh and models:** 400 × 400 cells of 10.25 µm, 11–15 per deflagration thickness. H<sub>2</sub>/O<sub>2</sub> chemistry and mixture-averaged transport.
-- **Reference delay:** τ<sub>0</sub> = 3.650 ms, the homogeneous ignition delay, from both Cantera and `MallardReactor`.
+- **Reference delay:** τ<sub>0</sub> = 3.650 ms, the homogeneous ignition delay, from both Cantera and `mallard reactor`.
 - **Cost:** 1.4–2.0 million steps per run, 4.7–5.5 hours on four A100 GPUs.
 
 <figure class="mallard-figure" markdown>

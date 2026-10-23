@@ -2,7 +2,7 @@
 
 The C++ classes and functions of Mallard's solver, generated from the comments in `src/`. To build and run Mallard, write input files, or read about the numerical methods, see the [user guide](../index.html).
 
-All of Mallard is one static library, `MallardCore`, linked by the `Mallard` executable (`src/main.cpp`) and the test suite. %Data live in Kokkos views on the execution device, with host mirrors (`h_` prefix) for setup and output; kernels are functors, so the same code runs on CPUs and GPUs.
+All of Mallard is one static library, `MallardCore`, linked by the `mallard` executable (`src/main.cpp`) and the test suite. %Data live in Kokkos views on the execution device, with host mirrors (`h_` prefix) for setup and output; kernels are functors, so the same code runs on CPUs and GPUs.
 
 ## Code organization
 

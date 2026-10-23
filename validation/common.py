@@ -27,7 +27,7 @@ ROOT = Path(os.environ.get("MALLARD_SRC", Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 from mallard.vtu import read_vtu  # noqa: E402
 
-MALLARD = ROOT / "build" / "src" / "Mallard"
+MALLARD = ROOT / "build" / "src" / "mallard"
 RUNS = ROOT / "runs"
 FIG = Path(__file__).resolve().parent / "fig"
 FIG.mkdir(exist_ok=True)
