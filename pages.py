@@ -75,7 +75,7 @@ DESCRIPTIONS = {
 }
 
 GENERATED = ["input.md", "examples.md", "installation.md", "tools.md", "references.md", "numerics", "design", "guide",
-             "theory", "verification", "tutorials", "images"]
+             "theory", "verification", "tutorials", "images", "input-keys.json", "templates.json"]
 
 REPO_FILES = set()
 
@@ -178,6 +178,15 @@ def main():
         out = docs / img[len("docs/"):]
         out.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(docsrc / img, out)
+    # The input builder's data (docs/builder.md): the key catalog setup records, and the
+    # case templates of `Mallard new`
+    if (docsrc / "docs" / "input-keys.json").is_file():
+        shutil.copy(docsrc / "docs" / "input-keys.json", docs / "input-keys.json")
+    manifest = docsrc / "templates" / "manifest.toml"
+    if manifest.is_file():
+        templates = [{k: t[k] for k in ("name", "summary", "dim") if k in t}
+                     for t in tomllib.loads(manifest.read_text()).get("templates", [])]
+        (docs / "templates.json").write_text(json.dumps(templates, indent=1) + "\n")
     write_nav(site, docs, pages)
     check_front_matter(content)
 
