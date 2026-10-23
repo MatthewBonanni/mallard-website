@@ -443,6 +443,7 @@
 .md-version--open .md-version__list { max-height: 10rem; opacity: 1; overflow: auto; }
 .mallard-version:focus-within:not(.md-version--open):not(:hover) .md-version__list { max-height: 0; opacity: 0; }
 .md-version__link[aria-current] { color: var(--md-accent-fg-color); }
+.mallard-version .md-version__current { top: -0.05rem; }
 .md-version__item.mallard-version__note {
   padding: 0.3rem 0.6rem; font-size: 0.6rem; line-height: 1.35; color: var(--md-default-fg-color--light); max-width: 12rem; white-space: normal;
 }
