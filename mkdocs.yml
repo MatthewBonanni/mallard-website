@@ -143,6 +143,7 @@ nav:
   - Reference:
       - Input reference: docs/input.md
       - Numerical methods: docs/numerics/overview.md
+      - Verification manual: docs/verification/index.md
       - TENO-E details: docs/numerics/teno_e.md
       - What is new: docs/numerics/originality.md
       - Tools: docs/tools.md
