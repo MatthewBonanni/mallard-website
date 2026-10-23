@@ -1,4 +1,4 @@
-"""Taylor-Green vortex at Re = 1600 (examples/taylor_green_3d/input_periodic.toml, 3D build) against the
+"""Taylor-Green vortex at Re = 1600 (examples/taylor_green_3d/input.toml, 3D build) against the
 512^3 spectral DNS of the High-Order CFD Workshop.
 
     tgv.py REFERENCE_GDIAG INTEGRALS_CSV
