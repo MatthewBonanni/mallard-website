@@ -273,7 +273,8 @@ def examples_page(readme_path, images_path, gh_ref, examples_dir=None, manifest=
     """The examples README as a gallery of cards, one per row of its tables: a still image or
     setup diagram, what the case shows, its build, hardware, size and run time, what it
     demonstrates (examples/<case>/card.toml), its key settings (from the input file), how to run
-    it and links to its input, results and tutorial; with filters (assets/examples.js)."""
+    it and links to its input, results and tutorial; with filters (assets/examples.js). Text after
+    a section's table (prose, figures, ### subsections) follows its cards."""
     readme = readme_path.read_text()
     images = json.loads(images_path.read_text())
     templates = {}
@@ -294,6 +295,10 @@ def examples_page(readme_path, images_path, gh_ref, examples_dir=None, manifest=
                 sections.append((title, None, text))
             continue
         group = re.sub(r"[^a-z]+", "-", title.lower()).strip("-")
+        lines = text.split("\n")
+        start = next(i for i, line in enumerate(lines) if line.startswith("|"))
+        end = next((i for i in range(start, len(lines)) if not lines[i].startswith("|")), len(lines))
+        trailing = "\n".join(lines[end:]).strip() or None
         body = []
         for name, file, what, rest_cols in rows:
             cols = [c.strip() for c in rest_cols.strip(" |").split(" | ")]
@@ -355,13 +360,15 @@ def examples_page(readme_path, images_path, gh_ref, examples_dir=None, manifest=
             if card.get("tutorial"):
                 links.append(f"[Tutorial](../docs/tutorials/{card['tutorial']}.md)")
             body += [" · ".join(links), "", "</div>"]
-        sections.append((title, body, None))
+        sections.append((title, body, trailing))
     out = [head.rstrip(), "", FILTERS]
     for title, body, text in sections:
         if body is None:
             out += ["", f"## {title}", text.rstrip()]
         else:
             out += ["", f"## {title}", "", '<div class="mallard-cards" markdown>', *body, "", "</div>"]
+            if text:
+                out += ["", text]
     return "\n".join(out) + "\n"
 
 
