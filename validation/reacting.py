@@ -2,8 +2,8 @@
 
     reacting.py [ignition|shock_tube|detonation ...]   (default: all three)
 
-Needs Mallard 0.4.0 or later (MallardReactor, [chemistry]) and Cantera. The ignition part runs
-MallardReactor for H2/air (mechanisms/h2o2.yaml) and CH4/air (gri30.yaml) at T0 = 1000-1500 K,
+Needs Mallard 0.9.0 or later (mallard reactor, [chemistry]) and Cantera. The ignition part runs
+mallard reactor for H2/air (mechanisms/h2o2.yaml) and CH4/air (gri30.yaml) at T0 = 1000-1500 K,
 phi = 0.5, 1, 2 and 1 atm, and Cantera's IdealGasReactor (rtol 1e-12) on the same output times;
 the ignition delay is the time of the maximum of dT/dt on those samples (parabolic peak).
 The shock tube is examples/reactive_shock_tube at 50, 25 and 12.5 um cells; the detonation is
@@ -25,7 +25,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import plot_detonation  # noqa: E402
 import plot_reactive_shock_tube  # noqa: E402
 
-REACTOR = ROOT / "build" / "src" / "MallardReactor"
+MALLARD = ROOT / "build" / "src" / "mallard"
 P_ATM = 101325.0
 T0S = (1000.0, 1100.0, 1200.0, 1300.0, 1400.0, 1500.0)
 PHIS = (0.5, 1.0, 2.0)
@@ -102,7 +102,7 @@ atol = 1.0e-10
     if not ((d / "done").exists() and (d / "input.toml").read_text() == toml):
         (d / "input.toml").write_text(toml)
         with open(d / "log.txt", "w") as log:
-            subprocess.run([str(REACTOR), "-i", "input.toml"], cwd=d, check=True, stdout=log,
+            subprocess.run([str(MALLARD), "reactor", "-i", "input.toml"], cwd=d, check=True, stdout=log,
                            stderr=subprocess.STDOUT)
         (d / "done").write_text("")
     data = np.genfromtxt(d / "reactor.csv", delimiter=",", names=True)
@@ -151,7 +151,7 @@ def ignition():
 
     fig, (a, b) = plt.subplots(1, 2, figsize=(7.2, 2.7), gridspec_kw=dict(width_ratios=[1, 1.15]))
     a.plot(t * 1e6, Tc, color=GREY, lw=2.2, label="Cantera")
-    a.plot(t * 1e6, T, color=TEAL, lw=1.0, label="MallardReactor")
+    a.plot(t * 1e6, T, color=TEAL, lw=1.0, label="mallard reactor")
     a.set_xlabel("t [µs]")
     a.set_ylabel("T [K]")
     a.set_title("H$_2$/air, φ = 1, 1200 K, 1 atm")
@@ -166,7 +166,7 @@ def ignition():
                        mew=0.9, label=f"{label.replace('2', '$_2$').replace('4', '$_4$')}, φ = {phi:g}")
     b.set_xlabel("1000 / T$_0$ [1/K]")
     b.set_ylabel("ignition delay [s]")
-    b.set_title("MallardReactor (symbols), Cantera (lines)")
+    b.set_title("mallard reactor (symbols), Cantera (lines)")
     b.legend(ncol=2, fontsize=6.5, loc="upper left")
     fig.tight_layout()
     fig.savefig(FIG / "ignition.png")

@@ -272,7 +272,7 @@ function check(text) {
     }
   }
   if (!notes.length) notes.push(["ok", "Every key is one Mallard reads, with a type and value it accepts. " +
-    "<code>Mallard --check</code> also finds missing keys, mesh and zone problems, and the time step."]);
+    "<code>mallard check</code> also finds missing keys, mesh and zone problems, and the time step."]);
   return notes;
 }
 
@@ -296,10 +296,10 @@ async function init() {
           <button type="button" data-action="download">Download input.toml</button>
         </div>
         <pre><code class="mallard-builder__toml"></code></pre>
-        <p class="mallard-builder__note">Run it with <code>Mallard -i input.toml</code>, after
-          <code>Mallard --check input.toml</code>.</p>
+        <p class="mallard-builder__note">Run it with <code>mallard -i input.toml</code>, after
+          <code>mallard check input.toml</code>.</p>
         <details class="mallard-builder__templates"><summary>Or start from a template</summary>
-          <ul>${templates.map((t) => `<li><code>Mallard new ${esc(t.name)}</code>${t.dim ? ` (${t.dim}D)` : ""}: ${esc(t.summary || "")}</li>`).join("")}</ul>
+          <ul>${templates.map((t) => `<li><code>mallard new ${esc(t.name)}</code>${t.dim ? ` (${t.dim}D)` : ""}: ${esc(t.summary || "")}</li>`).join("")}</ul>
         </details>
       </div>
     </div>

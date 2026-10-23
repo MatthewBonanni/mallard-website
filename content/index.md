@@ -21,7 +21,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - 2D triangles and quadrilaterals; 3D tetrahedra, hexahedra, prisms, pyramids and mixed meshes
-    - Gmsh 2.2/4.1, CGNS, Fluent, OpenFOAM polyMesh or HDF5 mesh files (`mallard-mesh-convert`), scaled, rotated and translated on read, or generated boxes
+    - Gmsh 2.2/4.1, CGNS, Fluent, OpenFOAM polyMesh or HDF5 mesh files (`mallard mesh convert`), scaled, rotated and translated on read, or generated boxes
     - Periodic boundaries, on generated meshes or paired zones of mesh files
     - Axisymmetric (r-z) flows, at design order up to the axis
     - Curved high-order boundaries, from Gmsh high-order elements or an analytic projection
@@ -56,7 +56,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Finite-rate chemistry from Cantera YAML mechanisms: elementary, three-body, falloff, PLOG and Chebyshev reactions
     - RODAS Rosenbrock integrator per cell with analytical Jacobians, with Strang or SIMPLER splitting; ignition delays match Cantera up to 1268 species
     - Mixture-averaged, unity-Lewis or constant-Lewis transport, optionally with thermal (Soret) diffusion; optically thin radiation
-    - Chemistry load balancing across MPI ranks; `MallardReactor`, a 0D constant-volume reactor
+    - Chemistry load balancing across MPI ranks; `mallard reactor`, a 0D constant-volume reactor
 
     [Thermochemistry](docs/guide/thermochemistry.md) · [Validation](validation.md#reacting-flow)
 
@@ -101,7 +101,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions; misspelled or unused keys are errors, with suggestions
-    - `Mallard new` case templates; `Mallard --check` for mesh quality, time step, memory and cost before a run; `Mallard upgrade-input` for inputs from older releases
+    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard upgrade-input` for inputs from older releases
     - Conservative high-order remap of a restart onto another mesh; versioned files, readable by every later release of the same major version
     - VTU (ParaView) or parallel HDF5 with XDMF; boundary-zone surfaces
     - Running means and covariances, point and line probes, domain integrals, wall forces
@@ -168,7 +168,7 @@ git clone --recursive https://github.com/MatthewBonanni/mallard.git
 cd mallard
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_KOKKOS=OFF -DKokkos_ENABLE_THREADS=ON
 cmake --build build -j
-cd examples/sod && ../../build/src/Mallard -i input.toml
+cd examples/sod && ../../build/src/mallard -i input.toml
 ```
 
 This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution; [Installation](docs/installation.md) covers containers (Docker, Apptainer), Spack and OpenMP, GPU and MPI builds.
