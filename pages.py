@@ -40,6 +40,7 @@ DESCRIPTIONS = {
     "tutorials/cylinder.md": "Vortex shedding behind a cylinder at Re = 100: a Gmsh mesh, viscous flow, wall forces, Strouhal number.",
     "guide/input_files.md": "How a Mallard input file is organized: its tables, numbers, vectors and expressions, units, and the other commands.",
     "guide/meshes.md": "Generated, Gmsh and HDF5 meshes in Mallard: cell types, stretching, periodic boundaries and curved high-order boundaries.",
+    "guide/geometry.md": "Regions, probe points and curves in Mallard: primitives, booleans, transforms, volume fractions on meshes, sample placement and probe output.",
     "guide/physics.md": "Euler and Navier-Stokes equations, the perfect-gas reference state, viscosity laws and axisymmetric flows in Mallard.",
     "guide/thermochemistry.md": "Gas mixtures, Cantera mechanisms, transport, finite-rate chemistry with Strang or SIMPLER splitting, radiation and mallard reactor.",
     "guide/les.md": "Large-eddy simulation in Mallard: SGS models, filter width, the hybrid low-dissipation flux, the dissipation budget, TFLES and PaSR.",
