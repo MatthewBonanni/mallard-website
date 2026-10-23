@@ -1,7 +1,7 @@
 """Shared helpers for the validation runs: running Mallard, reading its output, figure style.
 
 The scripts expect a built Mallard checkout in MALLARD_SRC (default: the parent of this
-directory) and import tools/mallard_vtu.py from it. Runs go to $MALLARD_SRC/runs/<case>,
+directory) and import its readers (tools/mallard/) and scripts. Runs go to $MALLARD_SRC/runs/<case>,
 figures and result files to ./fig. Each script runs its cases (skipping finished ones)
 and prints the numbers quoted on the website, e.g.
 
@@ -25,7 +25,7 @@ import numpy as np
 
 ROOT = Path(os.environ.get("MALLARD_SRC", Path(__file__).resolve().parent.parent)).expanduser().resolve()
 sys.path.insert(0, str(ROOT / "tools"))
-from mallard_vtu import read_vtu  # noqa: E402
+from mallard.vtu import read_vtu  # noqa: E402
 
 MALLARD = ROOT / "build" / "src" / "Mallard"
 RUNS = ROOT / "runs"
