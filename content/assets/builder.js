@@ -130,8 +130,11 @@ function field(path, key, value, opts = {}) {
     const o = opts.options.map((v) => `<option${v === value ? " selected" : ""}>${esc(v)}</option>`).join("");
     return `<label for="${id}">${label}</label><select id="${id}" data-path="${path}">${o}</select>`;
   }
+  const e = catalog[path] || {};
+  const title = e.dimension ? ` title="${esc(e.dimension + (e.unit ? "; a plain number is in " + e.unit : "; a plain number is SI") +
+    ', or give a unit, e.g. "1 atm"')}"` : "";
   return `<label for="${id}">${label}</label><input id="${id}" data-path="${path}" value="${esc(String(value))}"` +
-    (opts.hint ? ` placeholder="${esc(opts.hint)}"` : "") + ">";
+    (opts.hint ? ` placeholder="${esc(opts.hint)}"` : "") + title + ">";
 }
 
 function form() {
@@ -260,7 +263,8 @@ function check(text) {
       continue;
     }
     const t = typeOf(v);
-    if (e.type && !compatible(t, e.type)) {
+    // A dimensional number may be a quantity with a unit ("1 atm", "300 K")
+    if (e.type && !compatible(t, e.type) && !(e.dimension && t === "string")) {
       notes.push(["error", `${link(p)}: a ${t}, but Mallard reads a ${e.type.replace("|", " or ")}`]);
     }
     if (e.values && typeof v === "string" && !e.values.includes(v)) {
