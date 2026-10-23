@@ -2,7 +2,7 @@
 
     curved_faces_mallard.py MALLARD_SRC OUT.png [--h 0.06]
 
-The outline is tools/make_mallard_mesh.py's spline; Gmsh meshes it with cubic elements, whose boundary
+The outline is examples/mallard/make_mallard_mesh.py's spline; Gmsh meshes it with cubic elements, whose boundary
 edges (line4) carry two extra nodes on the spline. Mallard keeps every cell's corners and curves the
 wall from those edges: left, the chords through the corners (the face geometry with
 [mesh] curved_geometry = false), with the area they lose shaded; right, Mallard's face map, the cubic
@@ -26,7 +26,7 @@ ap.add_argument("mallard")
 ap.add_argument("out")
 ap.add_argument("--h", type=float, default=0.06)
 args = ap.parse_args()
-sys.path.insert(0, args.mallard + "/tools")
+sys.path.insert(0, args.mallard + "/examples/mallard")
 from make_mallard_mesh import outline  # noqa: E402
 import gmsh  # noqa: E402
 

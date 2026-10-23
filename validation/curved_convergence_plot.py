@@ -1,7 +1,7 @@
 """Steady vortex between circular walls: L1 density error against n_r, straight and curved walls.
 
 The numbers are those of Mallard's docs/design/curved_boundaries.md (subsonic, quadrilaterals, from
-tools/curved_convergence.py on an A100); this script only draws them.
+tools/dev/curved_convergence.py on an A100); this script only draws them.
 """
 import sys
 

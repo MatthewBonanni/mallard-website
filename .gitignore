@@ -19,3 +19,5 @@ content/images/
 mkdocs.build.yml
 content/docs/input-keys.json
 content/docs/templates.json
+__pycache__/
+*.pyc

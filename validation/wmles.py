@@ -6,8 +6,8 @@ figures of the validation page's wall-model section, from finished runs.
 RUNS_DIR holds one directory per run, <case>_<model> with case lm2000, lm5200,
 tl_m1.7, tl_m3.0 and model gfm or eq, each with the example's input.toml, the
 forces_bottom.csv and forces_top.csv of the run and profile.csv
-(tools/plane_average.py of its last statistics snapshot over x and z).
-tools/wmles_channel.py analyzes each over t >= 200 h/U_b and prints the table rows;
+(tools/post/plane_average.py of its last statistics snapshot over x and z).
+examples/channel_wmles/wmles_channel.py analyzes each over t >= 200 h/U_b and prints the table rows;
 the figures (light and dark SVG, the user guide's style, tools/docs/figstyle.py) go
 to content/validation/: wmles_velocity (U+ against Lee & Moser) and
 wmles_compressible (temperature profiles and the errors in Re_tau, B_q and T_c
@@ -23,7 +23,7 @@ import numpy as np
 
 from common import ROOT
 
-sys.path.insert(0, str(ROOT / "tools" / "docs"))
+sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "examples" / "channel_wmles")]
 import figstyle  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 from wmles_channel import REFERENCES, analyze  # noqa: E402
