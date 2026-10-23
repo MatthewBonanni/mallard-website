@@ -167,7 +167,6 @@
 
 .mallard-figure video { background: #000; }
 
-.md-typeset figure.mallard-fun { max-width: 36rem; margin-left: 0; }
 
 .md-typeset img.mallard-still {
   display: block;
@@ -223,8 +222,6 @@
 .mallard-gallery img.mallard-gallery__plot { background: #fff; }
 
 /* Home: featured run */
-.md-typeset figure.mallard-featured { max-width: none; margin: 1em 0 2em; }
-.md-typeset figure.mallard-featured video { background: #000; }
 
 /* Validation: the release or commit behind each result */
 .md-typeset p.mallard-provenance {
