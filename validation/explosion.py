@@ -64,7 +64,7 @@ def reference(n=4000):
 
 def main():
     import importlib.util
-    tools = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT) / "tools" / "mallard_vtu.py"  # a 3D-capable checkout
+    tools = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT) / "tools" / "mallard" / "vtu.py"  # a 3D-capable checkout
     spec = importlib.util.spec_from_file_location("mallard_vtu3d", tools)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

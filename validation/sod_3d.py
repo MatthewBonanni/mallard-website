@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from common import FIG, PLUM, RUNS, TEAL
-from mallard_vtu import read_vtu_cells
+from mallard.vtu import read_vtu_cells
 from sod import exact, exact_cell_avg
 
 N = 200

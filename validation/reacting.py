@@ -7,8 +7,8 @@ mallard reactor for H2/air (mechanisms/h2o2.yaml) and CH4/air (gri30.yaml) at T0
 phi = 0.5, 1, 2 and 1 atm, and Cantera's IdealGasReactor (rtol 1e-12) on the same output times;
 the ignition delay is the time of the maximum of dT/dt on those samples (parabolic peak).
 The shock tube is examples/reactive_shock_tube at 50, 25 and 12.5 um cells; the detonation is
-examples/detonation_1d started from the ZND profile of tools/detonation_reference.py (via
-tools/znd_restart.py) at 10, 20 and 40 cells per induction length.
+examples/detonation_1d started from the ZND profile of tools/setup/detonation_reference.py (via
+tools/setup/znd_restart.py) at 10, 20 and 40 cells per induction length.
 """
 import json
 import re
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 from common import FIG, FLAME, GREY, PLUM, ROOT, RUNS, TEAL, COLORS, example, run, sub
 
-sys.path.insert(0, str(ROOT / "tools"))
+sys.path[:0] = [str(ROOT / "examples" / "detonation_1d"), str(ROOT / "examples" / "reactive_shock_tube")]
 import plot_detonation  # noqa: E402
 import plot_reactive_shock_tube  # noqa: E402
 
@@ -221,7 +221,7 @@ def detonation():
     mech = ROOT / "mechanisms" / "h2o2.yaml"
     ref_log = d0 / "znd.log"
     if not znd.exists():
-        out = subprocess.run([py, str(ROOT / "tools" / "detonation_reference.py"), str(mech), "ohmech",
+        out = subprocess.run([py, str(ROOT / "tools" / "setup" / "detonation_reference.py"), str(mech), "ohmech",
                               "H2:2, O2:1, AR:7", "298", "6670", str(znd)], check=True, capture_output=True,
                              text=True).stdout
         ref_log.write_text(out)
@@ -239,7 +239,7 @@ def detonation():
         d = RUNS / name
         d.mkdir(parents=True, exist_ok=True)
         if not (d / "znd.restart").exists():
-            subprocess.run([py, str(ROOT / "tools" / "znd_restart.py"), str(znd), str(mech), "ohmech", str(nx),
+            subprocess.run([py, str(ROOT / "tools" / "setup" / "znd_restart.py"), str(znd), str(mech), "ohmech", str(nx),
                             "0.6", "0.25", str(d / "znd.restart")], check=True)
         run(name, sub(base, Nx=nx), threads=8)
         pvd = d / "solut" / "detonation.pvd"

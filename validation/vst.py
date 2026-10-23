@@ -4,7 +4,7 @@
 
 Reads the t = 1 snapshot of examples/viscous_shock_tube run in runs/val_vst (500,000
 quads, ~58,500 steps: use a GPU build) and uses the reference data and triple-point
-fit of tools/plot_viscous_shock_tube.py.
+fit of examples/viscous_shock_tube/plot_viscous_shock_tube.py.
 """
 import json
 import sys
@@ -12,8 +12,10 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-from common import FIG, FLAME, PLUM, TEAL, RUNS, last_vtu
-from mallard_vtu import read_vtu
+from common import FIG, FLAME, PLUM, TEAL, RUNS, ROOT, last_vtu
+from mallard.vtu import read_vtu
+
+sys.path.insert(0, str(ROOT / "examples" / "viscous_shock_tube"))
 from plot_viscous_shock_tube import REF_TRIPLE_POINT, REF_VORTEX_HEIGHT, REF_WALL, structured, triple_point
 
 

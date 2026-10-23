@@ -2,10 +2,10 @@
 
     flames.py RUNS_DIR CANTERA_DIR
 
-RUNS_DIR holds one run per flame, h2_phi<phi>_<mix|unity>, made by tools/flame_restart.py (20 cells per
-thermal thickness, two flame times, CFL 0.4) from the full flames that tools/flame_reference.py wrote with
+RUNS_DIR holds one run per flame, h2_phi<phi>_<mix|unity>, made by tools/setup/flame_restart.py (20 cells per
+thermal thickness, two flame times, CFL 0.4) from the full flames that tools/setup/flame_reference.py wrote with
 CANTERA_DIR as its output (flames.csv and the <case>.csv profiles). The flame speed is the consumption speed of
-tools/flame_speed.py, averaged over the last third of the run.
+tools/post/flame_speed.py, averaged over the last third of the run.
 """
 import json
 import sys
@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 
 from common import FIG, FLAME, GREY, ROOT, TEAL
 
-sys.path.insert(0, str(ROOT / "tools"))
+sys.path.insert(0, str(ROOT / "tools" / "post"))
 import flame_speed  # noqa: E402
 
 PHIS = (0.6, 0.8, 1.0, 1.2, 1.4)
