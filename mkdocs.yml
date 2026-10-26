@@ -123,6 +123,7 @@ nav:
       - Input files: docs/guide/input_files.md
   - User guide:
       - Meshes: docs/guide/meshes.md
+      - Geometry: docs/guide/geometry.md
       - Physics: docs/guide/physics.md
       - Thermochemistry: docs/guide/thermochemistry.md
       - Large-eddy simulation: docs/guide/les.md
