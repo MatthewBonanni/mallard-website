@@ -127,6 +127,16 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 !!! note "What's new here"
     Mallard runs TENO-E, a published unstructured TENO scheme, on every 3D cell type at orders 3 to 6. To make that stable it adds two stencil rules we have not found published: each cell's central stencil grows until its reconstruction's Lebesgue constant is bounded, and on thin cells candidates are ranked in the metric of the local mesh spacing. The rest of the numerics are published methods, cited where they are used. [What is new in Mallard's numerics](docs/numerics/originality.md)
 
+## Measuring a flow
+
+Probes take measurements while a case runs. Wall probes give C<sub>p</sub>, C<sub>f</sub>, y<sup>+</sup>, shear and heat flux. Exact cut planes, curves and surfaces give mass, momentum and enthalpy fluxes. Any probe can also write integrals, means and extrema over its geometry. Around a cylinder at Re = 40, the integrals of the wall tractions give the drag, and the net outflow through a closed circle settles to zero. [Probes](docs/guide/output.md#probes-probes)
+
+<figure class="mallard-figure" markdown>
+![Measurements around a cylinder at Re = 40: mass flux samples on a closed circle and a cut line, the wall pressure and skin-friction coefficients against angle, first-cell y+ with its mean and maximum, and the drag and the circle's net outflow over time](docs/images/guide/probe_measurements-light.svg#only-light){ loading=lazy }
+![Measurements around a cylinder at Re = 40: mass flux samples on a closed circle and a cut line, the wall pressure and skin-friction coefficients against angle, first-cell y+ with its mean and maximum, and the drag and the circle's net outflow over time](docs/images/guide/probe_measurements-dark.svg#only-dark){ loading=lazy }
+<figcaption>One short run, four probes: mass flux through a closed circle and a cut, the wall's C<sub>p</sub> and C<sub>f</sub>, y<sup>+</sup> with its mean and maximum, and integrals over time.</figcaption>
+</figure>
+
 ## Validated
 
 Every number below comes from a Mallard run compared with an exact solution, theory or published reference data; the [validation page](validation.md) has the setups, figures and error tables.
