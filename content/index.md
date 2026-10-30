@@ -101,13 +101,13 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions; misspelled or unused keys are errors, with suggestions
-    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard upgrade-input` for inputs from older releases
+    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard input upgrade` for inputs from older releases
     - Conservative high-order remap of a restart onto another mesh; versioned files, readable by every later release of the same major version
-    - VTU (ParaView) or parallel HDF5 with XDMF; boundary-zone surfaces
-    - Running means and covariances, point and line probes, domain integrals, wall forces
+    - VTKHDF for ParaView (default; written by all ranks in parallel, curved cells as quadratic cells) or VTU; boundary-zone surfaces
+    - Running means and covariances; probes on points, curves, surfaces, exact cut planes and boundary zones (cell averages or high-order point values; wall shear, C<sub>f</sub>, C<sub>p</sub>, heat flux, y<sup>+</sup> and fluxes through any surface; CSV, HDF5 or VTK, with integrals, means and extrema); domain integrals, wall forces
     - Heat release, production rates and detonation soot foils
 
-    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
+    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/output.md#probes-probes) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
 
 -   :material-check-decagram:{ .lg .middle } __Validated and tested__
 
