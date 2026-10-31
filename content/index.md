@@ -101,13 +101,13 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions; misspelled or unused keys are errors, with suggestions
-    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard upgrade-input` for inputs from older releases
+    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard input upgrade` for inputs from older releases
     - Conservative high-order remap of a restart onto another mesh; versioned files, readable by every later release of the same major version
-    - VTU (ParaView) or parallel HDF5 with XDMF; boundary-zone surfaces
-    - Running means and covariances, point and line probes, domain integrals, wall forces
+    - VTKHDF for ParaView (default; written by all ranks in parallel, curved cells as quadratic cells) or VTU; boundary-zone surfaces
+    - Running means and covariances; probes on points, curves, surfaces, exact cut planes and boundary zones (cell averages or high-order point values; wall shear, C<sub>f</sub>, C<sub>p</sub>, heat flux, y<sup>+</sup> and fluxes through any surface; CSV, HDF5 or VTK, with integrals, means and extrema); domain integrals, wall forces
     - Heat release, production rates and detonation soot foils
 
-    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
+    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/output.md#probes-probes) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
 
 -   :material-check-decagram:{ .lg .middle } __Validated and tested__
 
@@ -126,6 +126,16 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
 !!! note "What's new here"
     Mallard runs TENO-E, a published unstructured TENO scheme, on every 3D cell type at orders 3 to 6. To make that stable it adds two stencil rules we have not found published: each cell's central stencil grows until its reconstruction's Lebesgue constant is bounded, and on thin cells candidates are ranked in the metric of the local mesh spacing. The rest of the numerics are published methods, cited where they are used. [What is new in Mallard's numerics](docs/numerics/originality.md)
+
+## Measuring a flow
+
+Probes take measurements while a case runs. Wall probes give C<sub>p</sub>, C<sub>f</sub>, y<sup>+</sup>, shear and heat flux. Exact cut planes, curves and surfaces give mass, momentum and enthalpy fluxes. Any probe can also write integrals, means and extrema over its geometry. Around a cylinder at Re = 40, the integrals of the wall tractions give the drag, and the net outflow through a closed circle settles to zero. [Probes](docs/guide/output.md#probes-probes)
+
+<figure class="mallard-figure" markdown>
+![Measurements around a cylinder at Re = 40: mass flux samples on a closed circle and a cut line, the wall pressure and skin-friction coefficients against angle, first-cell y+ with its mean and maximum, and the drag and the circle's net outflow over time](docs/images/guide/probe_measurements-light.svg#only-light){ loading=lazy }
+![Measurements around a cylinder at Re = 40: mass flux samples on a closed circle and a cut line, the wall pressure and skin-friction coefficients against angle, first-cell y+ with its mean and maximum, and the drag and the circle's net outflow over time](docs/images/guide/probe_measurements-dark.svg#only-dark){ loading=lazy }
+<figcaption>One short run, four probes: mass flux through a closed circle and a cut, the wall's C<sub>p</sub> and C<sub>f</sub>, y<sup>+</sup> with its mean and maximum, and integrals over time.</figcaption>
+</figure>
 
 ## Validated
 
