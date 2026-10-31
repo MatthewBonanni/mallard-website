@@ -51,6 +51,7 @@ DESCRIPTIONS = {
     "guide/probes.md": "Mallard probes on points, curves, cut planes, surfaces and boundary zones, wall forces and domain integrals.",
     "guide/statistics.md": "In-situ statistics in Mallard: running time averages and covariances, spectra and two-point correlations, phase averages.",
     "guide/parallel.md": "Run Mallard on several CPU threads, GPUs or MPI ranks: partitions, halos, output, restarts and multi-GPU scaling.",
+    "guide/running.md": "Controlling a running Mallard job with signals and mallard ctl, MPI launchers and Slurm, divergence, and Kubernetes Jobs and MPIJobs.",
     "guide/performance.md": "Measured throughput of Mallard on CPUs and A100 GPUs: the flow solver, 3D TENO-E setup and memory, reacting mixtures and chemistry.",
     "numerics/overview.md": "Mallard's numerical methods: finite volume discretization, time step, reconstruction, Riemann solvers, boundary conditions and viscous fluxes.",
     "numerics/teno_e.md": "How Mallard implements TENO-E reconstruction of orders 3 to 6 on unstructured 2D and 3D meshes.",
