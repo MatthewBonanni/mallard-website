@@ -34,7 +34,7 @@ gmsh.initialize()
 gmsh.option.setNumber("General.Terminal", 0)
 gmsh.option.setNumber("General.NumThreads", 4)
 geo = gmsh.model.geo
-duck = outline(400)
+duck = np.asarray(outline(400))
 pts = [geo.addPoint(x, y, 0) for x, y in duck]
 body = geo.addSpline(pts + [pts[0]])
 c = [geo.addPoint(x, y, 0) for x, y in [(-0.4, -0.5), (1.5, -0.5), (1.5, 1.0), (-0.4, 1.0)]]
@@ -92,8 +92,8 @@ for ax, curved in zip(axs, (False, True)):
             ax.plot(arc[:, 0], arc[:, 1], ":", color=PLUM, lw=0.8)
             ax.plot(ch[:, 0], ch[:, 1], color=TEAL, lw=2.4, solid_capstyle="round")
     ax.set_aspect("equal")
-    ax.set_xlim(-0.18, 1.22)
-    ax.set_ylim(-0.3, 0.64)
+    ax.set_xlim(duck[:, 0].min() - 0.18, duck[:, 0].max() + 0.12)
+    ax.set_ylim(duck[:, 1].min() - 0.09, duck[:, 1].max() + 0.135)
     ax.axis("off")
 axs[0].set_title("Straight faces: chords through the corners (shaded: what they cut off)", fontsize=11, color=PLUM)
 axs[1].set_title("Curved faces: Mallard's cubic map of the Gmsh boundary elements", fontsize=11, color=PLUM)
