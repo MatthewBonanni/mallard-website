@@ -62,7 +62,7 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 
 <figure id="pulsed-jet" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/pulsed_jet_poster.jpg" aria-label="Azimuthal vorticity of a pulsed round jet launching a train of vortex rings, with the rings' core positions and the inlet velocity against its target"><source src="../media/pulsed_jet.mp4" type="video/mp4"></video>
-<figcaption markdown>**Pulsed jet launching vortex rings** (axisymmetric, Re<sub>D</sub> = 2000). A `mass_flow_inlet` whose mass flux is an expression of the radius and time ejects a slug of L / D = 3 per period, below the formation number, and each slug rolls up into a vortex ring. The first ring travels at 0.40 U<sub>0</sub>, the rings in its wake at 0.46 U<sub>0</sub>, with 1.01–1.11 times the circulation of the slug model; 442,368 quadrilaterals (D / 96). [Example: `pulsed_jet`](docs/examples.md#pulsed-jet)</figcaption>
+<figcaption markdown>**Pulsed jet launching vortex rings** (axisymmetric, Re<sub>D</sub> = 2000). A nozzle in an adiabatic wall, a `mass_flow_inlet` whose mass flux is an expression of time, ejects a slug of L / D = 3 per period, below the formation number, and each slug rolls up into a vortex ring. The first ring travels at 0.40 U<sub>0</sub>, the rings in its wake at 0.45–0.46 U<sub>0</sub>, with 1.02–1.12 times the circulation of the slug model; 442,368 quadrilaterals (D / 96). [Example: `pulsed_jet`](docs/examples.md#pulsed-jet)</figcaption>
 </figure>
 
 <figure id="shock-bubble" markdown>
