@@ -60,6 +60,11 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figcaption markdown>**Sphere at Re = 300, in 3D.** Periodic shedding of hairpin vortices from a wake with one plane of symmetry: smoothed Q-criterion isosurfaces (Q = 0.02 (U/D)²) colored by streamwise velocity, and the drag and lift coefficients. [Example: `sphere_re300`](docs/examples.md#sphere-re300) · [validation](validation.md#sphere-re300)</figcaption>
 </figure>
 
+<figure id="pulsed-jet" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/pulsed_jet_poster.jpg" aria-label="Azimuthal vorticity of a pulsed round jet launching a train of vortex rings, with the rings' core positions and the inlet velocity against its target"><source src="../media/pulsed_jet.mp4" type="video/mp4"></video>
+<figcaption markdown>**Pulsed jet launching vortex rings** (axisymmetric, Re<sub>D</sub> = 2000). A `mass_flow_inlet` whose mass flux is an expression of the radius and time ejects a slug of L / D = 3 per period, below the formation number, and each slug rolls up into a vortex ring. The first ring travels at 0.40 U<sub>0</sub>, the rings in its wake at 0.46 U<sub>0</sub>, with 1.01–1.11 times the circulation of the slug model; 442,368 quadrilaterals (D / 96). [Example: `pulsed_jet`](docs/examples.md#pulsed-jet)</figcaption>
+</figure>
+
 <figure id="shock-bubble" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/shock_bubble_3d_poster.jpg" aria-label="Helium surface and vortex ring of a shock-accelerated helium bubble, numerical schlieren on the symmetry plane and interface positions against Haas and Sturtevant"><source src="../media/shock_bubble_3d.mp4" type="video/mp4"></video>
 <figcaption markdown>**Shock–helium bubble interaction, in 3D** (Haas & Sturtevant 1987). A Mach 1.25 shock in air hits a helium bubble, which rolls up into a vortex ring: the helium surface, the vortex sheet and ring colored by helium fraction, and numerical schlieren on the symmetry plane. [Example: `shock_bubble_3d`](docs/examples.md#shock-bubble-3d) · [validation](validation.md#shock-bubble)</figcaption>
