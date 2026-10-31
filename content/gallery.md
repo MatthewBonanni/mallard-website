@@ -41,8 +41,8 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 </figure>
 
 <figure class="mallard-gallery__pair" id="curved-boundaries-2d" markdown>
-![The mallard outline meshed coarse: straight wall faces cutting off the bill, head, wing tip and tail, against curved faces following the outline](validation/curved_faces_mallard.png){ loading=lazy width=1800 height=2040 .mallard-gallery__plot }
-<figcaption markdown>**Curved boundaries in 2D.** The `mallard` example's outline meshed coarse with cubic Gmsh elements; only the wall cells are drawn. Top: chords through the corners, which cut off the shaded slivers at the bill, head, wing tip and tail. Bottom: Mallard's curved faces, which follow the outline. [Validation details](validation.md#curved-boundaries).</figcaption>
+![The mallard outline meshed coarse: straight wall faces cutting off the bill, head, wing tips and tail, against curved faces following the outline](validation/curved_faces_mallard.png){ loading=lazy width=1800 height=2040 .mallard-gallery__plot }
+<figcaption markdown>**Curved boundaries in 2D.** The `mallard` example's outline meshed coarse with cubic Gmsh elements; only the wall cells are drawn. Top: chords through the corners, which cut off the shaded slivers at the bill, head, wing tips and tail. Bottom: Mallard's curved faces, which follow the outline. [Validation details](validation.md#curved-boundaries).</figcaption>
 </figure>
 
 <figure id="isotropic-turbulence" markdown>

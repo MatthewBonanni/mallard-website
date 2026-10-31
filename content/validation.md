@@ -125,8 +125,8 @@ Since 0.8.0, faces on curved walls follow the true geometry to the order of the 
 Mallard keeps the corners of every cell and curves the faces on the wall. The figures below show this on coarse Gmsh meshes with cubic boundary elements, whose extra nodes Gmsh places on the geometry. The straight panels show the faces through the corners, as with `[mesh] curved_geometry = false`. The curved panels show Mallard's face map, the cubic through each boundary element's nodes, sampled finely.
 
 <figure class="mallard-figure" markdown>
-![The mallard outline meshed coarse with Gmsh: straight wall faces cutting off the bill, head, wing tip and tail, against the curved faces following the outline](validation/curved_faces_mallard.png){ loading=lazy width=1800 height=2040 style="max-width: 40rem; margin: 0 auto" }
-<figcaption>The outline of the `mallard` example, meshed with triangles of size 0.1 (36 faces on the wall); only the triangles touching the wall are drawn. Top: chords through the corners, with the area they cut off shaded. Bottom: the curved faces.</figcaption>
+![The mallard outline meshed coarse with Gmsh: straight wall faces cutting off the bill, head, wing tips and tail, against the curved faces following the outline](validation/curved_faces_mallard.png){ loading=lazy width=1800 height=2040 style="max-width: 40rem; margin: 0 auto" }
+<figcaption>The outline of the `mallard` example, meshed with triangles of size 0.1 (40 faces on the wall); only the triangles touching the wall are drawn. Top: chords through the corners, with the area they cut off shaded. Bottom: the curved faces.</figcaption>
 </figure>
 
 <figure class="mallard-figure" markdown>
