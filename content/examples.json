@@ -61,6 +61,11 @@
     "alt": "Mach number of Mach 8 flow over a flying mallard at t = 0.75",
     "more": "gallery.md"
   },
+  "mallard_logo": {
+    "image": "media/mallard_logo_poster.jpg",
+    "alt": "Density of a Mach 1.5 shock running through the Mallard logo painted in gas, at t = 3.6",
+    "more": "gallery.md#mallard-logo"
+  },
   "taylor_green_3d": {
     "image": "media/tgv_poster.jpg",
     "alt": "Q-criterion isosurfaces of the Taylor-Green vortex at 256 cubed and its dissipation rate against the spectral DNS",
