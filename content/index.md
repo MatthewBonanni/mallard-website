@@ -37,7 +37,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Low-Mach correction of the upwind dissipation
     - Forward Euler, SSPRK3, RK4, low-storage SSPRK(5,4) and 2N RK4(5), at a CFL number, a fixed step or embedded error-controlled steps
 
-    [Numerics guide](docs/guide/numerics.md) · [Numerical methods](docs/numerics/overview.md) · [What is new](docs/numerics/originality.md)
+    [Numerics guide](docs/guide/numerics.md) · [Numerical methods](docs/numerics/overview.md) · [What's new in the numerics](docs/numerics/originality.md)
 
 -   :material-water:{ .lg .middle } __Physics__
 
@@ -107,7 +107,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Running means and covariances; probes on points, curves, surfaces, exact cut planes and boundary zones (cell averages or high-order point values; wall shear, C<sub>f</sub>, C<sub>p</sub>, heat flux, y<sup>+</sup> and fluxes through any surface; CSV, HDF5 or VTK, with integrals, means and extrema); domain integrals, wall forces
     - Heat release, production rates and detonation soot foils
 
-    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/output.md#probes-probes) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
+    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/probes.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
 
 -   :material-check-decagram:{ .lg .middle } __Validated and tested__
 
@@ -129,7 +129,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
 ## Measuring a flow
 
-Probes take measurements while a case runs. Wall probes give C<sub>p</sub>, C<sub>f</sub>, y<sup>+</sup>, shear and heat flux. Exact cut planes, curves and surfaces give mass, momentum and enthalpy fluxes. Any probe can also write integrals, means and extrema over its geometry. Around a cylinder at Re = 40, the integrals of the wall tractions give the drag, and the net outflow through a closed circle settles to zero. [Probes](docs/guide/output.md#probes-probes)
+Probes take measurements while a case runs. Wall probes give C<sub>p</sub>, C<sub>f</sub>, y<sup>+</sup>, shear and heat flux. Exact cut planes, curves and surfaces give mass, momentum and enthalpy fluxes. Any probe can also write integrals, means and extrema over its geometry. Around a cylinder at Re = 40, the integrals of the wall tractions give the drag, and the net outflow through a closed circle settles to zero. [Probes](docs/guide/probes.md)
 
 <figure class="mallard-figure" markdown>
 ![Measurements around a cylinder at Re = 40: mass flux samples on a closed circle and a cut line, the wall pressure and skin-friction coefficients against angle, first-cell y+ with its mean and maximum, and the drag and the circle's net outflow over time](docs/images/guide/probe_measurements-light.svg#only-light){ loading=lazy }
@@ -185,5 +185,5 @@ This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a 
 
 ## Citing Mallard
 
-Mallard is archived on Zenodo: [doi:10.5281/zenodo.23112953](https://doi.org/10.5281/zenodo.23112953) (all versions; each release also has its own DOI there). Cite the software with the metadata in its [`CITATION.cff`](https://github.com/MatthewBonanni/mallard/blob/main/CITATION.cff) (GitHub's "Cite this repository" button), and the papers behind the methods you use, listed with where Mallard uses them on the [References](docs/references.md) page.
+Mallard is archived on Zenodo: [doi:10.5281/zenodo.23112953](https://doi.org/10.5281/zenodo.23112953) (all versions; each release also has its own DOI there). Cite the software with the metadata in its [`CITATION.cff`](https://github.com/MatthewBonanni/mallard/blob/main/CITATION.cff) (GitHub's "Cite this repository" button), and the papers behind the methods you use, listed with where Mallard uses them on the [Bibliography](docs/references.md) page.
 

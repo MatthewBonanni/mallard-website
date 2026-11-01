@@ -116,49 +116,52 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Getting started:
+  - Get started:
       - docs/index.md
       - Installation: docs/installation.md
-      - Quick start: docs/guide/quick_start.md
-      - Input files: docs/guide/input_files.md
+      # The pages of docs/tutorials/: the index, then the path numbered in its table's order (pages.py)
+      - TUTORIALS
   - User guide:
+      - Input files: docs/guide/input_files.md
       - Meshes: docs/guide/meshes.md
       - Geometry: docs/guide/geometry.md
       - Physics: docs/guide/physics.md
       - Thermochemistry: docs/guide/thermochemistry.md
       - Large-eddy simulation: docs/guide/les.md
-      - Numerics: docs/guide/numerics.md
+      - Initialization and restarts: docs/guide/initialization.md
       - Boundary conditions: docs/guide/boundary_conditions.md
       - Sources and sponges: docs/guide/sources.md
-      - Initialization and restarts: docs/guide/initialization.md
+      - Numerics: docs/guide/numerics.md
       - Output: docs/guide/output.md
       - Probes and monitors: docs/guide/probes.md
       - Statistics: docs/guide/statistics.md
-      - Running in parallel: docs/guide/parallel.md
       - Running and controlling jobs: docs/guide/running.md
+      - Running in parallel: docs/guide/parallel.md
       - Performance: docs/guide/performance.md
+  - Input builder: docs/builder.md
+  - Examples: docs/examples.md
+  - Gallery: gallery.md
+  - Validation:
+      - Validation cases: validation.md
+      - Verification manual: docs/verification/index.md
       - Performance dashboard: docs/dashboard.md
-      # New pages of docs/guide/ (pages.py)
-      - GUIDE_EXTRA
-  - Tutorials:
-      # The pages of docs/tutorials/: the index, then the path in its table's order (pages.py)
-      - TUTORIALS
-  - Theory manual:
-      # The chapters of docs/theory/, in the order of its index (pages.py)
-      - THEORY
+  - Theory:
+      - Theory manual:
+          # The chapters of docs/theory/, in the order of its index (pages.py)
+          - THEORY
+      - Numerical studies: docs/numerics/overview.md
+      - TENO-E details: docs/numerics/teno_e.md
+      - "What's new in the numerics": docs/numerics/originality.md
   - Reference:
       - Input reference: docs/input.md
-      - Input builder: docs/builder.md
-      - Numerical methods: docs/numerics/overview.md
-      - Verification manual: docs/verification/index.md
-      - TENO-E details: docs/numerics/teno_e.md
-      - What is new: docs/numerics/originality.md
+      - Command line: docs/guide/cli.md
       - Tools: docs/tools.md
-      - References: docs/references.md
+      - Bibliography: docs/references.md
       - API reference: docs/api/index.html
-      - Developer notes:
-          # The design notes of docs/design/ (pages.py)
+  - Developers:
+      - Contributing: docs/contributing.md
+      - Writing documentation: docs/design/documentation.md
+      - Design notes:
+          # The other design notes of docs/design/ (pages.py)
           - DESIGN_NOTES
-  - Examples: docs/examples.md
-  - Validation: validation.md
-  - Gallery: gallery.md
+      - Performance log: docs/design/performance.md

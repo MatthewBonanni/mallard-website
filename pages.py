@@ -3,7 +3,7 @@
 
     pages.py DOCSRC SITE_DIR REF DOCS_REF MALLARD_CHECKOUT
 
-DOCSRC holds docs/, README.md, examples/README.md and tools/README.md of the
+DOCSRC holds docs/, README.md, CONTRIBUTING.md, examples/README.md and tools/README.md of the
 Mallard ref DOCS_REF (REF itself, or main when REF predates the user guide).
 Writes content/docs/ (gitignored, except the landing page index.md) and
 mkdocs.build.yml. Links in the Mallard pages are written for GitHub; here they
@@ -33,6 +33,7 @@ DESCRIPTIONS = {
     "installation.md": "Build Mallard with CMake and Kokkos for CPUs, NVIDIA or AMD GPUs and MPI, run it, test it and post-process its output.",
     "input.md": "Every key of Mallard's TOML input file: run control, meshes, physics, initial and boundary conditions, numerics and output.",
     "examples.md": "Mallard's example cases by topic, from the Sod shock tube to turbulent flames, with their cost, setup and results.",
+    "contributing.md": "How changes to Mallard land: reporting bugs, building and testing, code style, adding a feature end to end, pull requests and CI.",
     "tools.md": "The Python scripts that come with Mallard: readers, plots, mesh generators, initial states, references and analyses.",
     "guide/quick_start.md": "Build Mallard and run a first case in three commands, then where to go next.",
     "tutorials/first_simulation.md": "Build Mallard, run the Sod shock tube, compare with the exact solution, then move to 2D and 3D cases.",
@@ -77,7 +78,7 @@ DESCRIPTIONS = {
     "design/axisymmetric.md": "Design notes on axisymmetric (r-z) flows in Mallard: revolved finite volumes, sources, the axis and reconstruction.",
 }
 
-GENERATED = ["input.md", "examples.md", "installation.md", "tools.md", "references.md", "numerics", "design", "guide",
+GENERATED = ["input.md", "examples.md", "installation.md", "contributing.md", "tools.md", "references.md", "numerics", "design", "guide",
              "theory", "verification", "tutorials", "images", "input-keys.json", "templates.json"]
 
 REPO_FILES = set()
@@ -123,6 +124,8 @@ def main():
     readme = (docsrc / "README.md").read_text()
     body = readme[readme.index("## Building"):readme.index("## Contributing")]
     pages["installation.md"] = ("README.md", "# Installation\n\n" + body.rstrip() + "\n")
+    if (docsrc / "CONTRIBUTING.md").is_file():
+        pages["contributing.md"] = ("CONTRIBUTING.md", (docsrc / "CONTRIBUTING.md").read_text())
     pages["tools.md"] = ("tools/README.md", (docsrc / "tools" / "README.md").read_text())
     pages["examples.md"] = ("examples/README.md", examples_page(docsrc / "examples" / "README.md",
                                                                  content / "examples.json", gh_ref,
@@ -131,7 +134,7 @@ def main():
         for rel in [r for r in pages if r.startswith("numerics/")]:
             src, text = pages[rel]
             if "references.md" not in text:
-                pages[rel] = (src, text.rstrip() + "\n\nSources of these methods: [References](../references.md).\n")
+                pages[rel] = (src, text.rstrip() + "\n\nSources of these methods: [Bibliography](../references.md).\n")
 
     images = set()
 
@@ -406,50 +409,47 @@ def site_url(path):
 
 
 def write_nav(site, docs, pages):
-    """mkdocs.build.yml: the nav of mkdocs.yml with the design notes and any new guide pages."""
+    """mkdocs.build.yml: the nav of mkdocs.yml with the tutorials, theory chapters and design notes."""
     config = (site / "mkdocs.yml").read_text()
     listed = set(re.findall(r"docs/([\w/.-]+\.md)", config))
+
+    def title(rel):
+        return re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
+
+    def fill(placeholder, lines):
+        return re.sub(rf"^( *)- {placeholder}$", lambda m: "\n".join(m.group(1) + "- " + line for line in lines),
+                      config, flags=re.M)
+
     lines = []
-    for rel in sorted(p for p in pages if p.startswith("design/")):
-        title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
-        title = re.sub(r",? *issue #\d+$", "", re.sub(r"^Design( note)?: *", "", title))
-        lines.append(f'          - "{title[0].upper() + title[1:]}": docs/{rel}')
-    config = re.sub(r'^ *- DESIGN_NOTES$', "\n".join(lines), config, flags=re.M)
-    extra = []
-    for rel in sorted(p for p in pages if p.startswith("guide/") and p not in listed):
-        title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
-        extra.append(f'      - "{title}": docs/{rel}')
-    config = re.sub(r'^ *- GUIDE_EXTRA$', "\n".join(extra), config, flags=re.M)
+    for rel in sorted(p for p in pages if p.startswith("design/") and p not in listed):
+        t = re.sub(r",? *issue #\d+$", "", re.sub(r"^Design( note)?: *", "", title(rel)))
+        lines.append(f'"{t[0].upper() + t[1:]}": docs/{rel}')
+    config = fill("DESIGN_NOTES", lines)
+    for rel in sorted(p for p in pages if p.startswith("guide/") and p not in listed and p != "guide/quick_start.md"):
+        print(f"warning: {rel} is not in the nav of mkdocs.yml")
     index = pages.get("tutorials/index.md", ("", ""))[1]
-    path = [posixpath.normpath(posixpath.join("tutorials", t)) for t in re.findall(r"\]\(([\w.-]+\.md)\)", index)]
-    order = {rel: k for k, rel in enumerate(dict.fromkeys(path))}
+    path = [(n, posixpath.normpath(posixpath.join("tutorials", t)))
+            for n, t in re.findall(r"^\| *(\d*) *\| *\[[^\]]*\]\(([\w.-]+\.md)\)", index, re.M)]
+    number = {rel: n for n, rel in reversed(path)}
+    order = {rel: k for k, rel in enumerate(dict.fromkeys(rel for _, rel in path))}
     tutorials = sorted((p for p in pages if p.startswith("tutorials/")),
                        key=lambda p: (not p.endswith("/index.md"), order.get(p, len(order)), p))
     lines = []
     for rel in tutorials:
         if rel.endswith("/index.md"):
-            lines.append(f'      - docs/{rel}')
+            lines.append(f'"{title(rel)}": docs/{rel}')
         else:
-            title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
-            lines.append(f'      - "{title}": docs/{rel}')
-    if lines:
-        config = re.sub(r'^ *- TUTORIALS$', "\n".join(lines), config, flags=re.M)
-    else:
-        config = re.sub(r'^ *- Tutorials:\n(?: *#[^\n]*\n)? *- TUTORIALS\n', "", config, flags=re.M)
+            lines.append(f'"{number[rel] + ". " if number.get(rel) else ""}{title(rel)}": docs/{rel}')
+    config = fill("TUTORIALS", lines)
     theory = [p for p in pages if p.startswith("theory/")]
     if theory:
         index = pages.get("theory/index.md", ("", ""))[1]
         linked = [posixpath.normpath(posixpath.join("theory", t)) for t in re.findall(r"\]\(([\w.-]+\.md)\)", index)]
         order = {rel: k for k, rel in enumerate(linked)}
         theory.sort(key=lambda p: (p != "theory/index.md", order.get(p, len(order)), p))
-        lines = []
-        for rel in theory:
-            if rel == "theory/index.md":
-                lines.append(f'      - "Overview and notation": docs/{rel}')
-            else:
-                title = re.search(r"^# (.+)$", pages[rel][1], re.M).group(1).replace('"', "'")
-                lines.append(f'      - "{title}": docs/{rel}')
-        config = re.sub(r'^ *- THEORY$', "\n".join(lines), config, flags=re.M)
+        lines = [f'"{"Overview and notation" if rel == "theory/index.md" else title(rel)}": docs/{rel}'
+                 for rel in theory]
+        config = fill("THEORY", lines)
     else:
         config = re.sub(r'^ *- Theory manual:\n(?: *#[^\n]*\n)? *- THEORY\n', "", config, flags=re.M)
     # Nav entries for pages this ref does not have (e.g. a release that predates them)
