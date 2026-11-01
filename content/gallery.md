@@ -120,4 +120,9 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figcaption markdown>**Mach 8 flow over a mallard.** Inviscid flow over the silhouette of a flying mallard (body length about 1.1), started impulsively: bow shocks form off the bill, head and wing, merge, and the wake rolls up behind the tail. [Example: `mallard`](docs/examples.md#mallard)</figcaption>
 </figure>
 
+<figure id="mallard-logo" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/mallard_logo_poster.jpg" aria-label="Density and numerical schlieren of a Mach 1.5 shock running through the Mallard logo painted in gas and around the logo's duck, t = 0 to 5"><source src="../media/mallard_logo.mp4" type="video/mp4"></video>
+<figcaption markdown>**The Mallard logo as an initial condition.** The logo image, read as a table by `[[initialize.data]]`, paints the gas: the frame and the wordmark three times denser than the air, the flame trail a quarter as dense; the logo's duck is a curved wall. A Mach 1.5 shock wraps around the duck and runs through the letters, whose edges roll up (Richtmyer–Meshkov) as they drift downstream. Euler, TENO5 on 1.26 million cubic triangles, t = 0 to 5. [Example: `mallard_logo`](docs/examples.md#mallard-logo)</figcaption>
+</figure>
+
 </div>
