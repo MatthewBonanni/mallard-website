@@ -4,7 +4,7 @@
 #   ./build.sh MALLARD_CHECKOUT [REF]
 #
 # REF is the latest release (default: the checkout's latest release tag). The
-# documentation pages come from docs/, README.md, examples/ and tools/README.md of
+# documentation pages come from docs/, README.md, CONTRIBUTING.md, examples/ and tools/README.md of
 # Mallard's main branch at the root, and of each release up to REF that has the user
 # guide under v<version>/, assembled by pages.py; the API reference is generated with
 # Doxygen from main into out/docs/api. Needs mkdocs-material, mkdocs-redirects,
@@ -57,6 +57,7 @@ assemble() {
     mkdir -p "$docsrc"
     local extra=()
     git -C "$src" cat-file -e "$3:templates/manifest.toml" 2>/dev/null && extra+=(templates/manifest.toml)
+    git -C "$src" cat-file -e "$3:CONTRIBUTING.md" 2>/dev/null && extra+=(CONTRIBUTING.md)
     # examples/: the README, and each example's card.toml and input files (for the cards' settings)
     git -C "$src" archive "$3" docs README.md tools/README.md ${extra[@]+"${extra[@]}"} examples/README.md \
         $(git -C "$src" ls-tree -r --name-only "$3" examples | grep '\.toml$') | tar -x -C "$docsrc"
