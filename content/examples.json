@@ -86,6 +86,11 @@
     "alt": "Hairpin vortices shed by a sphere at Re = 300",
     "more": "validation.md#sphere-re300"
   },
+  "pulsed_jet": {
+    "image": "media/pulsed_jet_poster.jpg",
+    "alt": "Azimuthal vorticity of a pulsed jet launching a train of vortex rings",
+    "more": "gallery.md#pulsed-jet"
+  },
   "h2_ignition": {
     "image": "validation/ignition.png",
     "alt": "Temperature history of constant-volume H2/air ignition and ignition delays of H2/air and CH4/air against Cantera",
