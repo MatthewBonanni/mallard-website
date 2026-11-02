@@ -1,7 +1,5 @@
 ---
 title: Validation
-hide:
-  - navigation
 description: Mallard against exact solutions, theory and reference data in 2D and 3D - order of accuracy, shock tubes and blast waves, shocks on bodies, viscous flow, turbulence (DNS), reacting flow and large-eddy simulation.
 ---
 
