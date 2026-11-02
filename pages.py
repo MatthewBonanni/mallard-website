@@ -121,9 +121,11 @@ def main():
                                      text=True).stdout
                 pages[rel] = (pages[rel][0], out)
 
-    readme = (docsrc / "README.md").read_text()
-    body = readme[readme.index("## Building"):readme.index("## Contributing")]
-    pages["installation.md"] = ("README.md", "# Installation\n\n" + body.rstrip() + "\n")
+    if "installation.md" not in pages:
+        # releases before docs/installation.md kept the installation guide in the README
+        readme = (docsrc / "README.md").read_text()
+        body = readme[readme.index("## Building"):readme.index("## Contributing")]
+        pages["installation.md"] = ("README.md", "# Installation\n\n" + body.rstrip() + "\n")
     if (docsrc / "CONTRIBUTING.md").is_file():
         pages["contributing.md"] = ("CONTRIBUTING.md", (docsrc / "CONTRIBUTING.md").read_text())
     pages["tools.md"] = ("tools/README.md", (docsrc / "tools" / "README.md").read_text())
