@@ -58,7 +58,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Mixture-averaged, unity-Lewis or constant-Lewis transport, optionally with thermal (Soret) diffusion; optically thin radiation
     - Chemistry load balancing across MPI ranks; `mallard reactor`, a 0D constant-volume reactor
 
-    [Thermochemistry](docs/guide/thermochemistry.md) · [Validation](validation.md#reacting-flow)
+    [Thermochemistry](docs/guide/thermochemistry.md) · [Benchmarks](validation.md#reacting-flow)
 
 -   :material-weather-windy:{ .lg .middle } __Large-eddy simulation__
 
@@ -71,7 +71,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Channel flow: Re<sub>τ</sub> within 0.7% and 1.6% of DNS at 395 and 590
     - Wall-modeled LES: Griffin–Fu–Moin (isothermal and adiabatic walls) or equilibrium ODE model; C<sub>f</sub> within 2.1% of Lee & Moser at Re<sub>τ</sub> = 2000 and 5200 on 12 cells per half-height, wall heat flux within 1.3% of Trettel & Larsson at M<sub>b</sub> = 1.7 and 3.0
 
-    [Large-eddy simulation](docs/guide/les.md) · [Wall models](docs/guide/les.md#wall-models-wall_model) · [Synthetic inflow](docs/guide/boundary_conditions.md#synthetic-turbulence) · [Validation](validation.md#les)
+    [Large-eddy simulation](docs/guide/les.md) · [Wall models](docs/guide/les.md#wall-models-wall_model) · [Synthetic inflow](docs/guide/boundary_conditions.md#synthetic-turbulence-turbulence) · [Validation](validation.md#les)
 
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
@@ -109,27 +109,27 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/probes.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
 
--   :material-check-decagram:{ .lg .middle } __Validated and tested__
+-   :material-check-decagram:{ .lg .middle } __Verified, validated and tested__
 
     ---
 
-    - 40 examples against exact solutions, theory, DNS and Cantera, e.g.:
+    - 40 examples against exact solutions, other codes, DNS and experiments, e.g.:
         - [Sphere wake](validation.md#sphere-re300) at Re = 300: Strouhal number and drag within 3% and 2% of Johnson & Patel
         - [Compressible isotropic turbulence](validation.md#isotropic-turbulence): enstrophy within 2.4% of the filtered DNS of Johnsen et al.
         - [CJ detonation](validation.md#detonation) speed within 0.01%; H<sub>2</sub>/air [flame speeds](validation.md#flame-speed) within 0.81% of Cantera from φ = 0.6 to 1.4
     - 500+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision, GCC and Clang, warnings as errors
     - Nightly sanitizers; a performance suite with per-hardware baselines
 
-    [Validation](validation.md) · [Verification manual](docs/verification/index.md) · [Examples](docs/examples.md)
+    [Verification and validation](validation.md) · [Verification manual](docs/verification/index.md) · [Examples](docs/examples.md)
 
 </div>
 
 !!! note "What's new here"
     Mallard runs TENO-E, a published unstructured TENO scheme, on every 3D cell type at orders 3 to 6. To make that stable it adds two stencil rules we have not found published: each cell's central stencil grows until its reconstruction's Lebesgue constant is bounded, and on thin cells candidates are ranked in the metric of the local mesh spacing. The rest of the numerics are published methods, cited where they are used. [What is new in Mallard's numerics](docs/numerics/originality.md)
 
-## Validated
+## Verified and validated
 
-Every number below comes from a Mallard run compared with an exact solution, theory or published reference data; the [validation page](validation.md) has the setups, figures and error tables.
+Every number below comes from a Mallard run compared with an exact solution, theory, another code or DNS; the [verification and validation page](validation.md) has the setups, figures and error tables, and the comparisons with experiments.
 
 <div class="mallard-stats" markdown>
 
@@ -159,7 +159,7 @@ Every number below comes from a Mallard run compared with an exact solution, the
 
 </div>
 
-The test suite (more than 400 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
+The test suite (more than 500 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
 
 ## Quick start
 
