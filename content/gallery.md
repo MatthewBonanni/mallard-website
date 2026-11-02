@@ -8,7 +8,7 @@ hide:
 
 # Gallery
 
-Every case here is one of Mallard's [examples](docs/examples.md). Quantitative comparisons with exact solutions and reference data are on the [validation](validation.md) page.
+Every case here is one of Mallard's [examples](docs/examples.md). Quantitative comparisons with exact solutions and reference data are on the [verification and validation](validation.md) page.
 
 <div class="mallard-gallery" markdown>
 

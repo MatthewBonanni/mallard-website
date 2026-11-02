@@ -141,10 +141,9 @@ nav:
   - Input builder: docs/builder.md
   - Examples: docs/examples.md
   - Gallery: gallery.md
-  - Validation:
-      - Validation cases: validation.md
+  - Verification and validation:
+      - Cases: validation.md
       - Verification manual: docs/verification/index.md
-      - Performance dashboard: docs/dashboard.md
   - Theory:
       - Theory manual:
           # The chapters of docs/theory/, in the order of its index (pages.py)
@@ -157,6 +156,7 @@ nav:
       - Command line: docs/guide/cli.md
       - Tools: docs/tools.md
       - Bibliography: docs/references.md
+      - Performance dashboard: docs/dashboard.md
       - API reference: docs/api/index.html
   - Developers:
       - Contributing: docs/contributing.md
