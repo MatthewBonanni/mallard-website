@@ -117,7 +117,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
         - [Sphere wake](validation.md#sphere-re300) at Re = 300: Strouhal number and drag within 3% and 2% of Johnson & Patel
         - [Compressible isotropic turbulence](validation.md#isotropic-turbulence): enstrophy within 2.4% of the filtered DNS of Johnsen et al.
         - [CJ detonation](validation.md#detonation) speed within 0.01%; H<sub>2</sub>/air [flame speeds](validation.md#flame-speed) within 0.81% of Cantera from φ = 0.6 to 1.4
-    - 400+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision, GCC and Clang, warnings as errors
+    - 500+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision, GCC and Clang, warnings as errors
     - Nightly sanitizers; a performance suite with per-hardware baselines
 
     [Validation](validation.md) · [Verification manual](docs/verification/index.md) · [Examples](docs/examples.md)
@@ -126,16 +126,6 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
 !!! note "What's new here"
     Mallard runs TENO-E, a published unstructured TENO scheme, on every 3D cell type at orders 3 to 6. To make that stable it adds two stencil rules we have not found published: each cell's central stencil grows until its reconstruction's Lebesgue constant is bounded, and on thin cells candidates are ranked in the metric of the local mesh spacing. The rest of the numerics are published methods, cited where they are used. [What is new in Mallard's numerics](docs/numerics/originality.md)
-
-## Measuring a flow
-
-Probes take measurements while a case runs. Wall probes give C<sub>p</sub>, C<sub>f</sub>, y<sup>+</sup>, shear and heat flux. Exact cut planes, curves and surfaces give mass, momentum and enthalpy fluxes. Any probe can also write integrals, means and extrema over its geometry. Around a cylinder at Re = 40, the integrals of the wall tractions give the drag, and the net outflow through a closed circle settles to zero. [Probes](docs/guide/probes.md)
-
-<figure class="mallard-figure" markdown>
-![Measurements around a cylinder at Re = 40: mass flux samples on a closed circle and a cut line, the wall pressure and skin-friction coefficients against angle, first-cell y+ with its mean and maximum, and the drag and the circle's net outflow over time](docs/images/guide/probe_measurements-light.svg#only-light){ loading=lazy }
-![Measurements around a cylinder at Re = 40: mass flux samples on a closed circle and a cut line, the wall pressure and skin-friction coefficients against angle, first-cell y+ with its mean and maximum, and the drag and the circle's net outflow over time](docs/images/guide/probe_measurements-dark.svg#only-dark){ loading=lazy }
-<figcaption>One short run, four probes: mass flux through a closed circle and a cut, the wall's C<sub>p</sub> and C<sub>f</sub>, y<sup>+</sup> with its mean and maximum, and integrals over time.</figcaption>
-</figure>
 
 ## Validated
 
