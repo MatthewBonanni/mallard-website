@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
-from common import FIG, FLAME, PLUM, TEAL, GREY, RUNS, load
+from common import FIG, FLAME, PLUM, TEAL, GRAY, RUNS, load
 
 U, D = 0.2, 1.0
 Q = 0.5 * 1.0 * U ** 2 * D
@@ -69,7 +69,7 @@ def main():
     dudy = interp_dy.gradient(cen[:, 0], cen[:, 1])[1]
     om = (dvdx - dudy) * D / U
     pc = ax.tripcolor(tri, np.clip(om, -3, 3), cmap="RdBu_r", vmin=-3, vmax=3, shading="flat", rasterized=True)
-    ax.add_patch(plt.Circle((0, 0), 0.5, color=GREY))
+    ax.add_patch(plt.Circle((0, 0), 0.5, color=GRAY))
     ax.set_xlim(-2, 14)
     ax.set_ylim(-3, 3)
     ax.set_aspect("equal")
@@ -83,7 +83,7 @@ def main():
     s = t * U / D
     ax1.plot(s, cd, color=TEAL, lw=0.8, label="$C_D$")
     ax1.plot(s, cl, color=FLAME, lw=0.8, label="$C_L$")
-    ax1.axvspan(T0 * U / D, s[-1], color=GREY, alpha=0.12, lw=0)
+    ax1.axvspan(T0 * U / D, s[-1], color=GRAY, alpha=0.12, lw=0)
     ax1.set_xlabel("$t U / D$")
     ax1.set_xlim(0, s[-1])
     ax1.set_ylim(-0.6, 1.8)
@@ -98,7 +98,7 @@ def main():
     for i, (lab, st, cdm, cla, col, mk) in enumerate(refs):
         vals = np.array([st / 0.164, cdm / 1.35, cla / 0.339])
         ax2.plot(np.arange(3) + (i - 1) * 0.12, vals, mk, color=col, ms=5, label=lab)
-    ax2.axhline(1, color=GREY, lw=0.6)
+    ax2.axhline(1, color=GRAY, lw=0.6)
     ax2.set_xticks(range(3), labels)
     ax2.set_xlim(-0.5, 2.5)
     ax2.set_ylim(0.95, 1.05)

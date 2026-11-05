@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import brentq
 
-from common import FIG, GREY, PLUM, TEAL, FLAME, example, load, last_vtu, order, run, sub
+from common import FIG, GRAY, PLUM, TEAL, FLAME, example, load, last_vtu, order, run, sub
 
 G = 1.4
 T_END = 0.2
