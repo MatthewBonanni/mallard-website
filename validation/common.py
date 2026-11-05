@@ -35,7 +35,7 @@ FIG.mkdir(exist_ok=True)
 TEAL = "#12655f"
 FLAME = "#d9730d"
 PLUM = "#2b1a22"
-GREY = "#8a8085"
+GRAY = "#8a8085"
 COLORS = [TEAL, FLAME, "#6b4a8a", "#3a7bbf", "#b23a48"]
 
 for _f in (Path(__file__).resolve().parent / "fonts").glob("Inter-*.ttf"):

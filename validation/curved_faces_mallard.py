@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 from matplotlib.patches import Polygon
 
-TEAL, FLAME, PLUM, GREY = "#12655f", "#d9730d", "#2b1a22", "#b4adb0"
+TEAL, FLAME, PLUM, GRAY = "#12655f", "#d9730d", "#2b1a22", "#b4adb0"
 
 ap = argparse.ArgumentParser()
 ap.add_argument("mallard")
@@ -81,7 +81,7 @@ def cubic(p, m=60):
 
 fig, axs = plt.subplots(2, 1, figsize=(9, 10.2))
 for ax, curved in zip(axs, (False, True)):
-    ax.add_collection(LineCollection(interior, colors=GREY, linewidths=0.8))
+    ax.add_collection(LineCollection(interior, colors=GRAY, linewidths=0.8))
     for e in edges:
         arc = cubic([X[v] for v in e])
         if curved:

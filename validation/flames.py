@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-from common import FIG, FLAME, GREY, ROOT, TEAL
+from common import FIG, FLAME, GRAY, ROOT, TEAL
 
 sys.path.insert(0, str(ROOT / "tools" / "post"))
 import flame_speed  # noqa: E402
@@ -56,7 +56,7 @@ def main(runs, ref):
     c = np.genfromtxt(ref / "h2_phi1.0_mix.csv", delimiter=",", names=True, skip_header=1)
     xm = x[np.argmax(np.gradient(d["T"], x))]
     xc = c["x"][np.argmax(np.gradient(c["T"], c["x"]))]
-    b.plot((c["x"] - xc) * 1e3, c["T"], color=GREY, lw=2.2, label="Cantera")
+    b.plot((c["x"] - xc) * 1e3, c["T"], color=GRAY, lw=2.2, label="Cantera")
     b.plot((x - xm) * 1e3, d["T"], color=TEAL, lw=1.0, label="Mallard, 20 cells / δ$_T$")
     b.set_xlim((c["x"].min() - xc) * 1e3, (c["x"].max() - xc) * 1e3)
     b.set_xlabel("x [mm]")

@@ -19,7 +19,7 @@ import cantera as ct
 import numpy as np
 import matplotlib.pyplot as plt
 
-from common import FIG, FLAME, GREY, PLUM, ROOT, RUNS, TEAL, COLORS, example, run, sub
+from common import FIG, FLAME, GRAY, PLUM, ROOT, RUNS, TEAL, COLORS, example, run, sub
 
 sys.path[:0] = [str(ROOT / "examples" / "detonation_1d"), str(ROOT / "examples" / "reactive_shock_tube")]
 import plot_detonation  # noqa: E402
@@ -150,7 +150,7 @@ def ignition():
                                                       mixture(fuel, o2, 1.0), 1200.0, t[1:])])
 
     fig, (a, b) = plt.subplots(1, 2, figsize=(7.2, 2.7), gridspec_kw=dict(width_ratios=[1, 1.15]))
-    a.plot(t * 1e6, Tc, color=GREY, lw=2.2, label="Cantera")
+    a.plot(t * 1e6, Tc, color=GRAY, lw=2.2, label="Cantera")
     a.plot(t * 1e6, T, color=TEAL, lw=1.0, label="mallard reactor")
     a.set_xlabel("t [µs]")
     a.set_ylabel("T [K]")
@@ -272,19 +272,19 @@ def detonation():
         dev = rows[:, 1] - rows[0, 1] - D_cj * (rows[:, 0] - rows[0, 0])
         a.plot(rows[:, 0] * 1e6, dev * 1e3, "o-", color=colors[nx], lw=0.9, ms=2.5,
                label=f"{r['cells_per_L']} cells / L$_{{ind}}$")
-    a.axhline(0.0, color=GREY, lw=0.8, ls="--")
+    a.axhline(0.0, color=GRAY, lw=0.8, ls="--")
     a.set_xlabel("t [µs]")
     a.set_ylabel("x$_s$ − D$_{CJ}$ t  [mm]")
     a.legend(loc="center right", fontsize=7)
     a.set_title(f"shock position against D$_{{CJ}}$ = {D_cj:.1f} m/s")
     # Structure behind the front at the end of the run, against ZND
-    b.plot(-zx["x"] * 1e3, zx["p"] / 1e3, color=GREY, lw=2.2, label="ZND")
+    b.plot(-zx["x"] * 1e3, zx["p"] / 1e3, color=GRAY, lw=2.2, label="ZND")
     for nx, r in res.items():
         t, x, p, T, hrr = r["last"]
         xs = plot_detonation.front(x, p, hrr, p.min())[0]
         b.plot((x - xs) * 1e3, p / 1e3, color=colors[nx], lw=0.9, label=f"{r['cells_per_L']} cells / L$_{{ind}}$")
-    b.axvline(-L_ind, color=GREY, lw=0.7, ls=":")
-    b.text(-L_ind, 20, " L$_{ind}$", color=GREY, fontsize=7.5)
+    b.axvline(-L_ind, color=GRAY, lw=0.7, ls=":")
+    b.text(-L_ind, 20, " L$_{ind}$", color=GRAY, fontsize=7.5)
     b.set_xlim(-6, 1)
     b.set_xlabel("distance from the shock [mm]")
     b.set_ylabel("p [kPa]")
