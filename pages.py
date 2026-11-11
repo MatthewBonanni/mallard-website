@@ -77,6 +77,7 @@ DESCRIPTIONS = {
     "design/performance.md": "Design notes on single-GPU performance and parallel scaling of Mallard: TENO setup and memory, reacting mixtures, partitions.",
     "design/synthetic_inflow.md": "Design notes on synthetic turbulent inflow in Mallard: the digital filter and its injection through characteristic inlets.",
     "design/nscbc.md": "Design notes on Mallard's characteristic (NSCBC) boundary conditions and sponge layers.",
+    "design/python_package.md": "Design notes on the mallard Python package: the post-processing layer, the solver bindings as an optional extension, extras.",
     "design/axisymmetric.md": "Design notes on axisymmetric (r-z) flows in Mallard: revolved finite volumes, sources, the axis and reconstruction.",
 }
 
