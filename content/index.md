@@ -100,7 +100,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     ---
 
-    - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions; misspelled or unused keys are errors, with suggestions
+    - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions, over regions that may move, repeat, wrap across periodic boundaries or follow the solution (where `T > 1500`, isosurfaces); misspelled or unused keys are errors, with suggestions
     - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard input upgrade` for inputs from older releases
     - Conservative high-order remap of a restart onto another mesh; versioned files, readable by every later release of the same major version
     - VTKHDF for ParaView (default; written by all ranks in parallel, curved cells as quadratic cells) or VTU; boundary-zone surfaces
