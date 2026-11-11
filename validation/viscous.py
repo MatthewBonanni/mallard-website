@@ -67,7 +67,7 @@ check_interval = 1000000
 prefix = "./solut/v"
 format = "vtu"
 time_interval = {t_stop}
-variables = ["U_X", "U_Y", "T"]
+fields = ["U_X", "U_Y", "T"]
 """
 
 

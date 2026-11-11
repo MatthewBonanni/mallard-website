@@ -12,6 +12,7 @@ become links between the site's pages:
 - relative links to files of docs/ stay relative (images are copied along);
 - relative links to anything else in the repository go to GitHub at DOCS_REF;
 - absolute links to the site itself become relative links, so --strict checks them;
+- link titles ([text](target "title")) are kept;
 - the image fragments #gh-light-mode-only / #gh-dark-mode-only become
   Material's #only-light / #only-dark.
 """
@@ -40,6 +41,10 @@ DESCRIPTIONS = {
     "tutorials/wedge.md": "An oblique shock on an 8 degree ramp: a generated mesh, boundary conditions, a line probe, ParaView, against theory.",
     "tutorials/cylinder.md": "Vortex shedding behind a cylinder at Re = 100: a Gmsh mesh, viscous flow, wall forces, Strouhal number.",
     "guide/input_files.md": "How a Mallard input file is organized: its tables, numbers, vectors and expressions, units, and the other commands.",
+    "guide/expressions.md": "Mallard's expression language, kexpr: variables, operators, functions and statements for initial and boundary states, sources, regions and probe curves.",
+    "guide/convergence.md": "Grid convergence in Mallard: mallard post convergence reports the observed order, Richardson extrapolation and the grid convergence index.",
+    "guide/features.md": "Which Mallard features combine: each pair marked validated, verified, implemented, rejected or untested, linked to its evidence.",
+    "guide/support.md": "What Mallard's CI builds and runs on each compiler, platform, GPU backend and build option, and how often.",
     "guide/meshes.md": "Generated, Gmsh and HDF5 meshes in Mallard: cell types, stretching, periodic boundaries and curved high-order boundaries.",
     "guide/physics.md": "Euler and Navier-Stokes equations, the perfect-gas reference state, viscosity laws and axisymmetric flows in Mallard.",
     "guide/thermochemistry.md": "Gas mixtures, Cantera mechanisms, transport, finite-rate chemistry with Strang or SIMPLER splitting, radiation and mallard reactor.",
@@ -83,7 +88,7 @@ GENERATED = ["input.md", "examples.md", "installation.md", "contributing.md", "t
 
 REPO_FILES = set()
 
-LINK = re.compile(r"(!?\[[^\]]*\])\(([^)\s]+)\)")
+LINK = re.compile(r"(!?\[[^\]]*\])\(([^)\s]+)((?: +\"[^\"]*\")?)\)")
 
 
 def main():
@@ -144,31 +149,31 @@ def main():
         page_dir = posixpath.dirname("docs/" + page)
 
         def fix(m):
-            label, target = m.group(1), m.group(2)
+            label, target, title = m.group(1), m.group(2), m.group(3)
             target = target.replace("#gh-light-mode-only", "#only-light").replace("#gh-dark-mode-only", "#only-dark")
             path, _, frag = target.partition("#")
             frag = "#" + frag if frag else ""
             if target.startswith(SITE):
                 p = path[len(SITE):].strip("/")
                 if (content / p).is_file():
-                    return f"{label}({posixpath.relpath(p, page_dir)}{frag})"
+                    return f"{label}({posixpath.relpath(p, page_dir)}{frag}{title})"
                 for cand in (p + ".md", (p + "/" if p else "") + "index.md"):
                     if (content / cand).exists() or cand.removeprefix("docs/") in pages:
-                        return f"{label}({posixpath.relpath(cand, page_dir)}{frag})"
+                        return f"{label}({posixpath.relpath(cand, page_dir)}{frag}{title})"
                 print(f"warning: {page}: no page for {target}")
                 return m.group(0)
             if re.match(r"^[a-z]+:", target) or target.startswith("#") or not path:
-                return f"{label}({target})"
+                return f"{label}({target}{title})"
             repo_target = posixpath.normpath(posixpath.join(posixpath.dirname(repo_path), path))
             if repo_target.startswith("docs/") and repo_target[5:] in pages:
-                return f"{label}({posixpath.relpath(repo_target, page_dir)}{frag})"
+                return f"{label}({posixpath.relpath(repo_target, page_dir)}{frag}{title})"
             if repo_target.startswith("docs/images/") and (docsrc / repo_target).is_file():
                 images.add(repo_target)
-                return f"{label}({posixpath.relpath(repo_target, page_dir)}{frag})"
+                return f"{label}({posixpath.relpath(repo_target, page_dir)}{frag}{title})"
             kind = "tree" if repo_target in repo_dirs else "blob"
             if repo_target not in repo_files and repo_target not in repo_dirs:
                 print(f"warning: {page}: {target} is not in the repository")
-            return f"{label}({GITHUB}{kind}/{gh_ref}/{repo_target}{frag})"
+            return f"{label}({GITHUB}{kind}/{gh_ref}/{repo_target}{frag}{title})"
 
         return outside_code(text, lambda t: LINK.sub(fix, t))
 

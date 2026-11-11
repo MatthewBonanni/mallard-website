@@ -70,4 +70,4 @@ check_interval = 1000
 prefix = "solut/sod"
 format = "vtu"
 time_interval = 0.2
-variables = ["RHO", "U", "P"]
+fields = ["RHO", "U", "P"]

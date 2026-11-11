@@ -21,8 +21,8 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - 2D triangles and quadrilaterals; 3D tetrahedra, hexahedra, prisms, pyramids and mixed meshes
-    - Gmsh 2.2/4.1, CGNS, Fluent, OpenFOAM polyMesh or HDF5 mesh files (`mallard mesh convert`), scaled, rotated and translated on read, or generated boxes
-    - Periodic boundaries, on generated meshes or paired zones of mesh files
+    - Gmsh 2.2/4.1, CGNS, Fluent, OpenFOAM polyMesh or HDF5 mesh files (`mallard mesh convert`), scaled, rotated and translated on read, or generated boxes and annuli
+    - Translational and rotational periodicity, on generated meshes or paired zones of mesh files
     - Axisymmetric (r-z) flows, at design order up to the axis
     - Curved high-order boundaries, from Gmsh high-order elements or an analytic projection
 
@@ -33,6 +33,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - First order, MUSCL (Barth–Jespersen or Venkatakrishnan) and TENO-E of orders 3 to 6, optionally bound preserving
+    - High order by default: on smooth flow, TENO-E reaches an accurate answer at a fraction of a second-order scheme's cost ([measured](docs/guide/numerics.md#why-high-order))
     - Rusanov, HLL, HLLC, Roe and the rotated-hybrid RHLL, carbuncle-free except at shocks at rest on cell faces; all for single gases and mixtures
     - Low-Mach correction of the upwind dissipation
     - Forward Euler, SSPRK3, RK4, low-storage SSPRK(5,4) and 2N RK4(5), at a CFL number, a fixed step or embedded error-controlled steps
@@ -45,9 +46,9 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     - Compressible Euler and Navier–Stokes; constant, Sutherland or power-law viscosity
     - Thermally perfect multicomponent mixtures, with an optional double-flux scheme for interfaces
-    - Gravity and arbitrary source terms
+    - Gravity; source terms and sponges as expressions over named regions
 
-    [Physics](docs/guide/physics.md) · [Sources](docs/guide/sources.md)
+    [Physics](docs/guide/physics.md) · [Sources](docs/guide/sources.md) · [Expressions](docs/guide/expressions.md) · [Regions](docs/guide/geometry.md#regions)
 
 -   :material-fire:{ .lg .middle } __Reacting flow__
 
@@ -80,7 +81,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Slip, adiabatic, isothermal and heat-flux walls, optionally moving
     - Inflow, characteristic far field, pressure outlets (local or area-averaged), transmissive, time-dependent expressions
     - Partially non-reflecting characteristic (NSCBC) inlets and outlets with transverse terms (1% of an acoustic pulse reflected, against 97–99% at a fixed-pressure outlet); sponge layers
-    - Zones split between conditions by expressions
+    - Every value a number or an expression of x, y, z and t; zones split between conditions by expressions
 
     [Boundary conditions](docs/guide/boundary_conditions.md) · [Sponges](docs/guide/sources.md#sponge-layers)
 
@@ -101,13 +102,16 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions; misspelled or unused keys are errors, with suggestions
-    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard input upgrade` for inputs from older releases
+    - Initial states from expressions, layered regions, tables and divergence-free synthetic turbulence of a prescribed spectrum
+    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard input upgrade` for inputs from older releases; `mallard list` for a case's fields and keys; tab completion for bash, zsh and fish
+    - `mallard ctl` to steer a running job; triggers: conditions on time, probes, forces and integrals that stop the run, write a restart or snapshot, or start statistics; a divergence report when a run fails, with the likely causes ranked by their evidence
+    - `mallard info` on any output file, `mallard diff` between two solutions, `mallard post extract` for probes and region integrals of existing output, `mallard post convergence` for the observed order, Richardson extrapolation and grid convergence index
     - Conservative high-order remap of a restart onto another mesh; versioned files, readable by every later release of the same major version
-    - VTKHDF for ParaView (default; written by all ranks in parallel, curved cells as quadratic cells) or VTU; boundary-zone surfaces
-    - Running means and covariances; probes on points, curves, surfaces, exact cut planes and boundary zones (cell averages or high-order point values; wall shear, C<sub>f</sub>, C<sub>p</sub>, heat flux, y<sup>+</sup> and fluxes through any surface; CSV, HDF5 or VTK, with integrals, means and extrema); domain integrals, wall forces
+    - VTKHDF for ParaView (default; written by all ranks in parallel, curved cells as quadratic cells) or VTU; boundary-zone surfaces; derived fields: Mach number, Q-criterion, λ<sub>2</sub> and numerical schlieren
+    - Running means and covariances, spectra and phase averages; probes on points, curves, surfaces, exact cut planes and boundary zones (cell averages or high-order point values; wall shear, C<sub>f</sub>, C<sub>p</sub>, heat flux, y<sup>+</sup> and fluxes through any surface; CSV, HDF5 or VTK, with integrals, means and extrema); domain integrals, wall forces
     - Heat release, production rates and detonation soot foils
 
-    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/probes.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
+    [Input files](docs/guide/input_files.md) · [Command line](docs/guide/cli.md) · [Running and controlling jobs](docs/guide/running.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/probes.md) · [Grid convergence](docs/guide/convergence.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
 
 -   :material-check-decagram:{ .lg .middle } __Verified, validated and tested__
 
@@ -117,10 +121,11 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
         - [Sphere wake](validation.md#sphere-re300) at Re = 300: Strouhal number and drag within 3% and 2% of Johnson & Patel
         - [Compressible isotropic turbulence](validation.md#isotropic-turbulence): enstrophy within 2.4% of the filtered DNS of Johnsen et al.
         - [CJ detonation](validation.md#detonation) speed within 0.01%; H<sub>2</sub>/air [flame speeds](validation.md#flame-speed) within 0.81% of Cantera from φ = 0.6 to 1.4
-    - 500+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision, GCC and Clang, warnings as errors
+    - 500+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision, GCC and Clang on Linux (x86-64 and arm64) and macOS, warnings as errors
+    - A feature matrix: each pair of features marked validated, verified, implemented, rejected or untested, linked to its evidence
     - Nightly sanitizers; a performance suite with per-hardware baselines
 
-    [Verification and validation](validation.md) · [Verification manual](docs/verification/index.md) · [Examples](docs/examples.md)
+    [Verification and validation](validation.md) · [Verification manual](docs/verification/index.md) · [Feature matrix](docs/guide/features.md) · [Supported platforms](docs/guide/support.md) · [Examples](docs/examples.md)
 
 </div>
 
@@ -171,7 +176,9 @@ cmake --build build -j
 cd examples/sod && ../../build/src/mallard -i input.toml
 ```
 
-This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution; [Installation](docs/installation.md) covers containers (Docker, Apptainer, Kubernetes), Spack and OpenMP, GPU and MPI builds.
+This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. Containers (`ghcr.io/matthewbonanni/mallard`, or `:cuda` for NVIDIA GPUs) and [Spack](https://spack.io) install it without a build; [Installation](docs/installation.md) covers them (Docker, Apptainer, Kubernetes), GPU and MPI builds and every CMake option, on the [supported platforms](docs/installation.md#supported-platforms).
+
+`mallard list templates` shows ready-to-run templates (`mallard new cylinder` creates a case with its mesh, run and plot scripts), `mallard check input.toml` checks a case before a long run, and `mallard ctl <run-dir> status|stop` steers it while it runs. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution, and the [tutorials](docs/tutorials/index.md) go on from there.
 
 ## Citing Mallard
 

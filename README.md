@@ -6,10 +6,10 @@ Source of [matthewbonanni.github.io/mallard](https://matthewbonanni.github.io/ma
 The site is built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/). The documentation pages
 and the API reference come from a Mallard checkout at build time, so they match a Mallard release:
 
-- `docs/guide/` (the user guide), `docs/input.md`, `docs/theory/` (the *Theory manual*, in the order of its index), `docs/numerics/`, `docs/references.md`, `docs/design/`
-  (the *Developer notes*), `examples/README.md` (*Examples*, one section per topic), `tools/README.md`
-  (*Tools*) and the Building through Postprocessing sections of `README.md` (*Installation*) become the
-  documentation pages. `pages.py` assembles them: links written for GitHub become links between the site's
+- `docs/installation.md`, `docs/tutorials/`, `docs/guide/` (the user guide), `docs/input.md`, `docs/theory/` (the *Theory manual*, in the order of its index), `docs/numerics/`, `docs/verification/`, `docs/references.md`, `docs/design/`
+  (the *Developer notes*), `CONTRIBUTING.md`, `examples/README.md` (*Examples*, one section per topic) and `tools/README.md`
+  (*Tools*) become the documentation pages (a release without `docs/installation.md` takes *Installation* from the
+  Building through Postprocessing sections of its `README.md`). `pages.py` assembles them, and warns about a guide page missing from the nav of `mkdocs.yml`: links written for GitHub become links between the site's
   pages (to other files of the repository, links to GitHub at the documented ref; absolute links to this site,
   relative ones that `--strict` checks), and the light/dark figure pairs (`#gh-light-mode-only`) become
   Material's (`#only-light`). A release without `docs/guide/` (0.8.0 and older) is documented with the pages of
