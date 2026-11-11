@@ -53,6 +53,7 @@ you from this first run to multi-GPU LES, one step at a time.
     [Output](guide/output.md) ·
     [Probes and monitors](guide/probes.md) ·
     [Statistics](guide/statistics.md) ·
+    [Python](guide/python.md) ·
     [Running and controlling jobs](guide/running.md) ·
     [Running in parallel](guide/parallel.md) ·
     [Performance](guide/performance.md)
@@ -93,6 +94,7 @@ you from this first run to multi-GPU LES, one step at a time.
 
     - [Input reference](input.md): every key and its default
     - [Command line](guide/cli.md): `mallard` and its subcommands
+    - [Python API](guide/python_api.md): the `mallard` Python package
     - [Tools](tools.md), [Bibliography](references.md), <a href="api/">API reference</a>
 
 -   :material-source-pull:{ .lg .middle } __Developers__

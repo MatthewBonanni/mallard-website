@@ -106,8 +106,9 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - VTKHDF for ParaView (default; written by all ranks in parallel, curved cells as quadratic cells) or VTU; boundary-zone surfaces
     - Running means and covariances; probes on points, curves, surfaces, exact cut planes and boundary zones (cell averages or high-order point values; wall shear, C<sub>f</sub>, C<sub>p</sub>, heat flux, y<sup>+</sup> and fluxes through any surface; CSV, HDF5 or VTK, with integrals, means and extrema); domain integrals, wall forces
     - Heat release, production rates and detonation soot foils
+    - A Python package that reads every output file into numpy arrays and runs every command
 
-    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/probes.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
+    [Input files](docs/guide/input_files.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/probes.md) · [Python](docs/guide/python.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
 
 -   :material-check-decagram:{ .lg .middle } __Verified, validated and tested__
 
