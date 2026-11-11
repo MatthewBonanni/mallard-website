@@ -68,7 +68,7 @@ function initialState() {
             zones: "inlet, outlet, wall" },
     physics: { type: "euler", gamma: 1.4, p_ref: 1, T_ref: 1, rho_ref: 1, mu: 0.001, Pr: fallback("physics.Pr", 0.72) },
     init: { u: "1.0, 0.0, 0.0", p: 1, T: 1 },
-    numerics: { preset: "robust" },
+    numerics: { preset: ["high_order", "robust"].find((p) => values("numerics.preset").includes(p)) },
     bcs: {},
     run: { t_stop: 1 },
     output: { prefix: "./solut/flow", format: "vtu", time_interval: 0.1 },
@@ -119,7 +119,8 @@ function toml() {
   for (const k of ["gamma", "p_ref", "T_ref", "rho_ref"]) L.push(`${k} = ${number(s.physics[k])}`);
   if (s.physics.type === "navier_stokes") L.push(`mu = ${number(s.physics.mu)}`, `Pr = ${number(s.physics.Pr)}`);
   L.push("", "[[write_data]]", `prefix = "${s.output.prefix}"`, `format = "${s.output.format}"`,
-         `time_interval = ${number(s.output.time_interval)}`, 'variables = ["RHO", "U", "P", "T"]');
+         `time_interval = ${number(s.output.time_interval)}`,
+         `${catalog["write_data.fields"] ? "fields" : "variables"} = ["RHO", "U", "P", "T"]`);
   return L.join("\n") + "\n";
 }
 

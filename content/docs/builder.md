@@ -13,8 +13,8 @@ Mallard's setup records as it reads the examples and tutorials: each key's type,
 values. Each key links to its row of the [input reference](input.md). The page runs in your browser
 and sends nothing anywhere.
 
-For a ready-made case with its mesh, run and post-processing scripts, start from a template instead:
-`mallard new --list`. `mallard check input.toml` checks what this page cannot: mesh files, zone
+For a ready-made case with its mesh, run and post-processing scripts, start from a template of
+[`mallard new`](guide/cli.md) instead. `mallard check input.toml` checks what this page cannot: mesh files, zone
 names, the time step, memory and cost.
 
 <div id="mallard-builder" class="mallard-builder" markdown="0">

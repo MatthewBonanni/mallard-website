@@ -10,8 +10,9 @@ reacting flows on unstructured meshes, on CPUs and GPUs.
 
 ## Quick start
 
-Build Mallard on a CPU and run a first case in three commands (a C++20 compiler,
-CMake and git are all it needs):
+Build Mallard on a CPU and run a first case in three commands (GCC 15, Clang 22 or
+Apple Clang 21 or newer, CMake 4.2 or newer and git are all it needs; see
+[supported platforms](guide/support.md)):
 
 ```bash
 git clone --recursive https://github.com/MatthewBonanni/mallard.git && cd mallard
@@ -20,8 +21,9 @@ cd examples/sod && ../../build/src/mallard -i input.toml
 ```
 
 The last line runs the Sod shock tube in about a second and writes `solut/sod.pvd`,
-which ParaView opens. `build/src/mallard new --list` lists ready-to-run cases to
-copy. GPU builds (CUDA, HIP), MPI and the other options are in
+which ParaView opens. `build/src/mallard list templates` lists ready-to-run cases
+to copy (`mallard new cylinder` creates one with its mesh, run and post-processing
+scripts). Containers, Spack, GPU builds (CUDA, HIP), MPI and the other options are in
 [Installation](installation.md); the [tutorials](tutorials/index.md) then take
 you from this first run to multi-GPU LES, one step at a time.
 
@@ -33,7 +35,7 @@ you from this first run to multi-GPU LES, one step at a time.
 
     ---
 
-    - [Installation](installation.md): CMake builds for CPUs, NVIDIA and AMD GPUs, MPI
+    - [Installation](installation.md): containers, Spack, and CMake builds for CPUs, NVIDIA and AMD GPUs, MPI
     - [Tutorials](tutorials/index.md): a numbered path from the Sod shock tube to multi-GPU LES and clusters
 
 -   :material-book-open-variant:{ .lg .middle } __User guide__
@@ -41,6 +43,7 @@ you from this first run to multi-GPU LES, one step at a time.
     ---
 
     [Input files](guide/input_files.md) ·
+    [Expressions](guide/expressions.md) ·
     [Meshes](guide/meshes.md) ·
     [Geometry](guide/geometry.md) ·
     [Physics](guide/physics.md) ·
@@ -53,6 +56,7 @@ you from this first run to multi-GPU LES, one step at a time.
     [Output](guide/output.md) ·
     [Probes and monitors](guide/probes.md) ·
     [Statistics](guide/statistics.md) ·
+    [Grid convergence](guide/convergence.md) ·
     [Running and controlling jobs](guide/running.md) ·
     [Running in parallel](guide/parallel.md) ·
     [Performance](guide/performance.md)
@@ -93,6 +97,8 @@ you from this first run to multi-GPU LES, one step at a time.
 
     - [Input reference](input.md): every key and its default
     - [Command line](guide/cli.md): `mallard` and its subcommands
+    - [Feature matrix](guide/features.md): which features combine, and the evidence
+    - [Supported platforms](guide/support.md): what CI builds and runs
     - [Tools](tools.md), [Bibliography](references.md), <a href="api/">API reference</a>
 
 -   :material-source-pull:{ .lg .middle } __Developers__

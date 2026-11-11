@@ -83,7 +83,7 @@ check_interval = 1000000
 prefix = "./solut/vortex"
 format = "vtu"
 time_interval = {T_END}
-variables = ["RHO"]
+fields = ["RHO"]
 """
 
 

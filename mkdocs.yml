@@ -123,6 +123,7 @@ nav:
       - TUTORIALS
   - User guide:
       - Input files: docs/guide/input_files.md
+      - Expressions: docs/guide/expressions.md
       - Meshes: docs/guide/meshes.md
       - Geometry: docs/guide/geometry.md
       - Physics: docs/guide/physics.md
@@ -135,6 +136,7 @@ nav:
       - Output: docs/guide/output.md
       - Probes and monitors: docs/guide/probes.md
       - Statistics: docs/guide/statistics.md
+      - Grid convergence: docs/guide/convergence.md
       - Running and controlling jobs: docs/guide/running.md
       - Running in parallel: docs/guide/parallel.md
       - Performance: docs/guide/performance.md
@@ -154,6 +156,8 @@ nav:
   - Reference:
       - Input reference: docs/input.md
       - Command line: docs/guide/cli.md
+      - Feature matrix: docs/guide/features.md
+      - Supported platforms: docs/guide/support.md
       - Tools: docs/tools.md
       - Bibliography: docs/references.md
       - Performance dashboard: docs/dashboard.md
