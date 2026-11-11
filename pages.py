@@ -51,6 +51,8 @@ DESCRIPTIONS = {
     "guide/output.md": "What a Mallard run writes: VTKHDF and VTU snapshots, terminal output, the run record, units, provenance, file formats and post-processing.",
     "guide/probes.md": "Mallard probes on points, curves, cut planes, surfaces and boundary zones, wall forces and domain integrals.",
     "guide/statistics.md": "In-situ statistics in Mallard: running time averages and covariances, spectra and two-point correlations, phase averages.",
+    "guide/python.md": "The mallard Python package: read every file Mallard writes into numpy arrays and run its commands from Python.",
+    "guide/python_api.md": "Reference for every function and class of the mallard Python package.",
     "guide/parallel.md": "Run Mallard on several CPU threads, GPUs or MPI ranks: partitions, halos, output, restarts and multi-GPU scaling.",
     "guide/running.md": "Controlling a running Mallard job with signals and mallard ctl, MPI launchers and Slurm, divergence, and Kubernetes Jobs and MPIJobs.",
     "guide/performance.md": "Measured throughput of Mallard on CPUs and A100 GPUs: the flow solver, 3D TENO-E setup and memory, reacting mixtures and chemistry.",

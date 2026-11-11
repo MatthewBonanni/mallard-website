@@ -135,6 +135,7 @@ nav:
       - Output: docs/guide/output.md
       - Probes and monitors: docs/guide/probes.md
       - Statistics: docs/guide/statistics.md
+      - Python: docs/guide/python.md
       - Running and controlling jobs: docs/guide/running.md
       - Running in parallel: docs/guide/parallel.md
       - Performance: docs/guide/performance.md
@@ -154,6 +155,7 @@ nav:
   - Reference:
       - Input reference: docs/input.md
       - Command line: docs/guide/cli.md
+      - Python API: docs/guide/python_api.md
       - Tools: docs/tools.md
       - Bibliography: docs/references.md
       - Performance dashboard: docs/dashboard.md
