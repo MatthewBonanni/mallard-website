@@ -37,12 +37,12 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 
 <figure id="ellipsoid" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/ellipsoid_poster.jpg" aria-label="Entropy error on the meridian plane of Mach 0.3 flow past a 2:1 spheroid, flat wall faces above and curved faces below, with the wall pressure against potential flow and the drag histories"><source src="../media/ellipsoid.mp4" type="video/mp4"></video>
-<figcaption markdown>**Flat or curved wall faces, in 3D.** Inviscid Mach 0.3 flow past a 2:1 spheroid on the same 627,507 tetrahedra, fifth-order TENO-E. The exact flow has no drag and no entropy. With flat facets the flow separates at their corners and turns unsteady, shedding entropy and scattering the wall pressure; with the faces curved onto the spheroid (`[[mesh.curved]]`) it stays steady, with the wall pressure of potential flow, Cd = 2·10⁻⁴ and an entropy error of 4·10⁻⁶. New in Mallard 0.9.0. [Example: `ellipsoid`](docs/examples.md#ellipsoid)</figcaption>
+<figcaption markdown>**Flat or curved wall faces, in 3D.** Inviscid Mach 0.3 flow past a 2:1 spheroid on the same 627,507 tetrahedra, fifth-order TENO-E. The exact flow has no drag and no entropy. With flat facets the flow separates at their corners and turns unsteady, shedding entropy and scattering the wall pressure; with the faces curved onto the spheroid (`[[mesh.curved]]`) it stays steady, with the wall pressure of potential flow, Cd = 2·10⁻⁴ and an entropy error of 4·10⁻⁶. [Example: `ellipsoid`](docs/examples.md#ellipsoid)</figcaption>
 </figure>
 
 <figure id="curved-boundaries" markdown>
 ![A coarse torus: flat triangles on the left, the same triangles curved by Mallard's cubic face map on the right](validation/curved_faces_torus.png){ loading=lazy width=2000 height=760 .mallard-gallery__plot }
-<figcaption markdown>**Curved boundaries in 3D.** A coarse torus of cubic triangles: flat faces through their corners (left) and the faces Mallard maps from the high-order elements (right), which follow the surface. New in Mallard 0.8.0. [Validation details](validation.md#curved-boundaries).</figcaption>
+<figcaption markdown>**Curved boundaries in 3D.** A coarse torus of cubic triangles: flat faces through their corners (left) and the faces Mallard maps from the high-order elements (right), which follow the surface. [Validation details](validation.md#curved-boundaries).</figcaption>
 </figure>
 
 <figure class="mallard-gallery__pair" id="curved-boundaries-2d" markdown>

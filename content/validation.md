@@ -5,7 +5,7 @@ description: Mallard checked in three ways - code verification against exact sol
 
 # Verification and validation
 
-Each result on this page comes from a run of Mallard (double precision, default settings, including the low-Mach correction of the convective flux, unless a section says otherwise), with the inputs described, compared with an exact solution, theory, or published reference data. The line under each heading, and the Version column below, give the release or commit that produced its numbers and figures; later releases change them only where a section says so. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). Mallard's test suite checks many of the same properties at smaller scale on every change. Mallard 0.5.0 changed two things that affect results: 2D cell centroids are now exact to round-off ([#127](https://github.com/MatthewBonanni/mallard/pull/127)), which keeps the Sod and Shu–Osher strips one-dimensional (both rerun with 0.5.0) and changes other 2D results at round-off level; and TENO-E ranks stencil candidates by the local mesh spacing on strongly stretched cells ([#120](https://github.com/MatthewBonanni/mallard/pull/120)), which leaves hexahedral and regular meshes unchanged. Cases marked 3D use Mallard's 3D build (`-DMallard_DIM=3`); see [a 3D case](docs/tutorials/first_simulation.md#6-a-3d-case) for how to build and run in 3D.
+Each result on this page comes from a Mallard run compared with an exact solution, theory or published reference data. Runs use double precision and default settings, including the low-Mach correction of the convective flux, unless a section says otherwise. The line under each heading and the Version column give the release or commit that produced the numbers and figures. Results from releases before 0.5.0 can differ from current ones at round-off level in 2D, where cell centroids are exact to round-off ([#127](https://github.com/MatthewBonanni/mallard/pull/127)), and on strongly stretched cells, where TENO-E ranks stencil candidates by the local mesh spacing ([#120](https://github.com/MatthewBonanni/mallard/pull/120)); hexahedral and regular meshes are unaffected. Most cases start from an input in Mallard's [examples](docs/examples.md); the scripts that ran every case and drew every figure are in the [website repository](https://github.com/MatthewBonanni/mallard-website/tree/main/validation). The test suite checks many of the same properties at smaller scale on every change. Cases marked 3D use the 3D build (`-DMallard_DIM=3`); [a 3D case](docs/tutorials/first_simulation.md#6-a-3d-case) shows how to build and run one.
 
 **Code verification**
 
@@ -19,7 +19,7 @@ Each result on this page comes from a run of Mallard (double precision, default 
 | [Spherical explosion](#spherical-explosion) (3D) | mean density difference, 64³ hexahedra | 0.004 | 1D radial solution, 4000 cells | <span class="mallard-nowrap">0.3.0</span> |
 | [Sedov–Taylor blast wave](#sedov-taylor) (3D) | shock radius error at t = 0.8 | +1.1% | exact similarity solution | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
 | [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.83°, 1.4985 (TENO-E) | 42.82°, 1.4984 (theory) | <span class="mallard-nowrap">0.4.0</span> |
-| [RHLL on the Mach 3 sphere](#mach-3-sphere-rhll) (3D) | shock on the axis / stagnation pressure, MUSCL, 796k tetrahedra | −0.6151 / 11.93 (before the fix: bulge to −0.624 / 10.6) | HLL: −0.6149 / 11.86 | <span class="mallard-nowrap">20239fc (in 0.8.0)</span> |
+| [RHLL on the Mach 3 sphere](#mach-3-sphere-rhll) (3D) | shock on the axis / stagnation pressure, MUSCL, 796k tetrahedra | −0.6151 / 11.93 (rotated flux alone: bulge to −0.624 / 10.6) | HLL: −0.6149 / 11.86 | <span class="mallard-nowrap">20239fc (in 0.8.0)</span> |
 | [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.0099% of U (quads); order 1.9–2.0, 0.0093% of U (triangles) | exact solution | <span class="mallard-nowrap">0.3.0</span> |
 | [CJ detonation](#detonation) (reacting) | front speed; induction length; peak pressure, at 10 / 20 / 40 cells per induction length | +0.11 / +0.01 / 0.00%; −4.5 / −1.8 / +2.7%; 174.8 / 175.2 / 174.7 kPa | D<sub>CJ</sub> 1616.9 m/s; ZND 1.525 mm; von Neumann 174.7 kPa | <span class="mallard-nowrap">0.4.0</span> |
 | [SIMPLER splitting](#simpler) (reacting) | detonation induction length vs ZND at CFL 1.0, 10 cells; Strang / SIMPLER | −25.5 / −0.9% | ZND 1.525 mm | <span class="mallard-nowrap">beb3c3f (in 0.8.0)</span> |
@@ -115,9 +115,9 @@ Every order converges at its design rate on both meshes: between the two finest 
 Mallard 0.3.0 (0.4.0 gives the same errors to seven digits)
 { .mallard-provenance }
 
-Mallard 0.3.0 makes generated meshes periodic (`[mesh] periodic = ["x", "y"]`): the faces on opposite sides of the box become interior faces, and every stencil reaches across them. To check that the seam costs no accuracy, the same vortex runs in the doubly periodic box [0, 14]², starting centered 1 unit inside the right edge, so that it straddles the seam, and moving with (u, v) = (1, 0) to t = 2, through the seam to the other side. Initial data and the exact solution use the nearest periodic image; everything else is as above, on N = 28 to 224.
+Generated meshes can be periodic (`[mesh] periodic = ["x", "y"]`): the faces on opposite sides of the box become interior faces, and every stencil reaches across them. To check that the seam costs no accuracy, the same vortex runs in the doubly periodic box [0, 14]², starting centered 1 unit inside the right edge, so that it straddles the seam, and moving with (u, v) = (1, 0) to t = 2, through the seam to the other side. Initial data and the exact solution use the nearest periodic image; everything else is as above, on N = 28 to 224.
 
-Between the two finest grids the observed orders are 2.91, 4.08, 4.87 and 6.15 on quadrilaterals and 2.98, 4.03, 4.94 and 6.05 on triangles: the design orders, as without the seam. Without boundaries, these runs are not affected by 0.4.0's changes to TENO-E next to walls: the errors are those of 0.3.0 to seven digits. Since 0.4.0, meshes read from Gmsh files can be periodic too, by pairing boundary zones in [`[[periodic]]`](docs/input.md#periodic) tables.
+Between the two finest grids the observed orders are 2.91, 4.08, 4.87 and 6.15 on quadrilaterals and 2.98, 4.03, 4.94 and 6.05 on triangles: the design orders, as without the seam. Meshes read from Gmsh files can be periodic too, by pairing boundary zones in [`[[periodic]]`](docs/input.md#periodic) tables.
 
 **Quadrilaterals, periodic**
 
@@ -142,7 +142,7 @@ Between the two finest grids the observed orders are 2.91, 4.08, 4.87 and 6.15 o
 Mallard 0.8.0 ([`177818c`](https://github.com/MatthewBonanni/mallard/commit/177818c), merge of [#263](https://github.com/MatthewBonanni/mallard/pull/263))
 { .mallard-provenance }
 
-Since 0.8.0, faces on curved walls follow the true geometry to the order of the scheme ([guide](docs/guide/meshes.md#curved-boundaries)). The geometry comes from high-order Gmsh boundary elements, or from an analytic projection onto circles and spheres. Straight-sided cells next to a curved wall misplace it by O(h²/R): that error enters the face quadrature points, the normals, and every moment TENO-E fits. At slip walls the polygonal wall also turns the flow at every node.
+Faces on curved walls follow the true geometry to the order of the scheme ([guide](docs/guide/meshes.md#curved-boundaries)). The geometry comes from high-order Gmsh boundary elements, or from an analytic projection onto circles and spheres. Straight-sided cells next to a curved wall misplace it by O(h²/R): that error enters the face quadrature points, the normals, and every moment TENO-E fits. At slip walls the polygonal wall also turns the flow at every node.
 
 Mallard keeps the corners of every cell and curves the faces on the wall. The figures below show this on coarse Gmsh meshes with cubic boundary elements, whose extra nodes Gmsh places on the geometry. The straight panels show the faces through the corners, as with `[mesh] curved_geometry = false`. The curved panels show Mallard's face map, the cubic through each boundary element's nodes, sampled finely.
 
@@ -247,7 +247,7 @@ L<sub>1</sub> density difference from the reference, ∫|ρ − ρ<sub>ref</sub>
 | 800 | 0.090 | 0.31 | 0.10 |
 | 1600 | 0.043 | 0.65 | 0.048 |
 
-With the rotated-hybrid RHLL flux, Mallard converges to the reference and is more accurate than the one-dimensional WENO5 scheme on every grid (0.3.0 had 0.26, 0.12 and 0.082 on 400, 800 and 1600 cells; 0.4.0 0.20, 0.11 and 0.059). With HLLC it does not converge beyond 400 cells: behind the Mach 3 shock, which moves along the grid lines of the strip, the rows of a problem that should stay one-dimensional differ by up to 1.1 in density on 800 and 1600 cells, and the entropy waves are lost. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. The example has used RHLL since Mallard 0.3.0 (0.2.0's used HLLC). With RHLL the rows differ by up to 0.07 on 800 cells and 10<sup>−5</sup> on 1600.
+With the rotated-hybrid RHLL flux, Mallard converges to the reference and is more accurate than the one-dimensional WENO5 scheme on every grid. With HLLC it does not converge beyond 400 cells: behind the Mach 3 shock, which moves along the grid lines of the strip, the rows of a problem that should stay one-dimensional differ by up to 1.1 in density on 800 and 1600 cells, and the entropy waves are lost. This is the grid-aligned shock instability that Quirk (1994) described for Roe's scheme and to which HLLC is also prone; use `RHLL` for strong shocks aligned with quadrilateral grids. The example uses RHLL. With RHLL the rows differ by up to 0.07 on 800 cells and 10<sup>−5</sup> on 1600.
 
 <figure class="mallard-figure" markdown>
 ![Entropy waves of the Shu-Osher problem on 1600 cells with HLLC and RHLL fluxes](validation/shu_osher_flux.png){ loading=lazy width=1258 height=714 style="max-width: 32rem" }
@@ -273,7 +273,7 @@ The cells collapse onto one curve, so the computed flow stays spherically symmet
 Development code between 0.3.0 and 0.4.0 (commit not recorded; 0.4.0 is bitwise the same on hexahedra)
 { .mallard-provenance }
 
-A point explosion in a gas at rest (Taylor 1950; Sedov 1959), the `sedov_3d` example (new in Mallard 0.4.0): the energy is deposited in a small sphere at the origin, and only the octant x, y, z ≥ 0 is computed, with three symmetry planes, on 128³ hexahedra (2,097,152 cells); fifth-order TENO-E with bound-preserving scaling, HLLC, SSPRK3, to t = 0.8, on A100 GPUs, run with the development code between 0.3.0 and 0.4.0 (0.4.0's changes to TENO-E leave results on hexahedra bitwise the same). The exact similarity solution for γ = 1.4 puts the shock at R = ξ<sub>0</sub>(E t²/ρ<sub>0</sub>)<sup>1/5</sup> with ξ<sub>0</sub> = 1.0328.
+A point explosion in a gas at rest (Taylor 1950; Sedov 1959), the `sedov_3d` example: the energy is deposited in a small sphere at the origin, and only the octant x, y, z ≥ 0 is computed, with three symmetry planes, on 128³ hexahedra (2,097,152 cells); fifth-order TENO-E with bound-preserving scaling, HLLC, SSPRK3, to t = 0.8, on A100 GPUs, run with the development code between 0.3.0 and 0.4.0 (0.4.0's changes to TENO-E leave results on hexahedra bitwise the same). The exact similarity solution for γ = 1.4 puts the shock at R = ξ<sub>0</sub>(E t²/ρ<sub>0</sub>)<sup>1/5</sup> with ξ<sub>0</sub> = 1.0328.
 
 <figure class="mallard-figure" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sedov_poster.jpg" aria-label="Density of the Sedov-Taylor blast wave on three symmetry planes, with the shock radius and density profile against the exact similarity solution"><source src="../media/sedov.mp4" type="video/mp4"></video>
@@ -306,22 +306,22 @@ Mach 1.758 flow (u = 600 m/s, T = 300 K, R = 277.4 J/(kg K)) over an 8° compres
 | MUSCL | 42.814° | −0.002° | 1.4984 | < 0.01% |
 | TENO-E 5 | 42.826° | +0.011° | 1.4985 | +0.01% |
 
-The fitted shock passes through x = 0.4997 m at y = 0, the ramp corner being at x = 0.5 m. MUSCL results are unchanged from Mallard 0.3.0; with 0.4.0's TENO-E changes next to walls, the TENO-E shock angle moved from 42.821° to 42.826°.
+The fitted shock passes through x = 0.4997 m at y = 0, the ramp corner being at x = 0.5 m.
 
 #### RHLL on the Mach 3 sphere {#mach-3-sphere-rhll}
 
 [`20239fc`](https://github.com/MatthewBonanni/mallard/commit/20239fc) (merge of [#248](https://github.com/MatthewBonanni/mallard/pull/248)); first released in Mallard 0.8.0
 { .mallard-provenance }
 
-With MUSCL on tetrahedra, the rotated-hybrid RHLL flux grew a carbuncle on the bow shock. On faces that cross the shock at an angle, its rotation turned the HLL part onto the shock normal instead of the face normal. Since [#248](https://github.com/MatthewBonanni/mallard/pull/248), RHLL blends the rotated flux toward HLL along the face normal by the pressure jump across the face, w = min(p<sub>l</sub>/p<sub>r</sub>, p<sub>r</sub>/p<sub>l</sub>)<sup>3</sup>. Contacts and shear layers have no pressure jump, so they keep the rotated flux. Inviscid Mach 3 flow over the sphere with MUSCL, at t = 2, gives the shock position on the axis and the stagnation pressure:
+With MUSCL on tetrahedra, a purely rotated hybrid flux grows a carbuncle on the bow shock: on faces that cross the shock at an angle, the rotation turns the HLL part onto the shock normal instead of the face normal. RHLL therefore blends the rotated flux toward HLL along the face normal by the pressure jump across the face, w = min(p<sub>l</sub>/p<sub>r</sub>, p<sub>r</sub>/p<sub>l</sub>)<sup>3</sup> ([#248](https://github.com/MatthewBonanni/mallard/pull/248)). Contacts and shear layers have no pressure jump, so they keep the rotated flux. Inviscid Mach 3 flow over the sphere with MUSCL, at t = 2, gives the shock position on the axis and the stagnation pressure:
 
-| Mesh | RHLL before the fix | RHLL with the fix | HLL |
+| Mesh | Rotated flux alone | RHLL | HLL |
 |---|---:|---:|---:|
 | quarter sphere, 121k tetrahedra | carbuncle: −0.687 / 9.0 at t = 1.2 | −0.6086 / 11.62 | −0.6087 / 11.71 |
 | full sphere, 475k tetrahedra | −0.630 / 9.1 | −0.6163 / 12.04 | −0.6163 / 12.11 |
 | example mesh, 796k tetrahedra (quarter) | bulges to −0.624 / 10.6 at t = 1.2–1.4 | −0.6151 / 11.93, steady | −0.6149 / 11.86 |
 
-With the fix, RHLL matches HLL's shock position to 10<sup>−4</sup> D. With TENO5 on the example mesh it gives −0.6157 to t = 1.8, as before the fix. Results of the other Riemann solvers are unchanged.
+RHLL matches HLL's shock position to 10<sup>−4</sup> D. With TENO5 on the example mesh, both give −0.6157 to t = 1.8.
 
 ### Viscous flow {#viscous-flow}
 
@@ -471,7 +471,7 @@ At Re = 100 the boundary layer spans many cells, so curving the wall moves the d
 Forces: development code before 0.4.0, with 0.4.0's MUSCL ([#111](https://github.com/MatthewBonanni/mallard/pull/111); commit not recorded). Animation: rerun between 0.5.0 and 0.6.0 for [#139](https://github.com/MatthewBonanni/mallard/pull/139)
 { .mallard-provenance }
 
-Viscous flow past a sphere at Re = U D / ν = 300 and Mach 0.2, the `sphere_re300` example (new in Mallard 0.4.0; run with 0.4.0's MUSCL, whose gradients on tetrahedra use vertex neighbours, [#111](https://github.com/MatthewBonanni/mallard/pull/111)). At this Reynolds number the wake sheds hairpin vortices periodically and keeps one plane of symmetry, so the sphere feels a mean lift as well as drag (Johnson & Patel 1999). The mesh, from `examples/sphere_re300/make_sphere_re300_mesh.py`, has 10 layers of prisms on the sphere, from 0.005 D, and tetrahedra refined through the near wake, on the full box −15 < x/D < 30, |y|, |z| < 15. Navier–Stokes, MUSCL with HLLC, SSPRK3 at CFL 0.8; MUSCL rather than TENO-E, which is currently unstable on the thin boundary-layer prisms. The coefficients are averaged over the 7 shedding periods of t U / D = 90–150; the 0.85M-cell run took 4.7 h on 4 A100 GPUs, and the 2.06M-cell one, refined by 1.4 in every direction, 6.7 h on 8.
+Viscous flow past a sphere at Re = U D / ν = 300 and Mach 0.2, the `sphere_re300` example (run with 0.4.0's MUSCL, whose gradients on tetrahedra use vertex neighbors, [#111](https://github.com/MatthewBonanni/mallard/pull/111)). At this Reynolds number the wake sheds hairpin vortices periodically and keeps one plane of symmetry, so the sphere feels a mean lift as well as drag (Johnson & Patel 1999). The mesh, from `examples/sphere_re300/make_sphere_re300_mesh.py`, has 10 layers of prisms on the sphere, from 0.005 D, and tetrahedra refined through the near wake, on the full box −15 < x/D < 30, |y|, |z| < 15. Navier–Stokes, MUSCL with HLLC, SSPRK3 at CFL 0.8; MUSCL rather than TENO-E, which is currently unstable on the thin boundary-layer prisms. The coefficients are averaged over the 7 shedding periods of t U / D = 90–150; the 0.85M-cell run took 4.7 h on 4 A100 GPUs, and the 2.06M-cell one, refined by 1.4 in every direction, 6.7 h on 8.
 
 <figure class="mallard-figure" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_re300_poster.jpg" aria-label="Q-criterion isosurfaces of the hairpin vortices shed by a sphere at Re = 300, colored by streamwise velocity, with drag and lift histories"><source src="../media/sphere_re300.mp4" type="video/mp4"></video>
@@ -1099,7 +1099,7 @@ All four are within 0–8% of the measurements, inside their 10% uncertainty, an
 Development code between 0.3.0 and 0.4.0, before [#109](https://github.com/MatthewBonanni/mallard/pull/109) (commit not recorded)
 { .mallard-provenance }
 
-Inviscid Mach 3 flow past a sphere of diameter D, started impulsively, the `sphere_mach3` example (new in Mallard 0.4.0): 796,962 tetrahedra in the quarter domain y, z ≥ 0 with two symmetry planes, refined on the sphere and through the shock layer; fifth-order TENO-E with bound-preserving scaling, HLL flux, SSPRK3, to t u<sub>∞</sub>/D = 3, on 4 GPUs. HLL rather than RHLL, because RHLL develops a carbuncle on the axis where the two symmetry planes meet ([issue #80](https://github.com/MatthewBonanni/mallard/issues/80)). This run used the development code before two 0.4.0 changes to TENO-E, the conditioning bound and complete stencils near boundaries ([#109](https://github.com/MatthewBonanni/mallard/pull/109)), which change results on tetrahedra; it has not been repeated with 0.4.0.
+Inviscid Mach 3 flow past a sphere of diameter D, started impulsively, the `sphere_mach3` example: 796,962 tetrahedra in the quarter domain y, z ≥ 0 with two symmetry planes, refined on the sphere and through the shock layer; fifth-order TENO-E with bound-preserving scaling, HLL flux, SSPRK3, to t u<sub>∞</sub>/D = 3, on 4 GPUs. HLL rather than RHLL, because RHLL develops a carbuncle on the axis where the two symmetry planes meet ([issue #80](https://github.com/MatthewBonanni/mallard/issues/80)). This run used the development code before two 0.4.0 changes to TENO-E, the conditioning bound and complete stencils near boundaries ([#109](https://github.com/MatthewBonanni/mallard/pull/109)), which change results on tetrahedra; it has not been repeated with 0.4.0.
 
 <figure class="mallard-figure" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_poster.jpg" aria-label="Mach 3 flow over a sphere: Mach number on the horizontal meridian, numerical schlieren on the vertical one and the revolved bow shock, with the standoff distance against Billig's correlation and the stagnation-line pressure"><source src="../media/sphere.mp4" type="video/mp4"></video>
