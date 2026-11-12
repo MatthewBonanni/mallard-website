@@ -49,7 +49,7 @@ def main(mallard):
         ax.set_xlabel("$x$")
         ax.set_title(lab)
         ax.set_xlim(0, 1)
-    axs[0].legend(loc="upper right")
+    fig.legend(*axs[0].get_legend_handles_labels(), loc="outside upper center", ncols=2)
     fig.savefig(FIG / "sod_3d.png")
 
 

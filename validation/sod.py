@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import brentq
 
-from common import FIG, GRAY, PLUM, TEAL, FLAME, example, load, last_vtu, order, run, sub
+from common import FIG, PLUM, TEAL, FLAME, example, load, last_vtu, order, run, sub
 
 G = 1.4
 T_END = 0.2
@@ -87,7 +87,7 @@ def main():
         ax.set_xlabel("$x$")
         ax.set_title(lab)
         ax.set_xlim(0, 1)
-    axs[0].legend(loc="upper right")
+    fig.legend(*axs[0].get_legend_handles_labels(), loc="outside upper center", ncols=3)
     fig.savefig(FIG / "sod.png")
     json.dump(results, open(FIG / "sod.json", "w"), indent=1)
 
