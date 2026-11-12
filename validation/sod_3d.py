@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-from common import FIG, PLUM, RUNS, TEAL
+from common import FIG, GRAY, RUNS, TEAL
 from mallard.vtu import read_vtu_cells
 from sod import exact, exact_cell_avg
 
@@ -44,12 +44,12 @@ def main(mallard):
     xe = np.linspace(0, 1, 4001)
     fig, axs = plt.subplots(1, 3, figsize=(7.2, 2.4), constrained_layout=True)
     for ax, v, e, lab in zip(axs, (rho, U[:, 0], p), exact(xe, t), (r"$\rho$", "$u$", "$p$")):
-        ax.plot(xe, e, color=PLUM, lw=0.9, label="exact")
+        ax.plot(xe, e, color=GRAY, lw=2.2, label="exact")
         ax.plot(cx, v, "o", ms=1.6, color=TEAL, label="3D, all 3,200 cells", zorder=3)
         ax.set_xlabel("$x$")
         ax.set_title(lab)
         ax.set_xlim(0, 1)
-    axs[0].legend(loc="upper right")
+    fig.legend(*axs[0].get_legend_handles_labels(), loc="outside upper center", ncols=2)
     fig.savefig(FIG / "sod_3d.png")
 
 

@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-from common import FIG, FLAME, PLUM, TEAL, example, load, last_vtu, run, sub
+from common import FIG, FLAME, GRAY, TEAL, example, load, last_vtu, run, sub
 
 G = 1.4
 T_END = 1.8
@@ -142,9 +142,9 @@ def main():
     xh, rh = mallard(1600, "HLLC")
     fig, axs = plt.subplots(1, 2, figsize=(7.2, 2.6), width_ratios=[1.5, 1], constrained_layout=True)
     for ax, lim in zip(axs, ((0, 10), (5.5, 7.5))):
-        ax.plot(xr, rr, color=PLUM, lw=0.8, label="reference (WENO5, 12,800 cells)")
-        ax.plot(x2, r2, "o", ms=1.8 if lim[1] - lim[0] > 5 else 2.4, color=TEAL, label="Mallard, 200 cells", zorder=3)
-        ax.plot(x4, r4, "-", color=FLAME, lw=0.8, label="Mallard, 400 cells")
+        ax.plot(xr, rr, color=GRAY, lw=2.2, label="reference (WENO5, 12,800 cells)")
+        ax.plot(x2, r2, color=TEAL, lw=1.0, label="Mallard, 200 cells")
+        ax.plot(x4, r4, color=FLAME, lw=1.0, label="Mallard, 400 cells")
         ax.set_xlim(*lim)
         ax.set_xlabel("$x$")
     axs[0].set_ylabel(r"$\rho$")
@@ -155,10 +155,10 @@ def main():
     fig.savefig(FIG / "shu_osher.png")
 
     fig, ax = plt.subplots(figsize=(4.2, 2.4), constrained_layout=True)
-    ax.plot(xr, rr, color=PLUM, lw=0.8, label="reference")
-    ax.plot(xh, rh, "-", color=FLAME, lw=0.8, label="HLLC, 1600 cells")
+    ax.plot(xr, rr, color=GRAY, lw=2.2, label="reference")
+    ax.plot(xh, rh, color=FLAME, lw=1.0, label="HLLC, 1600 cells")
     x16, r16 = mallard(1600)
-    ax.plot(x16, r16, "-", color=TEAL, lw=0.8, label="RHLL, 1600 cells")
+    ax.plot(x16, r16, color=TEAL, lw=1.0, label="RHLL, 1600 cells")
     ax.set_xlim(5.5, 7.5)
     ax.set_ylim(2.9, 4.8)
     ax.set_xlabel("$x$")

@@ -275,7 +275,6 @@ def detonation():
     a.axhline(0.0, color=GRAY, lw=0.8, ls="--")
     a.set_xlabel("t [µs]")
     a.set_ylabel("x$_s$ − D$_{CJ}$ t  [mm]")
-    a.legend(loc="center right", fontsize=7)
     a.set_title(f"shock position against D$_{{CJ}}$ = {D_cj:.1f} m/s")
     # Structure behind the front at the end of the run, against ZND
     b.plot(-zx["x"] * 1e3, zx["p"] / 1e3, color=GRAY, lw=2.2, label="ZND")
