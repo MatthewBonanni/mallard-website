@@ -36,7 +36,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - High order by default: on smooth flow, TENO-E reaches an accurate answer at a fraction of a second-order scheme's cost ([measured](docs/guide/numerics.md#why-high-order))
     - Rusanov, HLL, HLLC, Roe and the rotated-hybrid RHLL, carbuncle-free except at shocks at rest on cell faces; all for single gases and mixtures
     - Low-Mach correction of the upwind dissipation
-    - Forward Euler, SSPRK3, RK4, low-storage SSPRK(5,4) and 2N RK4(5), at a CFL number, a fixed step or embedded error-controlled steps
+    - Runge–Kutta time integration: forward Euler, SSPRK3, RK4 and the five-stage low-storage SSPRK54, CK45 and RDPK3Sp35, at a CFL number, a fixed step or error-controlled steps (RDPK3Sp35's embedded estimate)
 
     [Numerics guide](docs/guide/numerics.md) · [Numerical methods](docs/numerics/overview.md) · [What's new in the numerics](docs/numerics/originality.md)
 
