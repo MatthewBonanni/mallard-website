@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import brentq
 
-from common import FIG, GRAY, TEAL, FLAME, example, load, last_vtu, order, run, sub
+from common import FIG, PLUM, TEAL, FLAME, example, load, last_vtu, order, run, sub
 
 G = 1.4
 T_END = 0.2
@@ -81,9 +81,9 @@ def main():
     ex = exact(xe, T_END)
     fig, axs = plt.subplots(1, 3, figsize=(7.2, 2.4), constrained_layout=True)
     for ax, v, vm, e, lab in zip(axs, (rho, u, p), (rhom, um, pm), ex, (r"$\rho$", "$u$", "$p$")):
-        ax.plot(xe, e, color=GRAY, lw=2.2, label="exact")
-        ax.plot(xm, vm, color=FLAME, lw=1.0, label="MUSCL, Venkatakrishnan")
-        ax.plot(x, v, color=TEAL, lw=1.0, label="TENO-E, order 5")
+        ax.plot(xe, e, color=PLUM, lw=0.9, label="exact")
+        ax.plot(xm, vm, "-", color=FLAME, lw=0.8, label="MUSCL, Venkatakrishnan")
+        ax.plot(x, v, "o", ms=1.8, color=TEAL, label="TENO-E, order 5", zorder=3)
         ax.set_xlabel("$x$")
         ax.set_title(lab)
         ax.set_xlim(0, 1)

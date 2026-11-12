@@ -182,13 +182,13 @@ Discontinuous solutions against exact or converged references, in 1D strips, 2D 
 
 #### Sod shock tube {#sod-shock-tube}
 
-Mallard 0.5.0
+Table: Mallard 0.5.0. Figure: redrawn with [`fba4a82`](https://github.com/MatthewBonanni/mallard/commit/fba4a82) (0.9.1 + 90 commits)
 { .mallard-provenance }
 
 The Riemann problem of Sod (1978): (ρ, u, p) = (1, 0, 1) for x < 0.5 and (0.125, 0, 0.1) for x > 0.5, γ = 1.4, at t = 0.2. The [`sod`](docs/examples.md#sod) example: a strip of N × 4 square quadrilaterals with slip walls, HLLC flux, SSPRK3 at CFL 0.5. Run with Mallard 0.5.0.
 
 <figure class="mallard-figure" markdown>
-![Density, velocity and pressure of the Sod shock tube at t = 0.2 on 200 cells, TENO-E and MUSCL against the exact solution](validation/sod.png){ loading=lazy width=2158 height=718 }
+![Density, velocity and pressure of the Sod shock tube at t = 0.2 on 200 cells, TENO-E and MUSCL against the exact solution](validation/sod.png){ loading=lazy width=2158 height=714 }
 <figcaption>Sod shock tube at t = 0.2 on 200 cells. Fifth-order TENO-E (dots) and MUSCL with the Venkatakrishnan limiter (line) against the exact solution.</figcaption>
 </figure>
 
@@ -207,14 +207,14 @@ The errors are taken over all cells of the strip, whose four rows agree to round
 
 ##### Sod shock tube in 3D {#sod-3d}
 
-Text: Mallard 0.3.0. Figure and table: rerun with Mallard 0.7.0
+Text: Mallard 0.3.0. Table: rerun with Mallard 0.7.0. Figure: redrawn with [`fba4a82`](https://github.com/MatthewBonanni/mallard/commit/fba4a82) (0.9.1 + 90 commits), the same numbers
 { .mallard-provenance }
 
 The Sod problem of the [Sod shock tube](#sod-shock-tube) section on a 200 × 4 × 4 box of hexahedra with slip walls on all six faces, MUSCL with the Venkatakrishnan limiter, HLLC, SSPRK3. The solution stays one-dimensional to round-off (transverse velocities below 10<sup>−13</sup>), and its L<sub>1</sub> density error against the exact solution, 2.653 × 10<sup>−3</sup>, equals that of the same scheme on 200 × 4 quadrilaterals in 2D to all four digits.
 
 
 <figure class="mallard-figure" markdown>
-![Density, velocity and pressure of every cell of the 3D Sod shock tube against the exact solution](validation/sod_3d.png){ loading=lazy width=2158 height=718 }
+![Density, velocity and pressure of every cell of the 3D Sod shock tube against the exact solution](validation/sod_3d.png){ loading=lazy width=2158 height=714 }
 <figcaption>Every one of the 200 × 4 × 4 cells at t = 0.2 (MUSCL with the Venkatakrishnan limiter, HLLC), against the exact solution; Mallard 0.7.0.</figcaption>
 </figure>
 
@@ -228,7 +228,7 @@ The 0.7.0 rerun uses the `sod` example's settings in 0.7.0 (CFL 1.0 in that rele
 
 #### Shu–Osher problem {#shu-osher-problem}
 
-Mallard 0.5.0
+Table: Mallard 0.5.0. Figures: redrawn with [`fba4a82`](https://github.com/MatthewBonanni/mallard/commit/fba4a82) (0.9.1 + 90 commits)
 { .mallard-provenance }
 
 A Mach 3 shock running into a sinusoidal density field (Shu & Osher 1989), on [0, 10] (the usual [−5, 5] shifted by 5), t = 1.8, with the [`shu_osher`](docs/examples.md#shu-osher) example: fifth-order TENO-E and the RHLL flux on N × 4 square quadrilaterals, run with Mallard 0.5.0. There is no exact solution; the reference is a one-dimensional fifth-order WENO-JS solution (characteristic, Lax–Friedrichs flux splitting, SSPRK3) on 12,800 cells, which differs from the same code on 6,400 cells by 0.007 in L<sub>1</sub>.
