@@ -75,7 +75,7 @@ for tag in ${releases[@]+"${releases[@]}"}; do
     echo "Documentation of $tag under $tag/"
     rel="$work/site-$tag"
     mkdir -p "$rel/content"
-    cp -R "$here/mkdocs.yml" "$here/pages.py" "$here/hooks" "$here/overrides" "$here/data" "$rel/"
+    cp -R "$here/mkdocs.yml" "$here/pages.py" "$here/hooks" "$here/overrides" "$here/data" "$here/errata" "$rel/"
     cp -R "$here/content/assets" "$here/content/examples.json" "$rel/content/"
     # the tracked pages of content/docs (the landing page, the dashboard), not the generated ones
     (cd "$here" && git ls-files content/docs | tar -cf - -T -) | tar -xf - -C "$rel"
