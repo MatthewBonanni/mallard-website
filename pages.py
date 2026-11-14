@@ -62,7 +62,7 @@ DESCRIPTIONS = {
     "numerics/overview.md": "Mallard's numerical methods: finite volume discretization, time step, reconstruction, Riemann solvers, boundary conditions and viscous fluxes.",
     "numerics/teno_e.md": "How Mallard implements TENO-E reconstruction of orders 3 to 6 on unstructured 2D and 3D meshes.",
     "numerics/originality.md": "Which parts of Mallard's numerics are its own and which are published methods, with the closest prior work and the evidence.",
-    "verification/index.md": "Observed orders of accuracy of every Mallard scheme on every cell type, from its convergence tests: reconstruction, Euler and Navier-Stokes, time integrators, boundaries, remapping.",
+    "verification.md": "Observed orders of accuracy of every Mallard scheme on every cell type, from its convergence tests: reconstruction, Euler and Navier-Stokes, time integrators, boundaries, remapping.",
     "theory/index.md": "Mallard's theory manual: the equations it solves and the methods it solves them with, as implemented.",
     "theory/governing_equations.md": "The compressible Navier-Stokes equations Mallard solves: conservation laws, single-gas constitutive laws, axisymmetric form.",
     "theory/thermodynamics_transport.md": "Thermally perfect gas mixtures in Mallard: NASA polynomials, mixture-averaged transport, Soret diffusion and double flux.",
@@ -83,8 +83,10 @@ DESCRIPTIONS = {
     "design/axisymmetric.md": "Design notes on axisymmetric (r-z) flows in Mallard: revolved finite volumes, sources, the axis and reconstruction.",
 }
 
+# pages of docs/ published at another path of content/docs (same URL)
+MOVED = {"verification/index.md": "verification.md"}
 GENERATED = ["input.md", "examples.md", "installation.md", "contributing.md", "tools.md", "references.md", "numerics", "design", "guide",
-             "theory", "verification", "tutorials", "images", "input-keys.json", "templates.json"]
+             "theory", "verification", "verification.md", "tutorials", "images", "input-keys.json", "templates.json"]
 
 REPO_FILES = set()
 
@@ -126,6 +128,12 @@ def main():
                                      text=True).stdout
                 pages[rel] = (pages[rel][0], out)
 
+    # A page rather than a section index: under navigation.indexes, an index.md would become the page of
+    # the Verification and validation section
+    for old, new in MOVED.items():
+        if old in pages:
+            pages[new] = pages.pop(old)
+
     if "installation.md" not in pages:
         # releases before docs/installation.md kept the installation guide in the README
         readme = (docsrc / "README.md").read_text()
@@ -165,6 +173,8 @@ def main():
             if re.match(r"^[a-z]+:", target) or target.startswith("#") or not path:
                 return f"{label}({target}{title})"
             repo_target = posixpath.normpath(posixpath.join(posixpath.dirname(repo_path), path))
+            if repo_target[5:] in MOVED:
+                repo_target = "docs/" + MOVED[repo_target[5:]]
             if repo_target.startswith("docs/") and repo_target[5:] in pages:
                 return f"{label}({posixpath.relpath(repo_target, page_dir)}{frag}{title})"
             if repo_target.startswith("docs/images/") and (docsrc / repo_target).is_file():

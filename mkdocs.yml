@@ -145,9 +145,7 @@ nav:
   - Gallery: gallery.md
   - Verification and validation:
       - Cases: validation.md
-      # A section of its own, or navigation.indexes makes this index.md the parent section's page
-      - Verification manual:
-          - docs/verification/index.md
+      - Verification manual: docs/verification.md
   - Theory:
       - Theory manual:
           # The chapters of docs/theory/, in the order of its index (pages.py)
