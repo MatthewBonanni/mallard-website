@@ -89,7 +89,7 @@ you from this first run to multi-GPU LES, one step at a time.
 
     - [Theory manual](theory/index.md): the equations and methods, as implemented
     - [Numerical studies](numerics/overview.md) and [TENO-E details](numerics/teno_e.md)
-    - [What's new in the numerics](numerics/originality.md)
+    - [What's original in Mallard](numerics/originality.md)
 
 -   :material-file-document-outline:{ .lg .middle } __Reference__
 
