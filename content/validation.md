@@ -62,7 +62,7 @@ Each result on this page comes from a Mallard run compared with an exact solutio
 
 This page follows the usual definitions (Roache 1998; Oberkampf & Roy 2010):
 
-- **Code verification** asks whether Mallard solves its equations correctly: results against exact solutions, theory and the design order of accuracy. The [verification manual](docs/verification/index.md) adds the measured order of 149 convergence studies from the test suite.
+- **Code verification** asks whether Mallard solves its equations correctly: results against exact solutions, theory and the design order of accuracy. The [verification manual](docs/verification.md) adds the measured order of 149 convergence studies from the test suite.
 - **Benchmarks** compare Mallard with other codes and published simulations of the same equations: Cantera for chemistry and flames, DNS for turbulence, and DNS as the reference for the large-eddy simulation models.
 - **Validation** asks whether the equations and models describe reality: results against experiments.
 

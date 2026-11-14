@@ -80,7 +80,7 @@ you from this first run to multi-GPU LES, one step at a time.
     ---
 
     - [Validation cases](../validation.md): each case against its reference
-    - [Verification manual](verification/index.md): observed orders of accuracy
+    - [Verification manual](verification.md): observed orders of accuracy
     - [Performance dashboard](dashboard.md): throughput and scaling, measured
 
 -   :material-sigma:{ .lg .middle } __Theory__

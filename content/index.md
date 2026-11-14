@@ -125,7 +125,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - A feature matrix: each pair of features marked validated, verified, implemented, rejected or untested, linked to its evidence
     - Nightly sanitizers; a performance suite with per-hardware baselines
 
-    [Verification and validation](validation.md) · [Verification manual](docs/verification/index.md) · [Feature matrix](docs/guide/features.md) · [Supported platforms](docs/guide/support.md) · [Examples](docs/examples.md)
+    [Verification and validation](validation.md) · [Verification manual](docs/verification.md) · [Feature matrix](docs/guide/features.md) · [Supported platforms](docs/guide/support.md) · [Examples](docs/examples.md)
 
 </div>
 
