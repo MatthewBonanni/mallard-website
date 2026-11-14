@@ -152,7 +152,7 @@ nav:
           - THEORY
       - Numerical studies: docs/numerics/overview.md
       - TENO-E details: docs/numerics/teno_e.md
-      - "What's new in the numerics": docs/numerics/originality.md
+      - "What's original in Mallard": docs/numerics/originality.md
   - Reference:
       - Input reference: docs/input.md
       - Command line: docs/guide/cli.md
