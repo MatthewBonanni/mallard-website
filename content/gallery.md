@@ -102,7 +102,7 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 
 <figure markdown>
 ![Peak temperature of the counterflow diffusion flame against local strain rate and against spread rate, Mallard runs on the Cantera curve within 2%](media/counterflow_strain.png){ loading=lazy width=2053 height=683 .mallard-gallery__plot }
-<figcaption markdown>Peak temperature against strain: within 2% of Cantera from 344 to 1640 1/s at matched local strain rate (+0.35% to +1.93%, up to 91% of Cantera's extinction strain of 1811 1/s), and within 1.1% at matched spread rate. Mallard's points are the runs of [#171](https://github.com/MatthewBonanni/mallard/pull/171); the Cantera curve is the grid-converged reference of [#1140](https://github.com/MatthewBonanni/mallard/pull/1140).</figcaption>
+<figcaption markdown>Peak temperature against strain: within 2% of Cantera from 344 to 1640 1/s at matched local strain rate (+0.35% to +1.92%, up to 91% of Cantera's extinction strain of 1811 1/s), and within 1.1% at matched spread rate. Mallard's points are the runs of [#171](https://github.com/MatthewBonanni/mallard/pull/171); the Cantera curve is the grid-converged reference of [#1228](https://github.com/MatthewBonanni/mallard/pull/1228), converged at every strain rate.</figcaption>
 </figure>
 
 <figure id="triple-flame" markdown>
