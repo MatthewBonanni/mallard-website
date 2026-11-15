@@ -357,13 +357,13 @@ The viscous terms converge at second order on quadrilaterals and at 1.9 to 2.0 o
 
 #### CJ detonation {#detonation}
 
-Mallard 0.4.0
+Table: Mallard 0.4.0. Figure: redrawn with [`d57440e`](https://github.com/MatthewBonanni/mallard/commit/d57440e) (0.10.0 + 48 commits); at 20 cells per induction length the induction length is 1.504 mm (−1.4%) and the peak pressure 175.1 kPa, the other rows the same numbers
 { .mallard-provenance }
 
 A planar Chapman–Jouguet detonation in 2H<sub>2</sub>-O<sub>2</sub>-7Ar at 6.67 kPa and 298 K, the [`detonation_1d`](docs/examples.md#detonation-1d) example. With this mechanism the recombination zone behind the front is about 0.8 m long, so a detonation started by a driver gas runs below the CJ speed over any practical tube (9% below over 0.6 m); the run therefore starts from the steady ZND structure, computed with Cantera by `tools/setup/detonation_reference.py` (the formulation of Shepherd's [Shock and Detonation Toolbox](https://shepherd.caltech.edu/EDL/PublicResources/sdt/)) and placed on the mesh by `tools/setup/znd_restart.py`, and must keep it: the CJ speed D<sub>CJ</sub> = 1616.9 m/s, the induction length (from the shock to the peak heat release) 1.525 mm, and the von Neumann pressure spike, 174.7 kPa. A 0.6 m tube with the shock at 0.25 m, run for 200 µs (about 0.32 m of travel) on 10, 20 and 40 cells per induction length; MUSCL, HLLC, SSPRK3 at CFL 0.5. The front speed is a line fit to the shock position (the last cell above twice the initial pressure) over the second half of the run, and the induction length the mean over the same outputs.
 
 <figure class="mallard-figure" markdown>
-![Front speed of the detonation against the CJ speed over 200 microseconds, and the pressure behind the front against the ZND profile, at three resolutions](validation/detonation.png){ loading=lazy width=2101 height=783 }
+![Front speed of the detonation against the CJ speed over 200 microseconds, and the pressure behind the front against the ZND profile, at three resolutions](validation/detonation.png){ loading=lazy width=2095 height=778 }
 <figcaption>Left: front speed between outputs 10 µs apart. Right: pressure behind the front at 200 µs against the ZND profile; the dotted line is the ZND induction length.</figcaption>
 </figure>
 
@@ -1153,13 +1153,13 @@ With 0.02 D cells on the wall the facets sit 10<sup>−4</sup> D inside the sphe
 
 ### Decaying isotropic turbulence {#les-cbc}
 
-[`d8060fd`](https://github.com/MatthewBonanni/mallard/commit/d8060fd) with the uncommitted files of [#213](https://github.com/MatthewBonanni/mallard/pull/213) (0.5.0 + 83 commits on the LES branch). The dynamic constant: development code between 0.6.0 and 0.7.0 ([#223](https://github.com/MatthewBonanni/mallard/pull/223))
+[`d8060fd`](https://github.com/MatthewBonanni/mallard/commit/d8060fd) with the uncommitted files of [#213](https://github.com/MatthewBonanni/mallard/pull/213) (0.5.0 + 83 commits on the LES branch). The dynamic constant: development code between 0.6.0 and 0.7.0 ([#223](https://github.com/MatthewBonanni/mallard/pull/223)). Figure: redrawn with [`d57440e`](https://github.com/MatthewBonanni/mallard/commit/d57440e) (0.10.0 + 48 commits), the same numbers
 { .mallard-provenance }
 
 The grid turbulence of Comte-Bellot & Corrsin (1971), in the [`cbc_les`](docs/examples.md#cbc-les) example. A periodic box of eleven mesh lengths starts from the measured spectrum at the first station (t U<sub>0</sub>/M = 42). The spectra are compared at the next two stations, 98 and 171, with a fictitious sound speed for a turbulent Mach number of 0.1. Spectral error is the log<sub>10</sub> RMS of E<sub>LES</sub>/E<sub>CBC</sub> up to 2/3 of the grid cutoff wavenumber, at stations 2 / 3. The dissipation shares are averaged over the run.
 
 <figure class="mallard-figure" markdown>
-![Energy spectra of LES runs at two stations against the measurements of Comte-Bellot and Corrsin](validation/les_cbc.png){ loading=lazy width=1500 height=630 }
+![Energy spectra of LES runs at two stations against the measurements of Comte-Bellot and Corrsin](validation/les_cbc.png){ loading=lazy width=1484 height=701 }
 <figcaption>Energy spectra at t U<sub>0</sub>/M = 98 and 171 against Comte-Bellot & Corrsin: Sigma with the hybrid flux, without a model, and with HLLC.</figcaption>
 </figure>
 
