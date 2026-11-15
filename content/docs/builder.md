@@ -8,7 +8,7 @@ hide:
 # Input builder
 
 Build an input file step by step, or paste one to check it. Everything here comes from the
-[key catalog](https://github.com/MatthewBonanni/mallard/blob/main/docs/input-keys.json) that
+[key catalog](https://github.com/MatthewBonanni/mallard/tree/main/docs/input-keys) that
 Mallard's setup records as it reads the examples and tutorials: each key's type, default and accepted
 values. Each key links to its row of the [input reference](input.md). The page runs in your browser
 and sends nothing anywhere.
