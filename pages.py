@@ -25,6 +25,7 @@ import shutil
 import subprocess
 import sys
 import tomllib
+import urllib.parse
 from pathlib import Path
 
 SITE = "https://matthewbonanni.github.io/mallard/"
@@ -203,8 +204,10 @@ def main():
         shutil.copy(docsrc / img, out)
     # The input builder's data (docs/builder.md): the key catalog setup records, and the
     # case templates of `mallard new`
-    if (docsrc / "docs" / "input-keys.json").is_file():
-        shutil.copy(docsrc / "docs" / "input-keys.json", docs / "input-keys.json")
+    keys = sorted((docsrc / "docs" / "input-keys").glob("*.json"))
+    if keys:
+        catalog = {urllib.parse.unquote(f.name.removesuffix(".json")): json.loads(f.read_text()) for f in keys}
+        (docs / "input-keys.json").write_text(json.dumps(catalog, indent=1) + "\n")
     manifest = docsrc / "templates" / "manifest.toml"
     if manifest.is_file():
         templates = [{k: t[k] for k in ("name", "summary", "dim") if k in t}
