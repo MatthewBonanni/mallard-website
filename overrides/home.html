@@ -1,5 +1,12 @@
 {% extends "main.html" %}
 
+{% block extrahead %}
+  {{ super() }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+{% endblock %}
+
 {% block tabs %}
   {{ super() }}
   <section class="mallard-hero" aria-label="Introduction">
@@ -35,5 +42,7 @@
   {% if config.extra.versions %}
     <div id="mallard-versions" hidden data-current="{{ config.extra.current_version | e }}" data-versions="{{ config.extra.versions | e }}"></div>
   {% endif %}
+  <div class="mallard-home">
   {{ page.content }}
+  </div>
 {% endblock %}
