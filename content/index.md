@@ -4,12 +4,12 @@ title: Mallard
 hide:
   - navigation
   - toc
-hero_video: media/hero.mp4
-hero_poster: media/hero_poster.jpg
-hero_width: 1920
-hero_height: 1356
-hero_alt: Density of the 2D Riemann problem on 4096 by 4096 cells, vortex structures of the 3D Taylor-Green vortex at 256 cubed with its dissipation rate traced over the 512 cubed spectral DNS, the leading shock and soot foils of a 3D cellular detonation, and the temperature and heat release rate of a 2D autoignition DNS
-hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilaterals (16.8 million cells), with Kelvin–Helmholtz roll-ups along the slip lines of the jet; a cellular detonation in 2H2-O2-7Ar in a 3 cm square duct, 19.2 million hexahedra in a window that follows the front, whose transverse waves sweep both directions and print their tracks on the numerical soot foils of the walls (front speed within 0.2% of the Chapman–Jouguet speed); the Taylor–Green vortex at Re = 1600 on the full periodic box at 256³ (16.8 million hexahedra), whose kinetic-energy dissipation rate, traced beside it, peaks within 0.3% of the 512³ spectral DNS of the High-Order CFD Workshop; and a DNS of the autoignition of thermally stratified lean H2/air at 41 atm (T′ = 15 K, after Chen et al.), burning by spontaneous ignition fronts and deflagrations."
+hero_image: media/hero_riemann_1200.webp
+hero_image_small: media/hero_riemann_720.webp
+hero_width: 1200
+hero_height: 1050
+hero_alt: Density of the 2D Riemann problem on 4096 by 4096 cells, a detail where Kelvin-Helmholtz vortices roll up along the slip lines inside the jet
+hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilaterals (16.8 million cells): Kelvin–Helmholtz roll-ups along the slip lines of the jet, a detail of 1600 × 1400 cells."
 ---
 
 ## What's inside

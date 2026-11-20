@@ -28,10 +28,10 @@
           <div class="mallard-hero__release">Documentation of Mallard's main branch; latest release {{ config.extra.mallard_version }}</div>
         </div>
         <div class="mallard-hero__media">
-          <video data-autoplay controls loop muted playsinline preload="none" width="{{ page.meta.hero_width }}" height="{{ page.meta.hero_height }}" poster="{{ page.meta.hero_poster | url }}" aria-label="{{ page.meta.hero_alt }}">
-            <source src="{{ page.meta.hero_video | url }}" type="video/mp4">
-          </video>
-          <div class="mallard-hero__caption">{{ page.meta.hero_caption }}</div>
+          <a href="{{ 'gallery/#riemann-4k' | url }}">
+            <img src="{{ page.meta.hero_image | url }}" srcset="{{ page.meta.hero_image_small | url }} 720w, {{ page.meta.hero_image | url }} 1200w" sizes="(max-width: 60em) 100vw, 55vw" width="{{ page.meta.hero_width }}" height="{{ page.meta.hero_height }}" fetchpriority="high" alt="{{ page.meta.hero_alt }}">
+          </a>
+          <div class="mallard-hero__caption">{{ page.meta.hero_caption }} <a href="{{ 'gallery/#riemann-4k' | url }}">The animation</a> and more runs are in the <a href="{{ 'gallery/' | url }}">gallery</a>.</div>
         </div>
       </div>
     </div>

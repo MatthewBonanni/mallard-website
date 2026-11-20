@@ -46,6 +46,11 @@ body { font-feature-settings: var(--m-font-features); -webkit-font-smoothing: an
 .md-search__input { color: var(--m-text); }
 .md-search__input::placeholder, .md-search__icon { color: var(--m-text-muted); }
 
+/* Phones: the version selector, not a clipped site name, beside the menu button */
+@media screen and (max-width: 44.9375em) {
+  .md-header__topic:first-child > .md-ellipsis { display: none; }
+}
+
 /* Layout: a wider grid for tables and figures */
 .md-grid { max-width: 68rem; }
 
@@ -184,6 +189,9 @@ body { font-feature-settings: var(--m-font-features); -webkit-font-smoothing: an
   background: #000;
 }
 .mallard-hero__caption { font-size: 0.7rem; color: #c9b8b1; margin-top: 0.6rem; }
+.md-typeset .mallard-hero__caption a { color: #f6eee9; text-decoration: underline; text-decoration-color: #f6eee966; }
+.md-typeset .mallard-hero__caption a:hover { color: #79d6cb; }
+.mallard-hero__media img { aspect-ratio: 1920 / 1356; object-fit: cover; }
 .mallard-hero__release { font-size: 0.7rem; color: #c9b8b1; margin-top: 0.2rem; }
 
 @media screen and (max-width: 60em) {
