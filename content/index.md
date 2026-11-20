@@ -4,13 +4,72 @@ title: Mallard
 hide:
   - navigation
   - toc
+hero_title: High-order compressible flow on unstructured meshes
+hero_lede: Euler, Navier–Stokes and reacting flows and large-eddy simulation, in 2D and 3D. TENO-E reconstruction of orders 3 to 6 on every cell type, in one C++20 and Kokkos code for CPUs and NVIDIA and AMD GPUs.
+hero_image: media/hero_riemann_1200.webp
+hero_image_small: media/hero_riemann_720.webp
 hero_video: media/hero.mp4
-hero_poster: media/hero_poster.jpg
-hero_width: 1920
-hero_height: 1356
-hero_alt: Density of the 2D Riemann problem on 4096 by 4096 cells, vortex structures of the 3D Taylor-Green vortex at 256 cubed with its dissipation rate traced over the 512 cubed spectral DNS, the leading shock and soot foils of a 3D cellular detonation, and the temperature and heat release rate of a 2D autoignition DNS
-hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilaterals (16.8 million cells), with Kelvin–Helmholtz roll-ups along the slip lines of the jet; a cellular detonation in 2H2-O2-7Ar in a 3 cm square duct, 19.2 million hexahedra in a window that follows the front, whose transverse waves sweep both directions and print their tracks on the numerical soot foils of the walls (front speed within 0.2% of the Chapman–Jouguet speed); the Taylor–Green vortex at Re = 1600 on the full periodic box at 256³ (16.8 million hexahedra), whose kinetic-energy dissipation rate, traced beside it, peaks within 0.3% of the 512³ spectral DNS of the High-Order CFD Workshop; and a DNS of the autoignition of thermally stratified lean H2/air at 41 atm (T′ = 15 K, after Chen et al.), burning by spontaneous ignition fronts and deflagrations."
+hero_alt: Density of the 2D Riemann problem on 4096 by 4096 cells, a detail where Kelvin-Helmholtz vortices roll up along the slip lines inside the jet
+hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilaterals: Kelvin–Helmholtz roll-ups along the slip lines of the jet, a detail of 1600 × 1400 cells."
+hero_metrics:
+  - value: "3–6"
+    label: design orders, measured on triangles and quadrilaterals
+    link: validation/#design-order-convergence
+  - value: "0.01%"
+    label: CJ detonation speed error, finite-rate chemistry
+    link: validation/#detonation
+  - value: "50 M"
+    label: cell time steps per second on one A100
+    link: docs/guide/performance/
+  - value: "500+"
+    label: tests before every merge, on CPUs and GPUs
+    link: docs/guide/support/
 ---
+
+<div class="mallard-paths" markdown>
+
+<section class="mallard-path" markdown>
+
+<p class="mallard-path__label">New to Mallard</p>
+
+### Build and run a first case
+
+```bash
+git clone --recursive https://github.com/MatthewBonanni/mallard.git
+cd mallard
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+  -DUSE_SYSTEM_KOKKOS=OFF -DKokkos_ENABLE_THREADS=ON
+cmake --build build -j
+cd examples/sod && ../../build/src/mallard -i input.toml
+```
+
+That builds Mallard for CPUs and runs the Sod shock tube in about a second; open the run's `report.html` first. Containers (`ghcr.io/matthewbonanni/mallard`, `:cuda`) and Spack skip the build.
+
+1. [First simulation](docs/tutorials/first_simulation.md): the input, the output and the comparison with the exact solution
+2. [Tutorials](docs/tutorials/index.md): an ordered path to multi-GPU large-eddy simulation
+3. [Input builder](docs/builder.md): write or check an input in the browser; `mallard new cylinder` starts from a template
+4. [Installation](docs/installation.md): GPU and MPI builds, containers, Spack and every option
+
+</section>
+
+<section class="mallard-path" markdown>
+
+<p class="mallard-path__label">Evaluating Mallard</p>
+
+### Check the evidence
+
+Each result on this site links to a run against an exact solution, theory, another code, DNS or an experiment, with its setup, error table and the release that produced it.
+
+- [Verification and validation](validation.md): every case, from shock tubes to reacting LES
+- [Feature matrix](docs/guide/features.md): which features combine, each pair marked with its evidence
+- [Theory manual](docs/theory/index.md) and [what's original in Mallard](docs/numerics/originality.md)
+- [Performance](docs/guide/performance.md) and the [dashboard](docs/dashboard.md) of every merge on A100s
+- [Input reference](docs/input.md), [supported platforms](docs/guide/support.md) and the <a href="docs/api/">API reference</a>
+- [Contributing](docs/contributing.md): building, testing and what a pull request includes
+
+</section>
+
+</div>
 
 ## What's inside
 
@@ -165,20 +224,6 @@ Every number below comes from a Mallard run compared with an exact solution, the
 </div>
 
 The test suite (more than 500 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
-
-## Quick start
-
-```bash
-git clone --recursive https://github.com/MatthewBonanni/mallard.git
-cd mallard
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_KOKKOS=OFF -DKokkos_ENABLE_THREADS=ON
-cmake --build build -j
-cd examples/sod && ../../build/src/mallard -i input.toml
-```
-
-This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. Containers (`ghcr.io/matthewbonanni/mallard`, or `:cuda` for NVIDIA GPUs) and [Spack](https://spack.io) install it without a build; [Installation](docs/installation.md) covers them (Docker, Apptainer, Kubernetes), GPU and MPI builds and every CMake option, on the [supported platforms](docs/installation.md#supported-platforms).
-
-`mallard list templates` shows ready-to-run templates (`mallard new cylinder` creates a case with its mesh, run and plot scripts), `mallard check input.toml` checks a case before a long run, and `mallard ctl <run-dir> status|stop` steers it while it runs. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution, and the [tutorials](docs/tutorials/index.md) go on from there.
 
 ## Citing Mallard
 

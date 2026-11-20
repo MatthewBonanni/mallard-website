@@ -46,6 +46,11 @@ body { font-feature-settings: var(--m-font-features); -webkit-font-smoothing: an
 .md-search__input { color: var(--m-text); }
 .md-search__input::placeholder, .md-search__icon { color: var(--m-text-muted); }
 
+/* Phones: the version selector, not a clipped site name, beside the menu button */
+@media screen and (max-width: 44.9375em) {
+  .md-header__topic:first-child > .md-ellipsis { display: none; }
+}
+
 /* Layout: a wider grid for tables and figures */
 .md-grid { max-width: 68rem; }
 
@@ -132,53 +137,87 @@ body { font-feature-settings: var(--m-font-features); -webkit-font-smoothing: an
 /* Footer */
 .md-footer-meta { background: var(--m-surface); border-top: 1px solid var(--m-border); }
 
-/* Home hero */
+/* Home: hero, metrics and the two paths in */
 .mallard-hero {
-  background: #0b0f13;
-  color: #e6ebef;
-  padding: 3.2rem 0 3.6rem;
+  padding: var(--m-space-8) 0 var(--m-space-7);
+  border-bottom: 1px solid var(--m-border);
+  background:
+    radial-gradient(60rem 30rem at 85% -20%, var(--m-accent-soft), transparent 70%),
+    var(--m-bg);
 }
 .mallard-hero .md-grid { padding: 0 0.8rem; }
 .mallard-hero__inner {
   display: grid;
-  gap: 2.4rem;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--m-space-8);
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
   align-items: center;
 }
-.mallard-hero__wordmark { width: min(360px, 80%); display: block; margin-bottom: 1.4rem; }
-.mallard-hero h1 {
-  font-family: var(--m-font-sans);
-  font-weight: var(--m-type-display-weight);
-  letter-spacing: var(--m-type-display-tracking);
-  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
-  line-height: 1.2;
-  color: #fff;
-  margin: 0 0 1rem;
+.md-typeset .mallard-hero__eyebrow {
+  display: flex; align-items: center; gap: var(--m-space-3); margin: 0 0 var(--m-space-5);
+  font-size: var(--m-type-label-size); font-weight: var(--m-type-label-weight);
+  letter-spacing: var(--m-type-label-tracking); text-transform: uppercase; color: var(--m-text-muted);
 }
-.mallard-hero p { font-size: 0.95rem; color: #b9c3cc; margin: 0 0 1.6rem; max-width: 46ch; }
-.mallard-hero .md-button { margin: 0 0.6rem 0.6rem 0; }
-.mallard-hero .md-button--primary {
-  background: #4fc4b6;
-  border-color: #4fc4b6;
-  color: #04201d;
+.md-typeset .mallard-hero__eyebrow img { border-radius: var(--m-radius-sm); }
+.md-typeset .mallard-hero h1 {
+  font-size: clamp(1.7rem, 3.6vw, var(--m-type-display-size));
+  line-height: var(--m-type-display-line); font-weight: var(--m-type-display-weight);
+  letter-spacing: var(--m-type-display-tracking); margin: 0 0 var(--m-space-5); max-width: 18ch;
 }
-.mallard-hero .md-button--primary:hover { background: #79d6cb; border-color: #79d6cb; color: #04201d; }
-.mallard-hero .md-button:not(.md-button--primary) { color: #e6ebef; border-color: #33404c; }
-.mallard-hero .md-button:not(.md-button--primary):hover { color: #79d6cb; border-color: #79d6cb; }
-.mallard-hero__media video {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 10px;
-  border: 1px solid #ffffff1f;
-  box-shadow: 0 18px 50px #00000066;
-  background: #000;
+.md-typeset .mallard-hero__lede { font-size: 0.95rem; line-height: 1.6; color: var(--m-text-muted); margin: 0 0 var(--m-space-6); max-width: 52ch; }
+.mallard-hero__actions { display: flex; flex-wrap: wrap; gap: var(--m-space-3); }
+.md-typeset .mallard-hero__actions .md-button { margin: 0; }
+.md-typeset .mallard-hero__release { font-size: var(--m-type-caption-size); color: var(--m-text-muted); margin: var(--m-space-5) 0 0; }
+.md-typeset .mallard-hero__media { margin: 0; }
+.mallard-hero__media img {
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 11; object-fit: cover; border-radius: var(--m-radius-lg);
+  border: 1px solid var(--m-border); box-shadow: var(--m-shadow); background: #000;
 }
-.mallard-hero__caption { font-size: 0.7rem; color: #9aa6b2; margin-top: 0.6rem; }
-.mallard-hero__release { font-size: 0.7rem; color: #9aa6b2; margin-top: 0.2rem; }
-
+.md-typeset .mallard-hero__media figcaption {
+  max-width: none; margin: var(--m-space-3) 0 0; text-align: left; font-style: normal;
+  font-size: var(--m-type-caption-size); line-height: var(--m-type-caption-line); color: var(--m-text-muted);
+}
+ul.mallard-metrics {
+  font-size: 0.8rem;
+  list-style: none; margin: var(--m-space-7) 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--m-border); border-radius: var(--m-radius-lg); background: var(--m-bg); overflow: hidden;
+}
+ul.mallard-metrics li { margin: 0; border-left: 1px solid var(--m-border); }
+ul.mallard-metrics li:first-child { border-left: none; }
+ul.mallard-metrics a {
+  display: flex; flex-direction: column; gap: var(--m-space-1); height: 100%; box-sizing: border-box;
+  padding: var(--m-space-4) var(--m-space-5); color: inherit; text-decoration: none;
+}
+ul.mallard-metrics a:hover { background: var(--m-surface); }
+.mallard-metrics__value {
+  font-size: 1.35rem; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2;
+  font-variant-numeric: var(--m-numeric); color: var(--m-text);
+}
+.mallard-metrics__label { font-size: var(--m-type-caption-size); line-height: var(--m-type-caption-line); color: var(--m-text-muted); }
 @media screen and (max-width: 60em) {
-  .mallard-hero__inner { grid-template-columns: 1fr; }
+  .mallard-hero { padding-top: var(--m-space-6); }
+  .mallard-hero__inner { grid-template-columns: 1fr; gap: var(--m-space-6); }
+  ul.mallard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  ul.mallard-metrics li:nth-child(3) { border-left: none; }
+  ul.mallard-metrics li:nth-child(n + 3) { border-top: 1px solid var(--m-border); }
+}
+
+.md-typeset .mallard-paths {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--m-space-5); margin: var(--m-space-2) 0 var(--m-space-7);
+}
+.md-typeset .mallard-path {
+  border: 1px solid var(--m-border); border-radius: var(--m-radius-lg); padding: var(--m-space-5) var(--m-space-6); min-width: 0;
+}
+.md-typeset .mallard-path h3 { margin-top: 0; }
+.md-typeset .mallard-path__label {
+  margin: 0 0 var(--m-space-2); font-size: var(--m-type-label-size); font-weight: var(--m-type-label-weight);
+  letter-spacing: var(--m-type-label-tracking); text-transform: uppercase; color: var(--m-accent);
+}
+.md-typeset .mallard-path ol, .md-typeset .mallard-path ul { margin-left: 1.1em; }
+.md-typeset .mallard-path li { margin-bottom: var(--m-space-2); }
+.md-typeset .mallard-path pre > code { font-size: 0.68rem; }
+@media screen and (max-width: 60em) {
+  .md-typeset .mallard-paths { grid-template-columns: 1fr; }
 }
 
 /* Gallery */
@@ -214,8 +253,6 @@ body { font-feature-settings: var(--m-font-features); -webkit-font-smoothing: an
 }
 .mallard-figure figcaption { max-width: none; text-align: left; font-size: 0.75rem; }
 .md-typeset table:not([class]) td.num, .md-typeset .mallard-num { font-variant-numeric: tabular-nums; }
-.mallard-hero.md-typeset, .mallard-hero .md-typeset { color: #e6ebef; }
-.mallard-hero .md-typeset h1 { margin-top: 0; }
 
 /* Home: headline validation numbers */
 .md-typeset .mallard-stats > ul {
@@ -273,31 +310,6 @@ body { font-feature-settings: var(--m-font-features); -webkit-font-smoothing: an
   border: 1px solid var(--md-default-fg-color--lightest);
   background: #fff;
 }
-
-/* Home hero: facts */
-.md-typeset .mallard-facts {
-  list-style: none;
-  margin: 0 0 1.6rem;
-  padding: 0;
-  display: grid;
-  gap: 0.35rem;
-  font-size: 0.78rem;
-  color: #b9c3cc;
-}
-.md-typeset .mallard-facts li { margin: 0; padding-left: 1rem; position: relative; }
-.md-typeset .mallard-facts li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 0.4rem;
-  height: 0.4rem;
-  border-radius: 50%;
-  background: #4fc4b6;
-}
-.md-typeset .mallard-facts strong { color: #fff; font-weight: 600; }
-.md-typeset .mallard-facts a { color: #fff; text-decoration: underline; text-decoration-color: #4fc4b699; text-underline-offset: 0.18em; }
-.md-typeset .mallard-facts a:hover { color: #79d6cb; }
 
 /* Home: feature cards */
 .md-typeset .grid.cards.mallard-features { grid-template-columns: repeat(auto-fit, minmax(max(14rem, calc((100% - 1.6rem) / 3)), 1fr)); }
