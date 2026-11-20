@@ -1,4 +1,4 @@
-"""Laminar reacting mixing layer (V11, Mallard 0.10.0) against the boundary-layer reference.
+"""Laminar reacting mixing layer (V11, Mallard after 0.10.0, #1180) against the boundary-layer reference.
 
     MALLARD_SRC=~/mallard python mixing_layer.py
 
@@ -27,6 +27,7 @@ FIG.mkdir(exist_ok=True)
 TEAL, FLAME, GREY, BLUE = "#12655f", "#d9730d", "#8a8085", "#3a7bbf"
 RUNS = {"coarse": ("200 × 60 µm", BLUE), "base": ("100 × 30 µm", FLAME), "fine": ("50 × 15 µm", TEAL)}
 STATION = 0.02
+LENGTH = 0.03  # the domain; the outlet buffer beyond it is not compared
 
 for _f in (Path(__file__).resolve().parent / "fonts").glob("Inter-*.ttf"):
     font_manager.fontManager.addfont(str(_f))
@@ -51,6 +52,7 @@ def main():
     b.semilogy(ign["x"] * 1e3, ign["Y_OH_max"], color=GREY, lw=3.0, alpha=0.6)
     for name, (label, color) in RUNS.items():
         p = read(CASE / "results" / f"{name}.csv")
+        p = p[p["x"] <= LENGTH + 1e-9]  # not the outlet buffer
         a.plot(p["x"] * 1e3, p["T_max"], color=color, label=f"Mallard, {label}")
         b.semilogy(p["x"] * 1e3, p["Y_OH_max"], color=color)
     a.set_xlabel("x [mm]")
