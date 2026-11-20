@@ -45,7 +45,7 @@ then the releases, newest first, and switching keeps the page. `MALLARD_MAIN_REF
 ## Building locally
 
 ```sh
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # plus doxygen
+uv venv && uv pip install -r requirements.txt   # plus doxygen
 git clone https://github.com/MatthewBonanni/mallard.git ../mallard
 PATH=$PWD/.venv/bin:$PATH ./build.sh ../mallard          # latest release tag
 PATH=$PWD/.venv/bin:$PATH ./build.sh ../mallard main     # or any ref
