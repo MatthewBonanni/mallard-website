@@ -2,6 +2,30 @@
 // scrolled away, keeping the native controls of the markup. A video the visitor pauses
 // stays paused until they play it again. Visitors who prefer reduced motion (or have no
 // JavaScript) get the poster and the controls only.
+//
+// Posters of videos in a page (hooks/content.py moves them to data-poster) load when the
+// video comes within a screen of the viewport, rather than all with the page.
+(function () {
+  var lazy = document.querySelectorAll("video[data-poster]");
+  function show(v) {
+    v.poster = v.dataset.poster;
+    v.removeAttribute("data-poster");
+  }
+  if (!("IntersectionObserver" in window)) {
+    lazy.forEach(show);
+  } else {
+    var posters = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          posters.unobserve(e.target);
+          show(e.target);
+        }
+      });
+    }, { rootMargin: "100% 0px" });
+    lazy.forEach(function (v) { posters.observe(v); });
+  }
+})();
+
 (function () {
   var videos = document.querySelectorAll("video[data-autoplay]");
   if (!videos.length) return;
