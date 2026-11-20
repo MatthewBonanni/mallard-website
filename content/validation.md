@@ -45,7 +45,7 @@ Each result on this page comes from a Mallard run compared with an exact solutio
 | [Cellular detonation](#cellular-detonation) (reacting, 2D) | front speed | 1617.0 m/s | D<sub>CJ</sub> 1616.9 m/s | <span class="mallard-nowrap">dev. 0.3.0–0.4.0</span> |
 | [Cellular detonation in 3D](#cellular-detonation-3d) (reacting) | front speed over 17 cm | 1620.6 m/s | D<sub>CJ</sub> 1617 m/s | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
 | [Stratified autoignition](#autoignition) (reacting, 2D) | heat release peak time, T′ = 3.75 / 7.5 / 15 / 30 K | 0.993 / 0.986 / 0.952 / 0.822 τ<sub>0</sub> | trend of Chen et al., Hawkes et al. (2006) (qualitative) | <span class="mallard-nowrap">dev. 0.5.0–0.6.0</span> |
-| [Laminar reacting mixing layer](#reacting-mixing-layer) (reacting, 2D) | lift-off length, 200 × 60 / 100 × 30 / 50 × 15 µm cells | −6.9 / −2.6 / −0.5% | steady boundary-layer equations (Cantera): 15.26 mm | <span class="mallard-nowrap">7aded73 (after 0.10.0)</span> |
+| [Laminar reacting mixing layer](#reacting-mixing-layer) (reacting, 2D) | lift-off length, 200 × 60 / 100 × 30 / 50 × 15 µm cells | −6.1 / −2.2 / +0.6% | steady boundary-layer equations (Cantera): 15.26 mm | <span class="mallard-nowrap">d57440e (after 0.10.0)</span> |
 | [LES, channel flow, Re<sub>τ</sub> = 395 / 590](#les-channel) (3D) | Re<sub>τ</sub>, Sigma with Scotti's width (64³ / 96³) | +0.7% / +1.6% | 392.2 / 587.2 (Moser, Kim & Mansour 1999) | <span class="mallard-nowrap">dev. ~0.6.0–0.7.0</span> |
 | [Wall-modeled LES, channels](#les-wall-model) (3D) | C<sub>f</sub>, Re<sub>τ</sub> = 1995 / 5186, 12 cells per half-height, GFM; B<sub>q</sub>, T<sub>c</sub>/T<sub>w</sub>, M<sub>b</sub> = 1.7 / 3.0 | +2.1 / +1.5%; +1.3 / +0.5%, +0.2 / +0.7% | Lee & Moser (2015); Trettel & Larsson (2016) | <span class="mallard-nowrap">7646ddb (after 0.8.0)</span> |
 | [LES, thickened flame](#les-tfles) (reacting) | consumption speed at F = 7.9 / 31.6 | −0.2% / −0.2% | Cantera s<sub>L</sub> = 2.3324 m/s | <span class="mallard-nowrap">dev. 0.6.0–0.7.0</span> |
@@ -897,29 +897,29 @@ As the papers describe, larger fluctuations ignite earlier and burn longer, and 
 
 #### Laminar reacting mixing layer {#reacting-mixing-layer}
 
-Development code after 0.10.0 (version string 0.10.0): the solver of [`7aded73`](https://github.com/MatthewBonanni/mallard/commit/7aded73) with the scripts of [#476](https://github.com/MatthewBonanni/mallard/pull/476)
+Development code after 0.10.0 (version string 0.10.0): the solver of [`d57440e`](https://github.com/MatthewBonanni/mallard/commit/d57440e) with the scripts of [#1180](https://github.com/MatthewBonanni/mallard/pull/1180)
 { .mallard-provenance }
 
 A spatially developing planar mixing layer, V11 of the [design notes](docs/design/chemistry.md), in the [`reacting_mixing_layer`](docs/examples.md#reacting-mixing-layer) example. H<sub>2</sub>/N<sub>2</sub> (1:1 by volume) at 300 K and 50 m/s meets air at 1150 K and 100 m/s, both at 1 atm, at the trailing edge of a splitter plate of zero thickness. The hot air autoignites the mixture forming in the layer some 15 mm downstream, and a lifted diffusion flame trails behind, held by autoignition rather than by propagation.
 
 - **Reference:** the steady boundary-layer equations with the same mechanism (`h2o2.yaml`) and Cantera's mixture-averaged transport, marched in x from the plate in von Mises form on a similarity grid of 401 points across the layer (its lift-off length moves by 0.005 mm from 401 to 801 points).
-- **Mallard run:** 30 mm downstream of the plate, two `inlet_state` halves at x = 0 and `outlet_pressure` elsewhere, started from the reference and run for two flow-throughs of the slower stream (1.2 ms). Mixture-averaged transport, MUSCL, HLLC, SSPRK3 at CFL 0.8.
+- **Mallard run:** 30 mm downstream of the plate, two `inlet_state` halves at x = 0 and characteristic (`nscbc`) `outlet_pressure` conditions on the outlet, bottom and top, behind a 10 mm buffer of cells growing by 10% per cell before the outlet; started from the reference and run for two flow-throughs of the slower stream (1.2 ms). Mixture-averaged transport, MUSCL, HLLC, SSPRK3 at CFL 0.8. With reflecting boundaries, the start-up sound kept re-seeding Kelvin–Helmholtz roll-up of this convectively unstable layer at 20–30 mm, and on the finest mesh waves reaching an outlet without a buffer made sound that returned to the plate; with characteristic outlets and the buffer the layer is steady.
 - **Meshes:** quadrilaterals of 200 × 60, 100 × 30 and 50 × 15 µm (along x × across the layer), growing by 8% per cell outside it.
-- **Measures:** the lift-off length x<sub>OH</sub>, where the peak Y<sub>OH</sub> across the layer first reaches 2 × 10<sup>−3</sup>, from the per-snapshot peaks averaged over the last 0.4 ms.
+- **Measures:** the lift-off length x<sub>OH</sub>, where the peak Y<sub>OH</sub> across the layer first reaches 2 × 10<sup>−3</sup>, and x<sub>T</sub>, where the peak temperature first exceeds the air's by 250 K, from the per-snapshot peaks averaged over the last 0.4 ms.
 
 <figure class="mallard-figure" markdown>
-![Peak temperature and OH mass fraction along the mixing layer on three meshes against the boundary-layer reference, and temperature and OH across the layer at 20 mm](validation/mixing_layer.png){ loading=lazy width=2836 height=928 }
+![Peak temperature and OH mass fraction along the mixing layer on three meshes against the boundary-layer reference, and temperature and OH across the layer at 20 mm](validation/mixing_layer.png){ loading=lazy width=2847 height=943 }
 <figcaption>Left and middle: peak temperature and Y<sub>OH</sub> across the layer, along x. Right: temperature (solid) and Y<sub>OH</sub> (dashed) across the layer at x = 20 mm on the finest mesh, aligned at the stoichiometric mixture fraction.</figcaption>
 </figure>
 
 | Cells | Count | Cost on one A100 | x<sub>OH</sub> | error | peak T at 20 / 30 mm |
 |---|---:|---:|---:|---:|---:|
 | reference | | | 15.26 mm | | 1782 / 2072 K |
-| 200 × 60 µm | 20,700 | 2.3 min | 14.20 mm | −6.9% | 1848 / 2071 K |
-| 100 × 30 µm | 69,300 | 10 min | 14.86 mm | −2.6% | 1822 / 2042 K |
-| 50 × 15 µm | 246,600 | 87 min | 15.18 mm | −0.5% | 1809 / 2022 K |
+| 200 × 60 µm | 23,352 | 2.3 min | 14.33 mm | −6.1% | 1841 / 2070 K |
+| 100 × 30 µm | 75,168 | 12 min | 14.93 mm | −2.2% | 1805 / 2062 K |
+| 50 × 15 µm | 260,603 | 89 min | 15.36 mm | +0.6% | 1770 / 2058 K |
 
-The lift-off length converges to the reference's at close to second order, mostly through the refinement across the layer. Before ignition the peak Y<sub>OH</sub> grows exponentially along x as in the reference. Downstream of the flame base the layer is not steady: Kelvin–Helmholtz waves of a few m/s wrinkle the flame beyond about 18 mm and grow under refinement, so the time-averaged peak temperature at 25–30 mm falls about 50 K (2.4%) below the steady reference on the finest mesh. A quieter setup is tracked in [#1051](https://github.com/MatthewBonanni/mallard/issues/1051).
+The lift-off length converges to the reference's, to within 0.6% (x<sub>OH</sub>) and 0.5% (x<sub>T</sub>) on the finest mesh. The layer stays steady downstream of the flame base, and its profiles across the layer overlay the reference's: on the finest mesh the peak temperature at 25 and 30 mm is 13–14 K below the reference.
 
 ### Large-eddy simulation {#les}
 
