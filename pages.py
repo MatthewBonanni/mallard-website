@@ -189,7 +189,8 @@ def main():
                 print(f"warning: {page}: {target} is not in the repository")
             return f"{label}({GITHUB}{kind}/{gh_ref}/{repo_target}{frag}{title})"
 
-        return outside_code(text, lambda t: LINK.sub(fix, t))
+        # A wrapped line that starts with "#434" is prose on GitHub but a heading to Python-Markdown
+        return outside_code(text, lambda t: HASH_LINE.sub(r"\\#", LINK.sub(fix, t)))
 
     for page, (repo_path, text) in pages.items():
         text = rewrite(page, repo_path, text)
@@ -245,6 +246,9 @@ def check_front_matter(content):
 
 FENCE = re.compile(r"^( *)(```|~~~).*?^\1\2[ \t]*$", re.M | re.S)
 CODE_SPAN = re.compile(r"(`+)(?!`).+?(?<!`)\1(?!`)", re.S)
+
+
+HASH_LINE = re.compile(r"^#(?=[^#\s!])", re.M)
 
 
 def outside_code(text, f):
