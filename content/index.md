@@ -103,7 +103,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions; misspelled or unused keys are errors, with suggestions
     - Initial states from expressions, layered regions, tables and divergence-free synthetic turbulence of a prescribed spectrum
-    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run; `mallard input upgrade` for inputs from older releases; `mallard list` for a case's fields and keys; tab completion for bash, zsh and fish
+    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run, with an annotated image and a ParaView file of the domain, boundaries and regions (`--view`; `mallard info MESH --view` for a mesh alone); `mallard input upgrade` for inputs from older releases; `mallard list` for a case's fields and keys; tab completion for bash, zsh and fish
     - `mallard ctl` to steer a running job; triggers: conditions on time, probes, forces and integrals that stop the run, write a restart or snapshot, or start statistics; a divergence report when a run fails, with the likely causes ranked by their evidence
     - `mallard info` on any output file, `mallard diff` between two solutions, `mallard post extract` for probes and region integrals of existing output, `mallard post convergence` for the observed order, Richardson extrapolation and grid convergence index
     - Conservative high-order remap of a restart onto another mesh; versioned files, readable by every later release of the same major version
