@@ -1,32 +1,39 @@
 {% extends "main.html" %}
 
+{% block extrahead %}
+  {{ super() }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+{% endblock %}
+
 {% block tabs %}
   {{ super() }}
   <section class="mallard-hero" aria-label="Introduction">
     <div class="md-grid">
       <div class="mallard-hero__inner md-typeset">
-        <div class="mallard-hero__text">
-          <p class="mallard-hero__eyebrow"><img src="{{ 'assets/icon.png' | url }}" alt="Mallard logo" width="28" height="28">Open-source CFD</p>
-          <h1>{{ page.meta.hero_title }}</h1>
-          <p class="mallard-hero__lede">{{ page.meta.hero_lede }}</p>
-          <div class="mallard-hero__actions">
-            <a href="{{ 'docs/' | url }}" class="md-button md-button--primary">Get started</a>
-            <a href="{{ 'validation/' | url }}" class="md-button">Verification and validation</a>
-          </div>
-          <p class="mallard-hero__release">Documentation of Mallard's main branch · latest release {{ config.extra.mallard_version }}</p>
+        <div>
+          <img class="mallard-hero__wordmark" src="{{ 'assets/wordmark_dark.png' | url }}" alt="Mallard">
+          <h1>Unstructured, GPU accelerated, high-order finite volume CFD solver</h1>
+          <p>TENO-E reconstruction of orders 3 to 6 on triangles, quads and mixed meshes, Euler and Navier–Stokes, written in C++20 with Kokkos so one code runs on CPUs and GPUs.</p>
+          <ul class="mallard-facts">
+            <li><a href="{{ 'validation/#design-order-convergence' | url }}"><strong>Design order 3–6</strong></a> measured on triangles and quadrilaterals</li>
+            <li><a href="{{ 'validation/' | url }}"><strong>Verified and validated</strong></a> against exact solutions, other codes and experiments</li>
+            <li><a href="{{ 'docs/guide/performance/' | url }}"><strong>50 million</strong></a> cell time steps per second on one A100 (fifth-order TENO-E, 2D Euler)</li>
+            <li><strong>Open source</strong>, Apache 2.0, 500+ tests on every change</li>
+          </ul>
+          <a href="{{ 'docs/' | url }}" class="md-button md-button--primary">Get started</a>
+          <a href="{{ 'validation/' | url }}" class="md-button">Verification and validation</a>
+          <a href="{{ 'gallery/' | url }}" class="md-button">Gallery</a>
+          <div class="mallard-hero__release">Documentation of Mallard's main branch; latest release {{ config.extra.mallard_version }}</div>
         </div>
-        <figure class="mallard-hero__media">
-          <a href="{{ 'gallery/' | url }}">
-            <img src="{{ page.meta.hero_image | url }}" srcset="{{ page.meta.hero_image_small | url }} 720w, {{ page.meta.hero_image | url }} 1200w" sizes="(max-width: 60em) 100vw, 40vw" width="1200" height="1050" fetchpriority="high" loading="eager" alt="{{ page.meta.hero_alt }}">
+        <div class="mallard-hero__media">
+          <a href="{{ 'gallery/#riemann-4k' | url }}">
+            <img src="{{ page.meta.hero_image | url }}" srcset="{{ page.meta.hero_image_small | url }} 720w, {{ page.meta.hero_image | url }} 1200w" sizes="(max-width: 60em) 100vw, 55vw" width="{{ page.meta.hero_width }}" height="{{ page.meta.hero_height }}" fetchpriority="high" alt="{{ page.meta.hero_alt }}">
           </a>
-          <figcaption>{{ page.meta.hero_caption }} <a href="{{ page.meta.hero_video | url }}">Four Mallard runs (video)</a> · <a href="{{ 'gallery/' | url }}">Gallery</a></figcaption>
-        </figure>
+          <div class="mallard-hero__caption">{{ page.meta.hero_caption }} <a href="{{ 'gallery/#riemann-4k' | url }}">The animation</a> and more runs are in the <a href="{{ 'gallery/' | url }}">gallery</a>.</div>
+        </div>
       </div>
-      <ul class="mallard-metrics">
-        {% for m in page.meta.hero_metrics %}
-          <li><a href="{{ m.link | url }}"><span class="mallard-metrics__value">{{ m.value }}</span><span class="mallard-metrics__label">{{ m.label }}</span></a></li>
-        {% endfor %}
-      </ul>
     </div>
   </section>
 {% endblock %}
@@ -35,5 +42,7 @@
   {% if config.extra.versions %}
     <div id="mallard-versions" hidden data-current="{{ config.extra.current_version | e }}" data-versions="{{ config.extra.versions | e }}"></div>
   {% endif %}
+  <div class="mallard-home">
   {{ page.content }}
+  </div>
 {% endblock %}
