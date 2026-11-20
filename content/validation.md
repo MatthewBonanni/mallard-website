@@ -21,6 +21,7 @@ Each result on this page comes from a Mallard run compared with an exact solutio
 | [Oblique shock](#oblique-shock) | shock angle, pressure ratio | 42.83°, 1.4985 (TENO-E) | 42.82°, 1.4984 (theory) | <span class="mallard-nowrap">0.4.0</span> |
 | [RHLL on the Mach 3 sphere](#mach-3-sphere-rhll) (3D) | shock on the axis / stagnation pressure, MUSCL, 796k tetrahedra | −0.6151 / 11.93 (rotated flux alone: bulge to −0.624 / 10.6) | HLL: −0.6149 / 11.86 | <span class="mallard-nowrap">20239fc (in 0.8.0)</span> |
 | [Viscous exact solutions](#viscous-exact-solutions) | Stokes' first problem: order of accuracy, largest error at 128 rows | second order, 0.0099% of U (quads); order 1.9–2.0, 0.0093% of U (triangles) | exact solution | <span class="mallard-nowrap">0.3.0</span> |
+| [Vortex ring instability](#vortex-ring-instability) (3D) | fastest azimuthal mode; its growth rate σ 2πR²/Γ, 192³ (144³: same mode, rate 15–20% lower, not grid-converged) | n = 11; 0.909 | elliptic instability theory: n = 10.6; 0.877 (viscous), 0.929 (inviscid) | <span class="mallard-nowrap">1843395 (after 0.10.0)</span> |
 | [CJ detonation](#detonation) (reacting) | front speed; induction length; peak pressure, at 10 / 20 / 40 cells per induction length | +0.11 / +0.01 / 0.00%; −4.5 / −1.8 / +2.7%; 174.8 / 175.2 / 174.7 kPa | D<sub>CJ</sub> 1616.9 m/s; ZND 1.525 mm; von Neumann 174.7 kPa | <span class="mallard-nowrap">0.4.0</span> |
 | [SIMPLER splitting](#simpler) (reacting) | detonation induction length vs ZND at CFL 1.0, 10 cells; Strang / SIMPLER | −25.5 / −0.9% | ZND 1.525 mm | <span class="mallard-nowrap">beb3c3f (in 0.8.0)</span> |
 
@@ -352,6 +353,32 @@ On quadrilaterals the linear Couette and conduction profiles are reproduced to r
 | 128 | 9.94 × 10<sup>−5</sup> | 2.00 | 9.27 × 10<sup>−5</sup> | 1.92 |
 
 The viscous terms converge at second order on quadrilaterals and at 1.9 to 2.0 on these right triangles (0.0093% of U at 128 rows). With Mallard 0.2.0, on strips only 4 cells wide, the triangle error stalled near 0.4% of U. That came from the transmissive ends of the strip, not from the interior scheme: the viscous fluxes on triangles next to transmissive boundaries, which Mallard 0.3.0 makes second-order, and a one-sided gradient at those ends, which dominates when the strip narrows with refinement. The strip now keeps a fixed width of 0.25.
+
+#### Vortex ring instability (3D) {#vortex-ring-instability}
+
+Development code after 0.10.0 (version string 0.10.0): [`1843395`](https://github.com/MatthewBonanni/mallard/commit/1843395), [#1246](https://github.com/MatthewBonanni/mallard/pull/1246)
+{ .mallard-provenance }
+
+A thin vortex ring is unstable to azimuthal waves (Widnall & Tsai 1977): the strain each part of the ring induces on the rest excites the elliptic instability of its core, and a wave of n lobes grows around the ring. The [`vortex_ring_3d`](docs/examples.md#vortex-ring-3d) example starts a Gaussian ring of core radius a = 0.2 R at Re = Γ/2πν = 5000 and swirl Mach 0.3 in a periodic box 4.8 R wide, from an axisymmetric table in equilibrium (`vortex_ring.py table`) read in 3D through [`[[initialize.data]]`](docs/guide/initialization.md) with `at`, which displaces the ring by 3 × 10<sup>−4</sup> R in every azimuthal mode n = 1–24.
+
+- **Reference:** the elliptic instability of a curved Gaussian vortex (Blanco-Rodríguez & Le Dizès 2016, with its corrigendum, and the most unstable wavenumber k a = 2.33 of Hattori et al. 2019) at the core radius measured in the run: n = 2.33 R/a = 10.6, and σ 2πR²/Γ = 0.877 with viscous damping, 0.929 inviscid.
+- **Mallard run:** fifth-order TENO-E, HLLC and SSPRK3 on 192³ hexahedra (a/8, 7.1 million cells), to t = 95.7 (t Γ/2πR² = 9), and the same on 144³ (a/6, `coarse.toml`). `vortex_ring.py modes` takes the amplitude of every azimuthal mode of the vorticity in the core from the restarts, and `compare` fits their exponential growth.
+- **Cost:** 192³: 17,037 steps, 4.2 hours on 120 CPU threads (8 MPI ranks × 15 OpenMP threads). 144³: 12,633 steps, 2.5 hours on 64 threads.
+
+<figure class="mallard-figure" markdown>
+![Vorticity magnitude in the plane of a vortex ring as an azimuthal wave of 11 lobes grows and breaks down, the growth of modes 9 to 13, and the growth rate of every mode against the theory of the elliptic instability](docs/images/guide/vortex_ring_3d-light.svg#only-light){ loading=lazy }
+![Vorticity magnitude in the plane of a vortex ring as an azimuthal wave of 11 lobes grows and breaks down, the growth of modes 9 to 13, and the growth rate of every mode against the theory of the elliptic instability](docs/images/guide/vortex_ring_3d-dark.svg#only-dark){ loading=lazy }
+<figcaption>192³. Top: |ω| in the ring's plane as the seeded perturbation grows into a wave of 11 lobes and breaks down. Bottom left: the vorticity of modes 9 to 13 in the core, with their exponential fits over t = 30–70 (t Γ/2πR² = 2.8–6.6); the dashed line has the theory's growth rate. Bottom right: the fitted growth rate of every mode against the theory.</figcaption>
+</figure>
+
+| Fit window, t | 144³: fastest mode, σ 2πR²/Γ | 192³: fastest mode, σ 2πR²/Γ | 192³ over the viscous theory |
+|---|---:|---:|---:|
+| 20–35 | n = 11, 0.875 | n = 11, 1.019 | 1.14 |
+| 20–50 | n = 11, 0.808 | n = 11, 0.937 | 1.06 |
+| 25–60 | n = 11, 0.760 | n = 11, 0.918 | 1.04 |
+| 30–70 (default) | n = 10, 0.773 | n = 11, 0.909 | 1.04 |
+
+The mode number is converged: n = 11 grows fastest on both meshes in every window, against 10.6–11.0 from the theory at the core radius of each window (the coarse mesh's thicker core gives 10.1 in the last window, where its fastest mode is 10). The growth rate is not: on 192³ it is 4% above the viscous theory, between the viscous and inviscid values, but 192³ is 15–20% above 144³ in every window, and the 144³ rate falls as the window moves later, as the coarser mesh's numerical dissipation thickens the core (a = 0.237 R on 144³ against 0.225 R on 192³ at t = 63.8).
 
 ### Reacting flow {#reacting-flow-verification}
 
@@ -1214,6 +1241,7 @@ The cold flow of the Volvo bluff-body combustor (Sjunnesson et al.) in the `volv
 The sources of the reference data and test cases on this page. The sources of the numerical methods themselves, with where Mallard uses each, are on the [References](docs/references.md) page.
 
 - F. S. Billig, Shock-wave shapes around spherical- and cylindrical-nosed bodies, *J. Spacecraft Rockets* 4, 822–823 (1967). [doi:10.2514/3.28969](https://doi.org/10.2514/3.28969)
+- F. J. Blanco-Rodríguez and S. Le Dizès, Elliptic instability of a curved Batchelor vortex, *J. Fluid Mech.* 804, 224–247 (2016), and its corrigendum (2017, [hal-01430558](https://hal.science/hal-01430558)). [doi:10.1017/jfm.2016.533](https://doi.org/10.1017/jfm.2016.533)
 - M. E. Brachet, D. I. Meiron, S. A. Orszag, B. G. Nickel, R. H. Morf and U. Frisch, Small-scale structure of the Taylor–Green vortex, *J. Fluid Mech.* 130, 411–452 (1983).
 - F. Charlette, C. Meneveau and D. Veynante, A power-law flame wrinkling model for LES of premixed turbulent combustion. Part I: non-dynamic formulation and initial tests, *Combust. Flame* 131, 159–180 (2002). [doi:10.1016/S0010-2180(02)00400-5](https://doi.org/10.1016/S0010-2180%2802%2900400-5)
 - J. H. Chen, E. R. Hawkes, R. Sankaran, S. D. Mason and H. G. Im, Direct numerical simulation of ignition front propagation in a constant volume with temperature inhomogeneities: I. Fundamental analysis and diagnostics, *Combust. Flame* 145, 128–144 (2006). [doi:10.1016/j.combustflame.2005.09.017](https://doi.org/10.1016/j.combustflame.2005.09.017)
@@ -1227,6 +1255,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - D. G. Goodwin, R. L. Speth, H. K. Moffat and B. W. Weber, Cantera: an object-oriented software toolkit for chemical kinetics, thermodynamics, and transport processes, version 3.2.0, [cantera.org](https://www.cantera.org).
 - K. P. Griffin, L. Fu and P. Moin, Near-wall model for compressible turbulent boundary layers based on an inverse velocity transformation, *J. Fluid Mech.* 970, A36 (2023). [doi:10.1017/jfm.2023.627](https://doi.org/10.1017/jfm.2023.627)
 - J.-F. Haas and B. Sturtevant, Interaction of weak shock waves with cylindrical and spherical gas inhomogeneities, *J. Fluid Mech.* 181, 41–76 (1987). [doi:10.1017/S0022112087002003](https://doi.org/10.1017/S0022112087002003)
+- Y. Hattori, F. J. Blanco-Rodríguez and S. Le Dizès, Numerical stability analysis of a vortex ring with swirl, *J. Fluid Mech.* 878, 5–36 (2019). [doi:10.1017/jfm.2019.621](https://doi.org/10.1017/jfm.2019.621)
 - E. R. Hawkes, R. Sankaran, P. P. Pébay and J. H. Chen, Direct numerical simulation of ignition front propagation in a constant volume with temperature inhomogeneities: II. Parametric study, *Combust. Flame* 145, 145–159 (2006). [doi:10.1016/j.combustflame.2005.09.018](https://doi.org/10.1016/j.combustflame.2005.09.018)
 - E. Johnsen, J. Larsson, A. V. Bhagatwala, W. H. Cabot, P. Moin, B. J. Olson, P. S. Rawat, S. K. Shankar, B. Sjögreen, H. C. Yee, X. Zhong and S. K. Lele, Assessment of high-resolution methods for numerical simulations of compressible turbulence with shock waves, *J. Comput. Phys.* 229, 1213–1237 (2010). [doi:10.1016/j.jcp.2009.10.028](https://doi.org/10.1016/j.jcp.2009.10.028)
 - T. A. Johnson and V. C. Patel, Flow past a sphere up to a Reynolds number of 300, *J. Fluid Mech.* 378, 19–70 (1999). [doi:10.1017/S0022112098003206](https://doi.org/10.1017/S0022112098003206)
@@ -1261,6 +1290,7 @@ The sources of the reference data and test cases on this page. The sources of th
 - A. Trettel and J. Larsson, Mean velocity scaling for compressible wall turbulence with heat transfer, *Phys. Fluids* 28, 026102 (2016). [doi:10.1063/1.4942022](https://doi.org/10.1063/1.4942022)
 - N. Tsuboi, S. Katoh and A. K. Hayashi, Three-dimensional numerical simulation for hydrogen/air detonation: rectangular and diagonal structures, *Proc. Combust. Inst.* 29, 2783–2788 (2002). [doi:10.1016/S1540-7489(02)80339-X](https://doi.org/10.1016/S1540-7489(02)80339-X)
 - D. N. Williams, L. Bauwens and E. S. Oran, Detailed structure and propagation of three-dimensional detonations, *Proc. Combust. Inst.* 26, 2991–2998 (1996). [doi:10.1016/S0082-0784(96)80142-1](https://doi.org/10.1016/S0082-0784(96)80142-1)
+- S. E. Widnall and C.-Y. Tsai, The instability of the thin vortex ring of constant vorticity, *Phil. Trans. R. Soc. Lond. A* 287, 273–305 (1977). [doi:10.1098/rsta.1977.0146](https://doi.org/10.1098/rsta.1977.0146)
 - C. H. K. Williamson, Vortex dynamics in the cylinder wake, *Annu. Rev. Fluid Mech.* 28, 477–539 (1996).
 - H. Wu, P. C. Ma and M. Ihme, the SIMPLER balanced splitting, *Comput. Phys. Commun.* (2019). [doi:10.1016/j.cpc.2019.04.016](https://doi.org/10.1016/j.cpc.2019.04.016)
 - G. Zhou, K. Xu and F. Liu, Grid-converged solution and analysis of the unsteady viscous flow in a two-dimensional shock tube, *Phys. Fluids* 30, 016102 (2018), [doi:10.1063/1.4998300](https://doi.org/10.1063/1.4998300); [arXiv:1705.09062](https://arxiv.org/abs/1705.09062).
