@@ -220,68 +220,86 @@ ul.mallard-metrics a:hover { background: var(--m-surface); }
   .md-typeset .mallard-paths { grid-template-columns: 1fr; }
 }
 
-/* Gallery */
-.mallard-gallery figure { margin: 0 0 2.4rem; }
+/* Gallery: a two-column grid; the featured run and the side-by-side figures span both */
+.md-typeset .mallard-gallery {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense;
+  gap: var(--m-space-7) var(--m-space-6); margin-top: var(--m-space-6);
+}
+.md-typeset .mallard-gallery > figure { margin: 0; min-width: 0; }
+.md-typeset .mallard-gallery > figure.mallard-gallery__feature,
+.md-typeset .mallard-gallery > figure.mallard-gallery__duo,
+.md-typeset .mallard-gallery > figure.mallard-gallery__pair { grid-column: 1 / -1; }
 .mallard-gallery img, .mallard-gallery video {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 8px;
-  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: var(--m-radius-lg);
+  border: 1px solid var(--m-border);
   background: #000;
 }
-.mallard-gallery figcaption { max-width: none; text-align: left; font-size: 0.75rem; }
+.md-typeset .mallard-gallery figcaption {
+  max-width: none; margin: var(--m-space-3) 0 0; text-align: left; font-style: normal;
+  font-size: var(--m-type-small-size); line-height: var(--m-type-small-line); color: var(--m-text-muted);
+}
+.md-typeset .mallard-gallery figcaption strong:first-child { color: var(--m-text); font-weight: 600; }
 .mallard-gallery figure.mallard-gallery__pair {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1.2rem;
+  gap: var(--m-space-5);
   align-items: start;
 }
 .mallard-gallery figure.mallard-gallery__pair figcaption { margin-top: 0; }
 @media screen and (max-width: 44.9375em) {
+  .md-typeset .mallard-gallery { grid-template-columns: 1fr; gap: var(--m-space-6); }
   .mallard-gallery figure.mallard-gallery__pair { grid-template-columns: 1fr; }
 }
 
-/* Validation figures and tables */
+/* Validation figures and tables: framed figures, quiet captions */
 .mallard-figure img, .mallard-figure video {
   width: 100%;
   height: auto;
   display: block;
   background: #fff;
-  border-radius: 6px;
-  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: var(--m-radius-md);
+  border: 1px solid var(--m-border);
 }
-.mallard-figure figcaption { max-width: none; text-align: left; font-size: 0.75rem; }
+.md-typeset .mallard-figure { margin: var(--m-space-6) 0; }
+.md-typeset .mallard-figure figcaption {
+  max-width: none; margin-top: var(--m-space-3); text-align: left; font-style: normal;
+  font-size: var(--m-type-caption-size); line-height: var(--m-type-caption-line); color: var(--m-text-muted);
+}
 .md-typeset table:not([class]) td.num, .md-typeset .mallard-num { font-variant-numeric: tabular-nums; }
+.md-typeset h4 { font-size: 0.9rem; margin-top: var(--m-space-7); padding-top: var(--m-space-5); border-top: 1px solid var(--m-border); }
+.md-typeset p > strong:only-child { display: block; margin-top: var(--m-space-5); }
 
 /* Home: headline validation numbers */
 .md-typeset .mallard-stats > ul {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(max(11rem, calc((100% - 1.6rem) / 3)), 1fr));
-  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(max(11rem, calc((100% - 2.4rem) / 3)), 1fr));
+  gap: var(--m-space-4);
   list-style: none;
-  margin: 1em 0;
+  margin: var(--m-space-5) 0;
   padding: 0;
 }
 .md-typeset .mallard-stats > ul > li {
   margin: 0;
-  padding: 0.8rem 0.9rem;
-  border: 1px solid var(--md-default-fg-color--lightest);
-  border-left: 3px solid var(--m-accent);
-  border-radius: 6px;
-  font-size: 0.72rem;
-  line-height: 1.45;
-  color: var(--md-default-fg-color--light);
+  padding: var(--m-space-4) var(--m-space-5);
+  border: 1px solid var(--m-border);
+  border-radius: var(--m-radius-lg);
+  font-size: var(--m-type-caption-size);
+  line-height: var(--m-type-caption-line);
+  color: var(--m-text-muted);
 }
 .md-typeset .mallard-stats > ul > li > p:first-child {
-  margin: 0 0 0.35rem;
+  margin: 0 0 var(--m-space-2);
   font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 650;
+  letter-spacing: -0.015em;
   line-height: 1.25;
-  color: var(--md-default-fg-color);
+  font-variant-numeric: var(--m-numeric);
+  color: var(--m-text);
 }
-.md-typeset .mallard-stats > ul > li > p:first-child strong { font-weight: 600; }
+.md-typeset .mallard-stats > ul > li > p:first-child strong { font-weight: inherit; }
 .md-typeset .mallard-stats > ul > li > p { margin: 0; }
 
 /* Accessibility: links in running text are underlined, not told apart by color alone */
@@ -312,11 +330,14 @@ ul.mallard-metrics a:hover { background: var(--m-surface); }
 }
 
 /* Home: feature cards */
-.md-typeset .grid.cards.mallard-features { grid-template-columns: repeat(auto-fit, minmax(max(14rem, calc((100% - 1.6rem) / 3)), 1fr)); }
+.md-typeset .grid.cards.mallard-features { grid-template-columns: repeat(auto-fit, minmax(max(14rem, calc((100% - 1.6rem) / 3)), 1fr)); gap: var(--m-space-4); }
 .md-typeset .mallard-features > ul > li { display: flex; flex-direction: column; }
-.md-typeset .mallard-features > ul > li > ul { font-size: 0.72rem; line-height: 1.45; margin: 0 0 0.6rem; flex-grow: 1; }
-.md-typeset .mallard-features > ul > li > ul > li { margin: 0 0 0.3rem 1rem; }
-.md-typeset .mallard-features > ul > li > p:last-child { font-size: 0.72rem; margin: 0; }
+.md-typeset .mallard-features > ul > li > p:first-child { font-weight: 600; font-size: 0.85rem; margin: 0; }
+.md-typeset .mallard-features > ul > li > p:first-child .twemoji svg { fill: var(--m-accent); }
+.md-typeset .mallard-features > ul > li > hr { display: none; }
+.md-typeset .mallard-features > ul > li > ul { font-size: var(--m-type-caption-size); line-height: var(--m-type-caption-line); color: var(--m-text-muted); margin: var(--m-space-3) 0 var(--m-space-3); flex-grow: 1; }
+.md-typeset .mallard-features > ul > li > ul > li { margin: 0 0 var(--m-space-2) 1rem; }
+.md-typeset .mallard-features > ul > li > p:last-child { font-size: var(--m-type-caption-size); margin: 0; padding-top: var(--m-space-3); border-top: 1px solid var(--m-border); }
 
 /* Gallery: two stills side by side, and plots on white */
 .mallard-gallery__duo-media {
@@ -336,11 +357,12 @@ ul.mallard-metrics a:hover { background: var(--m-surface); }
 .md-typeset p.mallard-provenance {
   display: inline-block;
   margin: -0.4em 0 0.8em;
-  padding: 0.15em 0.6em;
-  border-radius: 999px;
-  border: 1px solid var(--md-default-fg-color--lightest);
-  font-size: 0.68rem;
-  color: var(--md-default-fg-color--light);
+  padding: 0.2em 0.7em;
+  border-radius: var(--m-radius-pill);
+  border: 1px solid var(--m-border);
+  background: var(--m-surface);
+  font-size: var(--m-type-caption-size);
+  color: var(--m-text-muted);
 }
 .md-typeset .mallard-nowrap { white-space: nowrap; }
 
