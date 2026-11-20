@@ -44,6 +44,8 @@ theme:
     repo: fontawesome/brands/github
 
 extra_css:
+  # Written by hooks/tokens.py from design/tokens.json
+  - assets/tokens.css
   - assets/extra.css
 
 extra_javascript:
@@ -68,6 +70,7 @@ extra_javascript:
 
 # Draws docs/dashboard.md from data/performance.json
 hooks:
+  - hooks/tokens.py
   - hooks/performance.py
   - hooks/content.py
 

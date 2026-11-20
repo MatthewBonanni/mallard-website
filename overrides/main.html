@@ -17,7 +17,8 @@
     {% set description = config.site_description %}
   {% endif %}
   {% set image = config.site_url ~ "assets/og.png" %}
-  <meta name="theme-color" content="#2b1a22">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f13" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="{{ config.site_name }}">
   <meta property="og:title" content="{{ title }}">
@@ -32,9 +33,6 @@
   <meta name="twitter:description" content="{{ description }}">
   <meta name="twitter:image" content="{{ image }}">
   <link rel="apple-touch-icon" href="{{ 'assets/icon.png' | url }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
 {% endblock %}
 
 {% block content %}

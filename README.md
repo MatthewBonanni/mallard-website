@@ -19,7 +19,7 @@ and the API reference come from a Mallard checkout at build time, so they match 
 
 This repository holds what is specific to the site: `mkdocs.yml`; the home page, gallery, validation page,
 documentation landing page and media in `content/`; `content/examples.json` (stills and setup diagrams of the
-examples); theme overrides in `overrides/`; `build.sh`, `pages.py`; and `check_links.py`, which `build.sh`
+examples); theme overrides in `overrides/`; the design tokens in `design/tokens.json` (colors of the light and dark themes, fonts, type scale, spacing and radii; the one source for the site and Mallard's GUI, which `hooks/tokens.py` writes as CSS custom properties, `--m-*`, into `assets/tokens.css` for `content/assets/extra.css`); `build.sh`, `pages.py`; and `check_links.py`, which `build.sh`
 runs on the built site: links and anchors, alt text of every image and video, and the dark twin of every
 light-theme SVG figure (and back). `hooks/content.py` lazy-loads images and anchors each key's row on the input
 reference (`<section>--<key>`), which `content/assets/keys.js` scrolls to from a search result. MathJax is served by the site itself: `build.sh` takes it
