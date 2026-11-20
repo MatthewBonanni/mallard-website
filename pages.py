@@ -202,17 +202,23 @@ def main():
         out = docs / img[len("docs/"):]
         out.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(docsrc / img, out)
-    # The input builder's data (docs/builder.md): the key catalog setup records, and the
-    # case templates of `mallard new`
+    # The input builder's data (docs/builder.md): the key catalog setup records (docs/input-keys/,
+    # one file per key; docs/input-keys.json before Mallard #845) and the case templates of
+    # `mallard new`. The page fails at runtime without them, so the build fails instead.
     keys = sorted((docsrc / "docs" / "input-keys").glob("*.json"))
     if keys:
         catalog = {urllib.parse.unquote(f.name.removesuffix(".json")): json.loads(f.read_text()) for f in keys}
         (docs / "input-keys.json").write_text(json.dumps(catalog, indent=1) + "\n")
+    elif (docsrc / "docs" / "input-keys.json").is_file():
+        shutil.copy(docsrc / "docs" / "input-keys.json", docs / "input-keys.json")
+    else:
+        sys.exit(f"pages.py: {docs_ref} has no key catalog (docs/input-keys/) for the input builder")
     manifest = docsrc / "templates" / "manifest.toml"
-    if manifest.is_file():
-        templates = [{k: t[k] for k in ("name", "summary", "dim") if k in t}
-                     for t in tomllib.loads(manifest.read_text()).get("templates", [])]
-        (docs / "templates.json").write_text(json.dumps(templates, indent=1) + "\n")
+    if not manifest.is_file():
+        sys.exit(f"pages.py: {docs_ref} has no templates/manifest.toml for the input builder")
+    templates = [{k: t[k] for k in ("name", "summary", "dim") if k in t}
+                 for t in tomllib.loads(manifest.read_text()).get("templates", [])]
+    (docs / "templates.json").write_text(json.dumps(templates, indent=1) + "\n")
     write_nav(site, docs, pages)
     check_front_matter(content)
 
