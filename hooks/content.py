@@ -1,6 +1,8 @@
 """MkDocs hook for every page's HTML:
 
-- images load lazily (loading="lazy", decoding="async") unless they say otherwise;
+- images load lazily (loading="lazy", decoding="async") unless they say otherwise, and so
+  do the posters of videos after a page's first (data-poster, which assets/media.js turns
+  into poster near the viewport);
 - on the input reference (docs/input.md), each table row of a key gets an anchor,
   <section>--<key> (e.g. run--cfl), so keys can be linked; assets/keys.js scrolls to
   the row of a searched key. The rows are also written to docs/input-reference.json
@@ -12,6 +14,7 @@ import os
 import re
 
 IMG = re.compile(r"<img(?![^>]*\sloading=)")
+POSTER = re.compile(r"(<video\b[^>]*?)\sposter=")
 HEADING = re.compile(r'<h[23] id="([^"]+)"[^>]*>(.*?)</h[23]>', re.S)
 ROW = re.compile(r"<tr>\s*<td>((?:<code>[^<]+</code>(?: / )?)+)</td>\s*<td>(.*?)</td>", re.S)
 KEY = re.compile(r"<code>([^<]+)</code>")
@@ -62,6 +65,9 @@ def on_post_build(config, **kwargs):
 
 def on_page_content(html, page, **kwargs):
     html = IMG.sub('<img loading="lazy" decoding="async"', html)
+    first = POSTER.search(html)
+    if first:
+        html = html[:first.end()] + POSTER.sub(r"\1 data-poster=", html[first.end():])
     if page.file.src_uri == "docs/input.md":
         html = anchor_rows(html)
     return html

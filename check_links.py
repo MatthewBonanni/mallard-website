@@ -30,10 +30,10 @@ class Collector(html.parser.HTMLParser):
         if tag == "img" and not (a.get("alt") or "").strip():
             self.missing_alt.append(a.get("src", "?"))
         if tag == "video" and not (a.get("aria-label") or "").strip():
-            self.missing_alt.append(a.get("poster", "video"))
+            self.missing_alt.append(a.get("poster") or a.get("data-poster", "video"))
         if tag == "img" and re.search(r"-(light|dark)\.svg$", a.get("src", "")):
             self.svgs.add(a["src"])
-        for key in ("href", "src", "poster"):
+        for key in ("href", "src", "poster", "data-poster"):
             if a.get(key) and not (tag == "link" and a.get("rel") in ("preconnect", "canonical", "alternate")):
                 self.links.append(a[key])
 
