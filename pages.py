@@ -169,7 +169,10 @@ def main():
                 for cand in (p + ".md", (p + "/" if p else "") + "index.md"):
                     if (content / cand).exists() or cand.removeprefix("docs/") in pages:
                         return f"{label}({posixpath.relpath(cand, page_dir)}{frag}{title})"
-                print(f"warning: {page}: no page for {target}")
+                # A release's copy (devsite.py) has only the documentation pages: its links to the root
+                # site's home, gallery, validation and media stay absolute, as intended
+                if (content / "validation.md").exists() or p.startswith("docs/"):
+                    print(f"warning: {page}: no page for {target}")
                 return m.group(0)
             if re.match(r"^[a-z]+:", target) or target.startswith("#") or not path:
                 return f"{label}({target}{title})"
