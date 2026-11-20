@@ -198,41 +198,57 @@ body { font-feature-settings: var(--m-font-features); -webkit-font-smoothing: an
   .mallard-hero__inner { grid-template-columns: 1fr; }
 }
 
-/* Gallery */
-.mallard-gallery figure { margin: 0 0 2.4rem; }
+/* Gallery: a two-column grid; the featured run and the side-by-side figures span both */
+.md-typeset .mallard-gallery {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense;
+  gap: var(--m-space-7) var(--m-space-6); margin-top: var(--m-space-6);
+}
+.md-typeset .mallard-gallery > figure { margin: 0; min-width: 0; }
+.md-typeset .mallard-gallery > figure.mallard-gallery__feature,
+.md-typeset .mallard-gallery > figure.mallard-gallery__duo,
+.md-typeset .mallard-gallery > figure.mallard-gallery__pair { grid-column: 1 / -1; }
 .mallard-gallery img, .mallard-gallery video {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 8px;
-  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: var(--m-radius-lg);
+  border: 1px solid var(--m-border);
   background: #000;
 }
-.mallard-gallery figcaption { max-width: none; text-align: left; font-size: 0.75rem; }
+.md-typeset .mallard-gallery figcaption {
+  max-width: none; margin: var(--m-space-3) 0 0; text-align: left; font-style: normal;
+  font-size: var(--m-type-small-size); line-height: var(--m-type-small-line); color: var(--m-text-muted);
+}
+.md-typeset .mallard-gallery figcaption strong:first-child { color: var(--m-text); font-weight: 600; }
 .mallard-gallery figure.mallard-gallery__pair {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1.2rem;
+  gap: var(--m-space-5);
   align-items: start;
 }
 .mallard-gallery figure.mallard-gallery__pair figcaption { margin-top: 0; }
 @media screen and (max-width: 44.9375em) {
+  .md-typeset .mallard-gallery { grid-template-columns: 1fr; gap: var(--m-space-6); }
   .mallard-gallery figure.mallard-gallery__pair { grid-template-columns: 1fr; }
 }
 
-/* Validation figures and tables */
+/* Validation figures and tables: framed figures, quiet captions */
 .mallard-figure img, .mallard-figure video {
   width: 100%;
   height: auto;
   display: block;
   background: #fff;
-  border-radius: 6px;
-  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: var(--m-radius-md);
+  border: 1px solid var(--m-border);
 }
-.mallard-figure figcaption { max-width: none; text-align: left; font-size: 0.75rem; }
+.md-typeset .mallard-figure { margin: var(--m-space-6) 0; }
+.md-typeset .mallard-figure figcaption {
+  max-width: none; margin-top: var(--m-space-3); text-align: left; font-style: normal;
+  font-size: var(--m-type-caption-size); line-height: var(--m-type-caption-line); color: var(--m-text-muted);
+}
 .md-typeset table:not([class]) td.num, .md-typeset .mallard-num { font-variant-numeric: tabular-nums; }
-.mallard-hero.md-typeset, .mallard-hero .md-typeset { color: #f6eee9; }
-.mallard-hero .md-typeset h1 { margin-top: 0; }
+.md-typeset h4 { font-size: 0.9rem; margin-top: var(--m-space-7); padding-top: var(--m-space-5); border-top: 1px solid var(--m-border); }
+.md-typeset p > strong:only-child { display: block; margin-top: var(--m-space-5); }
 
 /* Home: headline validation numbers */
 .md-typeset .mallard-stats > ul {
@@ -340,11 +356,12 @@ body { font-feature-settings: var(--m-font-features); -webkit-font-smoothing: an
 .md-typeset p.mallard-provenance {
   display: inline-block;
   margin: -0.4em 0 0.8em;
-  padding: 0.15em 0.6em;
-  border-radius: 999px;
-  border: 1px solid var(--md-default-fg-color--lightest);
-  font-size: 0.68rem;
-  color: var(--md-default-fg-color--light);
+  padding: 0.2em 0.7em;
+  border-radius: var(--m-radius-pill);
+  border: 1px solid var(--m-border);
+  background: var(--m-surface);
+  font-size: var(--m-type-caption-size);
+  color: var(--m-text-muted);
 }
 .md-typeset .mallard-nowrap { white-space: nowrap; }
 
