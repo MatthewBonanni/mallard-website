@@ -176,7 +176,7 @@ cmake --build build -j
 cd examples/sod && ../../build/src/mallard -i input.toml
 ```
 
-This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. Containers (`ghcr.io/matthewbonanni/mallard`, or `:cuda` for NVIDIA GPUs) and [Spack](https://spack.io) install it without a build; [Installation](docs/installation.md) covers them (Docker, Apptainer, Kubernetes), GPU and MPI builds and every CMake option, on the [supported platforms](docs/installation.md#supported-platforms).
+This builds Mallard for CPUs, then runs the Sod shock tube, which takes about a second. Containers (`ghcr.io/matthewbonanni/mallard`, or `:cuda` for NVIDIA GPUs; Docker, Apptainer, Kubernetes), a relocatable archive for Linux (from 0.11.0: unpack and run, no compiling, MPICH-based MPI) and [Spack](https://spack.io) install it without a build; [Installation](docs/installation.md) covers them, GPU and MPI builds and every CMake option, on the [supported platforms](docs/installation.md#supported-platforms).
 
 `mallard list templates` shows ready-to-run templates (`mallard new cylinder` creates a case with its mesh, run and plot scripts), `mallard check input.toml` checks a case before a long run, and `mallard ctl <run-dir> status|stop` steers it while it runs. [First simulation](docs/tutorials/first_simulation.md) walks through the input, the output and the comparison with the exact solution, and the [tutorials](docs/tutorials/index.md) go on from there.
 
