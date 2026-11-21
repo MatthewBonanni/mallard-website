@@ -121,6 +121,7 @@ nav:
   - Get started:
       - docs/index.md
       - Installation: docs/installation.md
+      - Quick start: docs/guide/quick_start.md
       # The pages of docs/tutorials/: the index, then the path numbered in its table's order (pages.py)
       - TUTORIALS
   - User guide:
@@ -142,6 +143,7 @@ nav:
       - Running and controlling jobs: docs/guide/running.md
       - Running in parallel: docs/guide/parallel.md
       - Performance: docs/guide/performance.md
+      - Python: docs/guide/python.md
   - Input builder: docs/builder.md
   - Examples: docs/examples.md
   - Gallery: gallery.md
@@ -158,6 +160,7 @@ nav:
   - Reference:
       - Input reference: docs/input.md
       - Command line: docs/guide/cli.md
+      - Python API: docs/guide/python_api.md
       - Feature matrix: docs/guide/features.md
       - Supported platforms: docs/guide/support.md
       - Tools: docs/tools.md
