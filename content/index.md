@@ -47,8 +47,9 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     - Compressible Euler and Navier–Stokes; constant, Sutherland or power-law viscosity
     - Thermally perfect multicomponent mixtures, with an optional double-flux scheme for interfaces
     - Gravity; source terms and sponges as expressions over named regions
+    - Lagrangian particles on the high-order reconstruction: tracers, and solid particles with drag, gravity, a stiff limit for the smallest and wall restitution or deposition; quantities along their paths and particle probes
 
-    [Physics](docs/guide/physics.md) · [Sources](docs/guide/sources.md) · [Expressions](docs/guide/expressions.md) · [Regions](docs/guide/geometry.md#regions)
+    [Physics](docs/guide/physics.md) · [Particles](docs/guide/particles.md) · [Sources](docs/guide/sources.md) · [Expressions](docs/guide/expressions.md) · [Regions](docs/guide/geometry.md#regions)
 
 -   :material-fire:{ .lg .middle } __Reacting flow__
 
