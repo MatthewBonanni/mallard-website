@@ -50,6 +50,7 @@ DESCRIPTIONS = {
     "guide/physics.md": "Euler and Navier-Stokes equations, the perfect-gas reference state, viscosity laws and axisymmetric flows in Mallard.",
     "guide/thermochemistry.md": "Gas mixtures, Cantera mechanisms, transport, finite-rate chemistry with Strang or SIMPLER splitting, radiation and mallard reactor.",
     "guide/les.md": "Large-eddy simulation in Mallard: SGS models, filter width, the hybrid low-dissipation flux, the dissipation budget, TFLES and PaSR.",
+    "guide/particles.md": "Lagrangian particles in Mallard: tracers, solid particles with drag, forces and heat transfer, stiff particles, walls, per-particle quantities and particle probes.",
     "guide/numerics.md": "Choosing Mallard's time step, reconstruction (first order, MUSCL, TENO-E orders 3 to 6), Riemann solver and other numerical options.",
     "guide/boundary_conditions.md": "Mallard's boundary conditions: walls, inflows, outflows, far fields, characteristic (NSCBC) boundaries and synthetic turbulence.",
     "guide/sources.md": "Gravity, constant mass flow, source terms as expressions, and sponge layers in Mallard.",

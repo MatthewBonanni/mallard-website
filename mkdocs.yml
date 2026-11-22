@@ -131,6 +131,7 @@ nav:
       - Physics: docs/guide/physics.md
       - Thermochemistry: docs/guide/thermochemistry.md
       - Large-eddy simulation: docs/guide/les.md
+      - Particles: docs/guide/particles.md
       - Initialization and restarts: docs/guide/initialization.md
       - Boundary conditions: docs/guide/boundary_conditions.md
       - Sources and sponges: docs/guide/sources.md
