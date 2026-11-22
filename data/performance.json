@@ -1230,11 +1230,97 @@
   }
  ],
  "scaling": {
-  "hardware": "NVIDIA A100-80GB, 4 per node, NVLink within a node, HDR InfiniBand with GPUDirect RDMA between nodes, GPU-aware MPI, one rank per GPU",
+  "hardware": "NVIDIA A100-SXM4-80GB GPUs (4 per node for the earlier runs, 8 for 0.11.0), NVLink within a node, HDR InfiniBand with GPUDirect RDMA between nodes, GPU-aware MPI, one rank per GPU",
   "plots": [
    {
+    "id": "strong-3d-0110",
+    "title": "3D strong scaling, Mallard 0.11.0",
+    "description": "Taylor–Green vortex (viscous), 128³ hexahedra, TENO-E 5, NVIDIA A100-SXM4-80GB, one node, NCCL and CUDA graphs (main a7a5432e4). Efficiency T₁ / (n Tₙ).",
+    "prs": [
+     1427
+    ],
+    "series": [
+     {
+      "label": "multi-jagged (default)",
+      "points": [
+       {
+        "gpus": 1,
+        "ms": 244.88,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 2,
+        "ms": 119.58,
+        "efficiency": 1.0239
+       },
+       {
+        "gpus": 4,
+        "ms": 60.94,
+        "efficiency": 1.0046
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "weak-3d-0110",
+    "title": "3D weak scaling, Mallard 0.11.0",
+    "description": "Taylor–Green vortex (viscous), 64³ hexahedra per GPU, TENO-E 5, NVIDIA A100-SXM4-80GB, 8 per node, NCCL and CUDA graphs (main 9da4ab1e7). Efficiency T₁ / Tₙ.",
+    "prs": [
+     1064,
+     1427
+    ],
+    "series": [
+     {
+      "label": "one node",
+      "points": [
+       {
+        "gpus": 1,
+        "ms": 30.58,
+        "efficiency": 1.0
+       },
+       {
+        "gpus": 2,
+        "ms": 30.79,
+        "efficiency": 0.9934
+       },
+       {
+        "gpus": 4,
+        "ms": 31.1,
+        "efficiency": 0.9834
+       },
+       {
+        "gpus": 8,
+        "ms": 31.03,
+        "efficiency": 0.9856
+       }
+      ]
+     },
+     {
+      "label": "two nodes",
+      "points": [
+       {
+        "gpus": 2,
+        "ms": 31.1,
+        "efficiency": 0.9835
+       },
+       {
+        "gpus": 8,
+        "ms": 31.05,
+        "efficiency": 0.985
+       },
+       {
+        "gpus": 14,
+        "ms": 31.05,
+        "efficiency": 0.9849
+       }
+      ]
+     }
+    ]
+   },
+   {
     "id": "strong-3d",
-    "title": "3D strong scaling",
+    "title": "3D strong scaling, Mallard 0.8.0",
     "description": "Taylor–Green vortex (viscous), 96³ hexahedra, TENO-E 5. Efficiency T₁ / (n Tₙ).",
     "prs": [
      261
@@ -1329,7 +1415,7 @@
    },
    {
     "id": "weak-3d",
-    "title": "3D weak scaling",
+    "title": "3D weak scaling, Mallard 0.8.0",
     "description": "Taylor–Green vortex (viscous), 64³ hexahedra per GPU, TENO-E 5. Efficiency T₁ / Tₙ.",
     "prs": [
      261

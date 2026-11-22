@@ -90,7 +90,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - Kokkos Serial, Threads, OpenMP, CUDA (NVIDIA) and HIP (AMD) backends; double or single precision
-    - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged, Hilbert-curve or graph (dKaMinPar) partitions: 93% (2D) and 91% (3D) weak-scaling efficiency on 16 A100 GPUs; no rank holds the whole mesh
+    - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged, Hilbert-curve or graph (dKaMinPar) partitions: 98.5% weak-scaling efficiency on 14 A100 GPUs over two nodes (3D TENO-E, [scaling](docs/guide/parallel.md#scaling-3d-taylor-green)); no rank holds the whole mesh
     - The whole time step as one CUDA graph; 3D TENO-E setup on the GPU
     - Bitwise-identical results on any number of threads or ranks; restarts bit for bit, also on a different rank count
     - Stiff chemistry on GPUs, with a sparse LU for large mechanisms
