@@ -130,6 +130,7 @@ nav:
       - Geometry: docs/guide/geometry.md
       - Physics: docs/guide/physics.md
       - Thermochemistry: docs/guide/thermochemistry.md
+      - Tabulated chemistry: docs/guide/flamelet.md
       - Large-eddy simulation: docs/guide/les.md
       - Particles: docs/guide/particles.md
       - Initialization and restarts: docs/guide/initialization.md
@@ -143,6 +144,8 @@ nav:
       - Running and controlling jobs: docs/guide/running.md
       - Running in parallel: docs/guide/parallel.md
       - Performance: docs/guide/performance.md
+      - Python: docs/guide/python.md
+      - C++ API: docs/guide/cpp_api.md
   - Input builder: docs/builder.md
   - Examples: docs/examples.md
   - Gallery: gallery.md
@@ -159,6 +162,7 @@ nav:
   - Reference:
       - Input reference: docs/input.md
       - Command line: docs/guide/cli.md
+      - Python API: docs/guide/python_api.md
       - Feature matrix: docs/guide/features.md
       - Supported platforms: docs/guide/support.md
       - Tools: docs/tools.md
