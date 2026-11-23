@@ -20,11 +20,10 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     ---
 
-    - 2D triangles and quadrilaterals; 3D tetrahedra, hexahedra, prisms, pyramids and mixed meshes
-    - Gmsh 2.2/4.1, CGNS, Fluent, OpenFOAM polyMesh or HDF5 mesh files (`mallard mesh convert`), scaled, rotated and translated on read, or generated boxes and annuli
-    - Translational and rotational periodicity, on generated meshes or paired zones of mesh files
-    - Axisymmetric (r-z) flows, at design order up to the axis
-    - Curved high-order boundaries, from Gmsh high-order elements or an analytic projection
+    - 2D: triangles, quadrilaterals; 3D: tetrahedra, hexahedra, prisms, pyramids, mixed
+    - Gmsh, CGNS, Fluent, OpenFOAM, HDF5; generated boxes and annuli
+    - Translational and rotational periodicity; axisymmetry
+    - Curved high-order boundaries
 
     [Meshes](docs/guide/meshes.md) · [Curved boundaries](docs/guide/meshes.md#curved-boundaries) · [Axisymmetric flows](docs/guide/physics.md#axisymmetric-flows)
 
@@ -32,11 +31,10 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     ---
 
-    - First order, MUSCL (Barth–Jespersen or Venkatakrishnan) and TENO-E of orders 3 to 6, optionally bound preserving
-    - High order by default: on smooth flow, TENO-E reaches an accurate answer at a fraction of a second-order scheme's cost ([measured](docs/guide/numerics.md#why-high-order))
-    - Rusanov, HLL, HLLC, Roe and the rotated-hybrid RHLL, carbuncle-free except at shocks at rest on cell faces; all for single gases and mixtures
-    - Low-Mach correction of the upwind dissipation
-    - Runge–Kutta time integration: forward Euler, SSPRK3, RK4 and the five-stage low-storage SSPRK54, CK45 and RDPK3Sp35, at a CFL number, a fixed step or error-controlled steps (RDPK3Sp35's embedded estimate)
+    - [TENO-E](https://doi.org/10.1007/s10915-025-02918-w) reconstruction, orders 3–6, every cell type
+    - High order by default: equal accuracy at a fraction of second-order cost on smooth flow ([measured](docs/guide/numerics.md#why-high-order))
+    - Riemann solvers: Rusanov, HLL, HLLC, Roe, RHLL; low-Mach correction
+    - Explicit Runge–Kutta: fixed CFL number or error-controlled steps
 
     [Numerics guide](docs/guide/numerics.md) · [Numerical methods](docs/numerics/overview.md) · [What's original in Mallard](docs/numerics/originality.md)
 
@@ -44,88 +42,102 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     ---
 
-    - Compressible Euler and Navier–Stokes; constant, Sutherland or power-law viscosity
-    - Thermally perfect multicomponent mixtures, with an optional double-flux scheme for interfaces
-    - Gravity; source terms and sponges as expressions over named regions
+    - Compressible Euler and Navier–Stokes
+    - Thermally perfect mixtures; finite-rate chemistry from [Cantera](https://cantera.org) mechanisms
+    - Detailed transport, Soret diffusion, optically thin radiation
+    - Source terms and sponges as expressions over named regions
+    - Regions: arrays of copies, moving with `t`, wrapping across periodic boundaries, solution-defined (`T > 1500`, isosurfaces)
+    - Regions from watertight STL and OBJ solids, in their drawing units
 
-    [Physics](docs/guide/physics.md) · [Sources](docs/guide/sources.md) · [Expressions](docs/guide/expressions.md) · [Regions](docs/guide/geometry.md#regions)
-
--   :material-fire:{ .lg .middle } __Reacting flow__
-
-    ---
-
-    - Finite-rate chemistry from Cantera YAML mechanisms: elementary, three-body, falloff, PLOG and Chebyshev reactions
-    - RODAS Rosenbrock integrator per cell with analytical Jacobians, with Strang or SIMPLER splitting; ignition delays match Cantera up to 1268 species
-    - Mixture-averaged, unity-Lewis or constant-Lewis transport, optionally with thermal (Soret) diffusion; optically thin radiation
-    - Chemistry load balancing across MPI ranks; `mallard reactor`, a 0D constant-volume reactor
-
-    [Thermochemistry](docs/guide/thermochemistry.md) · [Benchmarks](validation.md#reacting-flow)
+    [Physics](docs/guide/physics.md) · [Thermochemistry](docs/guide/thermochemistry.md) · [Sources](docs/guide/sources.md) · [Regions](docs/guide/geometry.md#regions) · [CAD regions](docs/guide/geometry.md#regions-from-cad-surfaces)
 
 -   :material-weather-windy:{ .lg .middle } __Large-eddy simulation__
 
     ---
 
-    - Explicit LES: Sigma (default), WALE, Vreman or Smagorinsky eddy viscosity, with Scotti's filter width on anisotropic cells and an opt-in dynamic constant
-    - Kinetic-energy-preserving hybrid flux, with the Riemann solver only at compressions, and a dissipation budget that separates the model's, the scheme's and molecular dissipation
-    - Thickened flame (TFLES) with dynamic thickening and a dynamic efficiency (no model constant); PaSR closure (experimental)
-    - Synthetic turbulent inflow through characteristic inlets: a digital filter or a precursor run's statistics, bitwise the same on any number of ranks
-    - Channel flow: Re<sub>τ</sub> within 0.7% and 1.6% of DNS at 395 and 590
-    - Wall-modeled LES: Griffin–Fu–Moin (isothermal and adiabatic walls) or equilibrium ODE model; C<sub>f</sub> within 2.1% of Lee & Moser at Re<sub>τ</sub> = 2000 and 5200 on 12 cells per half-height, wall heat flux within 1.3% of Trettel & Larsson at M<sub>b</sub> = 1.7 and 3.0
+    - Sigma, WALE, Vreman, Smagorinsky models; kinetic-energy-preserving hybrid flux
+    - Thickened flames with dynamic efficiency; synthetic turbulent inflow
+    - Wall models: Griffin–Fu–Moin compressible, equilibrium ODE
 
-    [Large-eddy simulation](docs/guide/les.md) · [Wall models](docs/guide/les.md#wall-models-wall_model) · [Synthetic inflow](docs/guide/boundary_conditions.md#synthetic-turbulence-turbulence) · [Validation](validation.md#les)
+    [Large-eddy simulation](docs/guide/les.md) · [Wall models](docs/guide/les.md#wall-models-wall_model) · [Validation](validation.md#les)
+
+-   :material-grain:{ .lg .middle } __Particles__
+
+    ---
+
+    - Lagrangian tracers on the high-order reconstructed velocity; pathlines at the scheme's spatial and integrator's temporal order
+    - Solid particles: Stokes, Schiller–Naumann, Singh et al. (compressible, rarefied) drag; gravity, pressure-gradient, added-mass, Saffman lift; Ranz–Marshall heat transfer
+    - Exponential integration of stiff particles; time step independent of particles
+    - Wall bounces with restitution, located within the step; deposition on sticking walls
+    - Path quantities: time integrals, extrema, first times, turns about an axis; particle probes over regions
+    - GPUs and MPI; bitwise identical on any rank count and across restarts
+
+    [Particles](docs/guide/particles.md) · [Theory](docs/theory/particles.md)
 
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
     ---
 
-    - Slip, adiabatic, isothermal and heat-flux walls, optionally moving
-    - Inflow, characteristic far field, pressure outlets (local or area-averaged), transmissive, time-dependent expressions
-    - Partially non-reflecting characteristic (NSCBC) inlets and outlets with transverse terms (1% of an acoustic pulse reflected, against 97–99% at a fixed-pressure outlet); sponge layers
-    - Every value a number or an expression of x, y, z and t; zones split between conditions by expressions
+    - Walls, inlets, outlets, far field, symmetry; composable options: NSCBC, averaging, turbulence, wall models
+    - Every value a number or an expression of x, y, z, t
+    - Profiles in boundary coordinates (wall distance, position along the boundary, radius, angle)
+    - Profiles from data files (tables, point clouds) in those coordinates
 
     [Boundary conditions](docs/guide/boundary_conditions.md) · [Sponges](docs/guide/sources.md#sponge-layers)
 
--   :material-chip:{ .lg .middle } __Performance and parallelism__
+-   :material-chip:{ .lg .middle } __Performance__
 
     ---
 
-    - Kokkos Serial, Threads, OpenMP, CUDA (NVIDIA) and HIP (AMD) backends; double or single precision
-    - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged, Hilbert-curve or graph (dKaMinPar) partitions: 93% (2D) and 91% (3D) weak-scaling efficiency on 16 A100 GPUs; no rank holds the whole mesh
-    - The whole time step as one CUDA graph; 3D TENO-E setup on the GPU
-    - Bitwise-identical results on any number of threads or ranks; restarts bit for bit, also on a different rank count
-    - Stiff chemistry on GPUs, with a sparse LU for large mechanisms
+    - CPUs (OpenMP, threads), NVIDIA and AMD GPUs; single or double precision
+    - MPI: GPU-aware or NCCL halo exchange overlapped with computation; multi-jagged, Hilbert-curve or graph partitioning
+    - Whole time step as one CUDA graph
+    - Bitwise identical on any rank count; bitwise restarts
 
     [Running in parallel](docs/guide/parallel.md) · [Performance](docs/guide/performance.md) · [Dashboard](docs/dashboard.md)
 
--   :material-file-chart:{ .lg .middle } __Input, output and diagnostics__
+-   :material-file-chart:{ .lg .middle } __Input and output__
 
     ---
 
-    - TOML input with units (`p = "1 atm"`), checked against each key's dimension; states, sources and sponges as expressions; misspelled or unused keys are errors, with suggestions
-    - Initial states from expressions, layered regions, tables and divergence-free synthetic turbulence of a prescribed spectrum
-    - `mallard new` case templates; `mallard check` for mesh quality, time step, memory and cost before a run, with an annotated image and a ParaView file of the domain, boundaries and regions (`--view`; `mallard info MESH --view` for a mesh alone); `mallard input upgrade` for inputs from older releases; `mallard list` for a case's fields and keys; tab completion for bash, zsh and fish
-    - `mallard ctl` to steer a running job; triggers: conditions on time, probes, forces and integrals that stop the run, write a restart or snapshot, or start statistics; a divergence report when a run fails, with the likely causes ranked by their evidence
-    - `mallard info` on any output file, `mallard diff` between two solutions, `mallard post extract` for probes and region integrals of existing output, `mallard post convergence` for the observed order, Richardson extrapolation and grid convergence index
-    - Conservative high-order remap of a restart onto another mesh; versioned files, readable by every later release of the same major version
-    - VTKHDF for ParaView (default; written by all ranks in parallel, curved cells as quadratic cells) or VTU; boundary-zone surfaces; derived fields: Mach number, Q-criterion, λ<sub>2</sub> and numerical schlieren
-    - Running means and covariances, spectra and phase averages; probes on points, curves, surfaces, exact cut planes and boundary zones (cell averages or high-order point values; wall shear, C<sub>f</sub>, C<sub>p</sub>, heat flux, y<sup>+</sup> and fluxes through any surface; CSV, HDF5 or VTK, with integrals, means and extrema); domain integrals, wall forces
-    - Heat release, production rates and detonation soot foils
+    - TOML input with units (`p = "1 atm"`); errors name the key, line and fix
+    - Initial states: expressions, layered regions, tables, divergence-free synthetic turbulence of a prescribed spectrum
+    - Command-line tools:
+        - `mallard check`: pre-run checks; mesh-quality and stencil fields for ParaView; every cell's stencils in one file; `--view` for an annotated image and ParaView file of domain, boundaries, regions
+        - `mallard ctl`: steer a running job
+        - `mallard diff`: compare two solutions
+        - `mallard info`: inspect any output file
+        - `mallard new`: case templates
+        - `mallard pack`: one archive that reproduces a run; SHA-256 manifest, `--verify`
+        - `mallard post average`: means, RMS, Reynolds and Favre covariances, plane averages, PDFs, conditional statistics
+        - `mallard post convergence`: observed order, Richardson extrapolation, grid convergence index across resolutions
+        - `mallard post derive`: derived fields
+        - `mallard post extract`: probes and region integrals from existing output
+        - `mallard post flame`: premixed flame position, thermal thickness, consumption and displacement speeds
+        - Tab completion: bash, zsh, fish
+    - Triggers on time, probes, forces, integrals: stop, write restart or snapshot, start or stop statistics, log, change a setting; steps land exactly on tested times
+    - Run report `report.html` per run: outcome, configuration, health, monitor plots, cost, output; self-contained
+    - Divergence report on failure: where, when, ranked likely causes with evidence, what to try
+    - VTKHDF output for ParaView
+    - Derived fields, in the run or via `mallard post derive`: Mach number, stagnation state, entropy, Q-criterion, λ<sub>2</sub>, enstrophy, helicity, numerical schlieren, pressure coefficient; flames: mixture fraction, progress variable, flame index, scalar dissipation
+    - Probes on points, curves, surfaces, boundaries, regions
+    - Statistics, spectra, phase averages, PDFs, conditional statistics (on mixture fraction or progress variable)
+    - Initial-transient detection and confidence intervals (MSER-5, batch means): start statistics, stop at convergence
+    - C++ API: step a case from your program, same results as `mallard -i`; CMake package (`find_package(Mallard)`)
+    - Python package: output files as numpy arrays via Mallard's reader; post-processing commands as functions
 
-    [Input files](docs/guide/input_files.md) · [Command line](docs/guide/cli.md) · [Running and controlling jobs](docs/guide/running.md) · [Output and diagnostics](docs/guide/output.md) · [Probes](docs/guide/probes.md) · [Grid convergence](docs/guide/convergence.md) · [Remap](docs/guide/initialization.md#remap-from-another-mesh) · [Input reference](docs/input.md)
+    [Input files](docs/guide/input_files.md) · [Command line](docs/guide/cli.md) · [Run report](docs/guide/output.md#run-report-reporthtml) · [Divergence report](docs/guide/running.md#the-divergence-report) · [Derived fields](docs/guide/output.md#derived-fields) · [Probes](docs/guide/probes.md) · [Grid convergence](docs/guide/convergence.md) · [C++ API](docs/guide/cpp_api.md) · [Python](docs/guide/python.md) · [Input reference](docs/input.md)
 
--   :material-check-decagram:{ .lg .middle } __Verified, validated and tested__
+-   :material-check-decagram:{ .lg .middle } __Verification and validation__
 
     ---
 
-    - 40 examples against exact solutions, other codes, DNS and experiments, e.g.:
-        - [Sphere wake](validation.md#sphere-re300) at Re = 300: Strouhal number and drag within 3% and 2% of Johnson & Patel
-        - [Compressible isotropic turbulence](validation.md#isotropic-turbulence): enstrophy within 2.4% of the filtered DNS of Johnsen et al.
-        - [CJ detonation](validation.md#detonation) speed within 0.01%; H<sub>2</sub>/air [flame speeds](validation.md#flame-speed) within 0.81% of Cantera from φ = 0.6 to 1.4
-    - 500+ unit and regression tests on every change: 2D, 3D, MPI on 1–4 ranks, single precision, GCC and Clang on Linux (x86-64 and arm64) and macOS, warnings as errors
-    - A feature matrix: each pair of features marked validated, verified, implemented, rejected or untested, linked to its evidence
-    - Nightly sanitizers; a performance suite with per-hardware baselines
+    - 40 examples vs exact solutions, other codes, DNS, experiments
+    - 1,600+ tests; verification manual of measured convergence orders
+    - CPU and GPU CI before every merge; performance dashboard
+    - Every method and reference cited
 
-    [Verification and validation](validation.md) · [Verification manual](docs/verification.md) · [Feature matrix](docs/guide/features.md) · [Supported platforms](docs/guide/support.md) · [Examples](docs/examples.md)
+    [Verification and validation](validation.md) · [Verification manual](docs/verification.md) · [Feature matrix](docs/guide/features.md) · [Examples](docs/examples.md) · [Dashboard](docs/dashboard.md) · [Bibliography](docs/references.md)
 
 </div>
 
@@ -164,7 +176,7 @@ Every number below comes from a Mallard run compared with an exact solution, the
 
 </div>
 
-The test suite (more than 500 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
+The test suite (more than 1,600 tests) checks the Riemann solvers against an exact solver, design order on triangles and quadrilaterals, conservation, symmetry and free-stream preservation, shock tubes, an oblique shock and exact viscous solutions on every change.
 
 ## Quick start
 
