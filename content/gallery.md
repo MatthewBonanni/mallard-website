@@ -1,6 +1,6 @@
 ---
 title: Gallery
-description: Animations of Mallard simulations - a 16.8-million-cell 2D Riemann problem, double Mach reflection, 3D turbulence and wakes, detonations, flames and the viscous shock tube.
+description: Animations of Mallard simulations - a 16.8-million-cell 2D Riemann problem, double Mach reflection, 3D turbulence and wakes, particles over a backward-facing step, detonations, flames and the viscous shock tube.
 hide:
   - navigation
   - toc
@@ -63,6 +63,11 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/sphere_re300_poster.jpg" aria-label="Q-criterion isosurfaces of the hairpin vortices shed by a sphere at Re = 300, colored by streamwise velocity, with drag and lift histories"><source src="../media/sphere_re300.mp4" type="video/mp4"></video>
 <figcaption markdown>**Sphere at Re = 300, in 3D.** Periodic shedding of hairpin vortices from a wake with one plane of symmetry: smoothed Q-criterion isosurfaces (Q = 0.02 (U/D)²) colored by streamwise velocity, and the drag and lift coefficients. [Example: `sphere_re300`](docs/examples.md#sphere-re300) · [validation](validation.md#sphere-re300)</figcaption>
+</figure>
+
+<figure id="particle-step" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/particle_step_poster.jpg" aria-label="Tracers and solid particles of Stokes numbers 1 and 4 seeded in the inlet channel of a backward-facing step and carried through its separated shear layer, over the vorticity of the gas"><source src="../media/particle_step.mp4" type="video/mp4"></video>
+<figcaption markdown>**Solid particles over a backward-facing step** (after Fessler & Eaton 1997, 1999). Laminar channel flow at Re<sub>H</sub> = 3000 and Mach 0.3 separates at a step of expansion ratio 5:3 into a shear layer that rolls up into vortices; 45,600 particles per Stokes number St = τU<sub>0</sub>/5H, one-way coupled, are seeded in the inlet channel. Tracers roll up with the vortices and fill the recirculation zone; at St = 1 the particles are flung out of the vortex cores and enter the zone only in tongues between them (0.28 as many under the shear layer as tracers); at St = 4 they cross the shear layer and never reach the floor upstream of 8 H: the trends Fessler & Eaton measured. Fifth-order TENO on 29,280 quadrilaterals. [Example: `particle_step`](docs/examples.md#particle-step) · [guide](docs/guide/particles.md)</figcaption>
 </figure>
 
 <figure id="pulsed-jet" markdown>
