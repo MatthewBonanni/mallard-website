@@ -1,6 +1,6 @@
 ---
 title: Gallery
-description: Animations of Mallard simulations - a 16.8-million-cell 2D Riemann problem, double Mach reflection, 3D turbulence and wakes, detonations, flames and the viscous shock tube.
+description: Animations of Mallard simulations - a 16.8-million-cell 2D Riemann problem, double Mach reflection, 3D turbulence and wakes, a shock through a particle curtain, detonations, flames and the viscous shock tube.
 hide:
   - navigation
   - toc
@@ -73,6 +73,11 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figure id="shock-bubble" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/shock_bubble_3d_poster.jpg" aria-label="Helium surface and vortex ring of a shock-accelerated helium bubble, numerical schlieren on the symmetry plane and interface positions against Haas and Sturtevant"><source src="../media/shock_bubble_3d.mp4" type="video/mp4"></video>
 <figcaption markdown>**Shock–helium bubble interaction, in 3D** (Haas & Sturtevant 1987). A Mach 1.25 shock in air hits a helium bubble, which rolls up into a vortex ring: the helium surface, the vortex sheet and ring colored by helium fraction, and numerical schlieren on the symmetry plane. [Example: `shock_bubble_3d`](docs/examples.md#shock-bubble-3d) · [validation](validation.md#shock-bubble)</figcaption>
+</figure>
+
+<figure id="shock-curtain" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/shock_curtain_poster.jpg" aria-label="Numerical schlieren of a Mach 1.66 shock hitting a curtain of glass beads colored by their velocity, with the pressure along the tube, the curtain's edges against the experiment and the beads' volume fraction"><source src="../media/shock_curtain.mp4" type="video/mp4"></video>
+<figcaption markdown>**A shock wave hitting a curtain of glass beads** (after the Sandia multiphase shock tube, Wagner et al. 2012). A Mach 1.66 shock in air hits a 2 mm curtain of 115 µm beads at 19% volume fraction: 304,000 parcels coupled two ways as point particles reflect a shock, attenuate the transmitted one to 85% of the incident pressure ratio, and spread as the post-shock flow drags them away. The upstream edge follows the experiment within 0.9 mm over 650 µs; the downstream edge moves about half as fast, since the dilute model leaves out the volume the beads take and the effect of neighbors on their drag. [Example: `shock_curtain`](docs/examples.md#shock-curtain) · [guide](docs/guide/particles.md#two-way-coupling)</figcaption>
 </figure>
 
 <figure markdown>
