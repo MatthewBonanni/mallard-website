@@ -155,6 +155,11 @@
     "alt": "Near-wall vortices and velocity streaks of turbulent channel flow at Re_tau = 180",
     "more": "validation.md#channel-retau180"
   },
+  "shock_curtain": {
+    "image": "media/shock_curtain_poster.jpg",
+    "alt": "Glass beads of a curtain hit by a Mach 1.66 shock, colored by velocity, against the experiment's edges",
+    "more": "gallery.md#shock-curtain"
+  },
   "shock_bubble_3d": {
     "image": "media/shock_bubble_3d_poster.jpg",
     "alt": "Vortex ring of a shock-accelerated helium bubble with schlieren and interface positions",
