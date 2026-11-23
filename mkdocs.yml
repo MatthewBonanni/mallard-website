@@ -154,6 +154,7 @@ nav:
           - THEORY
       - Numerical studies: docs/numerics/overview.md
       - TENO-E details: docs/numerics/teno_e.md
+      - Particle numerics: docs/numerics/particles.md
       - "What's original in Mallard": docs/numerics/originality.md
   - Reference:
       - Input reference: docs/input.md

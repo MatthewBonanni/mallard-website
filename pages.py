@@ -62,6 +62,7 @@ DESCRIPTIONS = {
     "guide/performance.md": "Measured throughput of Mallard on CPUs and A100 GPUs: the flow solver, 3D TENO-E setup and memory, reacting mixtures and chemistry.",
     "numerics/overview.md": "Mallard's numerical methods: finite volume discretization, time step, reconstruction, Riemann solvers, boundary conditions and viscous fluxes.",
     "numerics/teno_e.md": "How Mallard implements TENO-E reconstruction of orders 3 to 6 on unstructured 2D and 3D meshes.",
+    "numerics/particles.md": "How Mallard discretizes Lagrangian particles: the gas at a particle from TENO-E, location, exponential integration, bounces, migration and determinism.",
     "numerics/originality.md": "Which parts of Mallard's numerics are its own and which are published methods, with the closest prior work and the evidence.",
     "verification.md": "Observed orders of accuracy of every Mallard scheme on every cell type, from its convergence tests: reconstruction, Euler and Navier-Stokes, time integrators, boundaries, remapping.",
     "theory/index.md": "Mallard's theory manual: the equations it solves and the methods it solves them with, as implemented.",
