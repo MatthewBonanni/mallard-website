@@ -91,11 +91,12 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     - Kokkos Serial, Threads, OpenMP, CUDA (NVIDIA) and HIP (AMD) backends; double or single precision
     - MPI with GPU-aware or NCCL halo exchange, overlapped with computation, and multi-jagged, Hilbert-curve or graph (dKaMinPar) partitions: 93% (2D) and 91% (3D) weak-scaling efficiency on 16 A100 GPUs; no rank holds the whole mesh
+    - An unstructured solver with an automatic structured fast path: it finds the structured blocks of any mesh, where TENO reads stencils by index and shares its tables by stencil shape (1.04 kB instead of 32.0 kB per TENO5 hexahedron, so one A100-80GB holds 11.6 million cells instead of 2.1 million), while walls and irregular cells stay unstructured
     - The whole time step as one CUDA graph; 3D TENO-E setup on the GPU
     - Bitwise-identical results on any number of threads or ranks; restarts bit for bit, also on a different rank count
     - Stiff chemistry on GPUs, with a sparse LU for large mechanisms
 
-    [Running in parallel](docs/guide/parallel.md) · [Performance](docs/guide/performance.md) · [Dashboard](docs/dashboard.md)
+    [Running in parallel](docs/guide/parallel.md) · [Performance](docs/guide/performance.md) · [Structured fast path](docs/guide/performance.md#structured-fast-path) · [Dashboard](docs/dashboard.md)
 
 -   :material-file-chart:{ .lg .middle } __Input, output and diagnostics__
 
