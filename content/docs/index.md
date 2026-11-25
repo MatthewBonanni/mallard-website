@@ -59,7 +59,8 @@ you from this first run to multi-GPU LES, one step at a time.
     [Grid convergence](guide/convergence.md) ·
     [Running and controlling jobs](guide/running.md) ·
     [Running in parallel](guide/parallel.md) ·
-    [Performance](guide/performance.md)
+    [Performance](guide/performance.md) ·
+    [Python](guide/python.md)
 
 -   :material-tune-variant:{ .lg .middle } __Input builder__
 
@@ -97,6 +98,7 @@ you from this first run to multi-GPU LES, one step at a time.
 
     - [Input reference](input.md): every key and its default
     - [Command line](guide/cli.md): `mallard` and its subcommands
+    - [Python API](guide/python_api.md): the `mallard` Python package
     - [Feature matrix](guide/features.md): which features combine, and the evidence
     - [Supported platforms](guide/support.md): what CI builds and runs
     - [Tools](tools.md), [Bibliography](references.md), <a href="api/">API reference</a>

@@ -74,19 +74,6 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
 
     [Large-eddy simulation](docs/guide/les.md) · [Wall models](docs/guide/les.md#wall-models-wall_model) · [Synthetic inflow](docs/guide/boundary_conditions.md#synthetic-turbulence-turbulence) · [Validation](validation.md#les)
 
--   :material-grain:{ .lg .middle } __Particles__
-
-    ---
-
-    - Lagrangian tracers moved with the velocity of the high-order reconstruction: pathlines converge at the scheme's order in space (measured 2.94 to 5.09 for TENO3 to TENO5) and the integrator's in time
-    - Solid particles with Stokes, Schiller–Naumann or Singh et al. drag (compressible and rarefied gas), gravity, pressure-gradient, added-mass and Saffman lift forces, and Ranz–Marshall heat transfer
-    - Stiff particles, whose relaxation time is below the time step, integrated exponentially: the time step never depends on the particles
-    - Wall bounces with restitution, located within the step, or deposition on sticking walls
-    - Quantities along each path (time integrals, extrema, first times, turns about an axis) and particle probes of the particles in a region
-    - On GPUs and many MPI ranks, bitwise the same on any number of ranks and across restarts
-
-    [Particles](docs/guide/particles.md) · [Drag laws](docs/guide/particles.md#drag-laws) · [Theory](docs/theory/particles.md) · [Verification](docs/verification.md#lagrangian-particles)
-
 -   :material-border-outside:{ .lg .middle } __Boundary conditions__
 
     ---
