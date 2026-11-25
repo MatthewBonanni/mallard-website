@@ -90,7 +90,7 @@ hero_caption: "Configuration 3 of the 2D Riemann problem on 4096² quadrilateral
     ---
 
     - CPUs (OpenMP, threads), NVIDIA and AMD GPUs; single or double precision
-    - MPI: GPU-aware or NCCL halo exchange overlapped with computation; multi-jagged, Hilbert-curve or graph partitioning
+    - MPI: GPU-aware or NCCL halo exchange overlapped with computation; multi-jagged, Hilbert-curve or graph partitioning; 98.5% weak-scaling efficiency on 14 A100s over two nodes (3D TENO-E, [scaling](docs/guide/parallel.md#scaling-3d-taylor-green))
     - Whole time step as one CUDA graph
     - Bitwise identical on any rank count; bitwise restarts
 
