@@ -139,7 +139,11 @@ def main():
     if "installation.md" not in pages:
         # releases before docs/installation.md kept the installation guide in the README
         readme = (docsrc / "README.md").read_text()
-        body = readme[readme.index("## Building"):readme.index("## Contributing")]
+        start, end = re.search(r"^## Building\b", readme, re.M), re.search(r"^## Contributing\b", readme, re.M)
+        if not start or not end or end.start() <= start.start():
+            sys.exit(f"pages.py: {docs_ref} has no docs/installation.md, and its README.md has no "
+                     "'## Building' ... '## Contributing' sections to take Installation from")
+        body = readme[start.start():end.start()]
         pages["installation.md"] = ("README.md", "# Installation\n\n" + body.rstrip() + "\n")
     if (docsrc / "CONTRIBUTING.md").is_file():
         pages["contributing.md"] = ("CONTRIBUTING.md", (docsrc / "CONTRIBUTING.md").read_text())
