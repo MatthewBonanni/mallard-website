@@ -32,7 +32,7 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 
 <figure markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/tgv_poster.jpg" aria-label="Q-criterion isosurfaces of the Taylor-Green vortex at 256 cubed, beside the dissipation rate against the spectral DNS and the 128 cubed run"><source src="../media/tgv.mp4" type="video/mp4"></video>
-<figcaption markdown>**Taylor–Green vortex at Re = 1600 on the full periodic box**, 256³ (16.8 million hexahedra), fifth-order TENO-E: Q-criterion isosurfaces colored by vorticity magnitude, and the dissipation rate tracing the 512³ spectral DNS (peak within 0.3%) beside the 128³ run. [Example: `taylor_green_3d`](docs/examples.md#taylor-green-3d) · [validation](validation.md#taylor-green-vortex)</figcaption>
+<figcaption markdown>**Taylor–Green vortex at Re = 1600 on the full periodic box**, 256³ (16.8 million hexahedra), fifth-order TENO-E: Q-criterion isosurfaces colored by vorticity magnitude, and the dissipation rate tracing the 512³ spectral DNS (peak within 0.3%) beside the 128³ run. [Example: `taylor_green_3d`](docs/examples.md#taylor-green-3d) · [validation](validation.md#taylor-green-vortex) · [scaling on A100s](docs/guide/parallel.md#scaling-3d-taylor-green)</figcaption>
 </figure>
 
 <figure id="ellipsoid" markdown>
