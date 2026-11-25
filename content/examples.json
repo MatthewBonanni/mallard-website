@@ -33,6 +33,11 @@
       "alt": "Zones of the wedge: inflow, pressure outlet and symmetry planes over the 8 degree ramp"
     }
   },
+  "particle_wake": {
+    "image": "media/particle_wake_poster.jpg",
+    "alt": "Particles of four Stokes numbers in the Karman vortex street of a cylinder at Re = 100",
+    "more": "gallery.md#particle-wake"
+  },
   "cylinder": {
     "image": "validation/cylinder_wake.png",
     "alt": "Vorticity in the wake of the cylinder at Re = 100",
