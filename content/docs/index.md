@@ -23,7 +23,7 @@ cd examples/sod && ../../build/src/mallard -i input.toml
 The last line runs the Sod shock tube in about a second and writes `solut/sod.pvd`,
 which ParaView opens. `build/src/mallard list templates` lists ready-to-run cases
 to copy (`mallard new cylinder` creates one with its mesh, run and post-processing
-scripts). Containers, Spack, GPU builds (CUDA, HIP), MPI and the other options are in
+scripts). Containers (Docker, Apptainer), portable Linux binaries (CPU only, 0.11.0 and newer; no compiling), Spack, GPU builds (CUDA, HIP), MPI and the other options are in
 [Installation](installation.md); the [tutorials](tutorials/index.md) then take
 you from this first run to multi-GPU LES, one step at a time.
 
@@ -35,7 +35,7 @@ you from this first run to multi-GPU LES, one step at a time.
 
     ---
 
-    - [Installation](installation.md): containers, Spack, and CMake builds for CPUs, NVIDIA and AMD GPUs, MPI
+    - [Installation](installation.md): containers (Docker, Apptainer), portable Linux binaries, Spack, and CMake builds for CPUs, NVIDIA and AMD GPUs, MPI
     - [Tutorials](tutorials/index.md): a numbered path from the Sod shock tube to multi-GPU LES and clusters
 
 -   :material-book-open-variant:{ .lg .middle } __User guide__
