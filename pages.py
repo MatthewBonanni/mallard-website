@@ -50,6 +50,11 @@ DESCRIPTIONS = {
     "guide/physics.md": "Euler and Navier-Stokes equations, the perfect-gas reference state, viscosity laws and axisymmetric flows in Mallard.",
     "guide/thermochemistry.md": "Gas mixtures, Cantera mechanisms, transport, finite-rate chemistry with Strang or SIMPLER splitting, radiation and mallard reactor.",
     "guide/les.md": "Large-eddy simulation in Mallard: SGS models, filter width, the hybrid low-dissipation flux, the dissipation budget, TFLES and PaSR.",
+    "guide/particles.md": "Lagrangian particles in Mallard: tracers, solid particles with drag, forces and heat transfer, stiff particles, walls, per-particle quantities and particle probes.",
+    "guide/flamelet.md": "Tabulated chemistry in Mallard: flamelet/progress-variable (FPV) tables for the gas's thermodynamics, transport and progress-variable source.",
+    "guide/python.md": "The mallard Python package: every Mallard file as numpy arrays through the solver's own reader, and the post-processing commands as functions.",
+    "guide/python_api.md": "Reference of every public function and class of the mallard Python package, from their docstrings.",
+    "guide/cpp_api.md": "Mallard as a C++ library: run a case step by step from your own program, with the same results as mallard -i.",
     "guide/numerics.md": "Choosing Mallard's time step, reconstruction (first order, MUSCL, TENO-E orders 3 to 6), Riemann solver and other numerical options.",
     "guide/boundary_conditions.md": "Mallard's boundary conditions: walls, inflows, outflows, far fields, characteristic (NSCBC) boundaries and synthetic turbulence.",
     "guide/sources.md": "Gravity, constant mass flow, source terms as expressions, and sponge layers in Mallard.",
@@ -81,6 +86,7 @@ DESCRIPTIONS = {
     "design/performance.md": "Design notes on single-GPU performance and parallel scaling of Mallard: TENO setup and memory, reacting mixtures, partitions.",
     "design/synthetic_inflow.md": "Design notes on synthetic turbulent inflow in Mallard: the digital filter and its injection through characteristic inlets.",
     "design/nscbc.md": "Design notes on Mallard's characteristic (NSCBC) boundary conditions and sponge layers.",
+    "design/python_package.md": "Design notes on the mallard Python package: the post-processing layer, the solver bindings as an optional extension, extras.",
     "design/axisymmetric.md": "Design notes on axisymmetric (r-z) flows in Mallard: revolved finite volumes, sources, the axis and reconstruction.",
 }
 
