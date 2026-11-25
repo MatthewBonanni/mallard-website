@@ -96,6 +96,11 @@
     "alt": "Hairpin vortices shed by a sphere at Re = 300",
     "more": "validation.md#sphere-re300"
   },
+  "particle_step": {
+    "image": "media/particle_step_poster.jpg",
+    "alt": "Tracers and particles of Stokes numbers 1 and 4 carried over a backward-facing step, over the vorticity of the gas",
+    "more": "gallery.md#particle-step"
+  },
   "pulsed_jet": {
     "image": "media/pulsed_jet_poster.jpg",
     "alt": "Azimuthal vorticity of a pulsed jet launching a train of vortex rings",

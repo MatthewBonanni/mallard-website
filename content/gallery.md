@@ -1,6 +1,6 @@
 ---
 title: Gallery
-description: Animations of Mallard simulations - a 16.8-million-cell 2D Riemann problem, double Mach reflection, 3D turbulence and wakes, particles in a vortex street, detonations, flames and the viscous shock tube.
+description: Animations of Mallard simulations - a 16.8-million-cell 2D Riemann problem, double Mach reflection, 3D turbulence and wakes, particles in a vortex street and over a backward-facing step, detonations, flames and the viscous shock tube.
 hide:
   - navigation
   - toc
@@ -68,6 +68,11 @@ Every case here is one of Mallard's [examples](docs/examples.md). Quantitative c
 <figure id="particle-wake" markdown>
 <video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/particle_wake_poster.jpg" aria-label="Solid particles of Stokes numbers 0, 0.25, 1 and 4 seeded upstream of a cylinder and swept through its Karman vortex street, over the vorticity of the gas"><source src="../media/particle_wake.mp4" type="video/mp4"></video>
 <figcaption markdown>**Solid particles in a Kármán vortex street.** A cylinder at Re = 100 and Mach 0.2, fifth-order TENO on 245,760 quadrilaterals, and 134,000 particles for each Stokes number St = τU/D seeded upstream once the shedding is developed. Tracers wrap into the vortices; at St = 1 the particles are flung out of the vortex cores and the recirculation and gather on the braids between them (20 to 54 particles in the cores, against about 1,100 tracers); at St = 4 they are only bent by the street, rebound off the front of the cylinder and leave a shadow behind it. [Example: `particle_wake`](docs/examples.md#particle-wake) · [guide](docs/guide/particles.md)</figcaption>
+</figure>
+
+<figure id="particle-step" markdown>
+<video data-autoplay controls loop muted playsinline preload="none" width="1920" height="1080" poster="../media/particle_step_poster.jpg" aria-label="Tracers and solid particles of Stokes numbers 1 and 4 seeded in the inlet channel of a backward-facing step and carried through its separated shear layer, over the vorticity of the gas"><source src="../media/particle_step.mp4" type="video/mp4"></video>
+<figcaption markdown>**Solid particles over a backward-facing step** (after Fessler & Eaton 1997, 1999). Laminar channel flow at Re<sub>H</sub> = 3000 and Mach 0.3 separates at a step of expansion ratio 5:3 into a shear layer that rolls up into vortices; 45,600 particles per Stokes number St = τU<sub>0</sub>/5H, one-way coupled, are seeded in the inlet channel. Tracers roll up with the vortices and fill the recirculation zone; at St = 1 the particles are flung out of the vortex cores and enter the zone only in tongues between them (0.28 as many under the shear layer as tracers); at St = 4 they cross the shear layer and never reach the floor upstream of 8 H: the trends Fessler & Eaton measured. Fifth-order TENO on 29,280 quadrilaterals. [Example: `particle_step`](docs/examples.md#particle-step) · [guide](docs/guide/particles.md)</figcaption>
 </figure>
 
 <figure id="pulsed-jet" markdown>
